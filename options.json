@@ -1,0 +1,176 @@
+{
+	"color_options": [
+		{
+			"id": "party",
+			"name": "Party And Alliance List Target Color",
+			"default": {
+				"r": 255,
+				"g": 173,
+				"b": 56
+			}
+		},
+		
+		{
+			"id": "enemy",
+			"name": "Enemy List Target Color",
+			"default": {
+				"r": 255,
+				"g": 173,
+				"b": 56
+			}
+		},
+		
+		{
+			"id": "proc",
+			"name": "Ability Proc Color",
+			"default": {
+				"r": 255,
+				"g": 173,
+				"b": 56
+			}
+		},
+		
+		{
+			"id": "shield",
+			"name": "Party List Shield Color",
+			"default": {
+				"r": 255,
+				"g": 211,
+				"b": 0
+			}
+		}
+	],
+	
+	"penumbra": [
+		{
+			"name": "Selected Window",
+			"accent": {
+				"Default": [""],
+				"No Accent Bar": ["no_window_border"]
+			}
+		},
+		
+		{
+			"name": "Non-Selected Window",
+			"main": {
+				"Default": [""],
+				"Transparent Background": ["Non-Selected Window Transparency BLACK Style"]
+			}
+		},
+		
+		// {
+		// 	"name": "Party and Alliance List Target Color",
+		// 	"accent": {
+		// 		"Default": [""],
+		// 		"Custom Color": ["party_target_color"]
+		// 	}
+		// },
+		
+		// {
+		// 	"name": "Enemy List Target Color",
+		// 	"accent": {
+		// 		"Default": [""],
+		// 		"Custom Color": ["enemy_target_color"]
+		// 	}
+		// },
+		
+		{
+			"name": "Gauges",
+			"main": {
+				"Default": [""],
+				"Silver": ["Silver Frame Gaugebar"]
+			}
+		},
+		
+		{
+			"name": "Target Castbar",
+			"main": {
+				"Default": ["Default Target Castbar"],
+				"Gray": ["Gray Color Target Castbar"],
+				"Red": ["Red Color Target Castbar"]
+			}
+		},
+		
+		// {
+		// 	"name": "Party List Shield Color",
+		// 	"accent": {
+		// 		"Custom Color": ["shield_color"]
+		// 	},
+			
+		// 	"main": {
+		// 		"Dark Red": ["PartyList ShieldColor - DarkRed"],
+		// 		"Emerald Green": ["PartyList ShieldColor - EmeraldGreen"],
+		// 		"Purple": ["PartyList ShieldColor - Purple"],
+		// 		"Sky Blue": ["PartyList ShieldColor - SkyBlue"],
+		// 		"Yellow": [""]
+		// 	}
+		// },
+		
+		{
+			"name": "Minimap",
+			"main": {
+				"Circle - Colored Cardinal": ["circle/Circle Minimap Cardinal Color"],
+				"Circle - White Cardinal": ["circle/Circle Minimap Cardinal White Color"],
+				"Circle - No Cardinal": ["circle/Circle Minimap Without NSEW"],
+				"Circle - No Symbols": ["circle/Circle Minimap Without All Symbols"],
+				
+				"Square - Colored Cardinal": ["square/Square Minimap Cardinal Color", "Square Minimap"],
+				"Square - White Cardinal": ["square/Square Minimap Cardinal White Color", "Square Minimap"],
+				"Square - No Cardinal": ["square/Square Minimap Without NSEW", "Square Minimap"],
+				"Square - No Symbols": ["square/Square Minimap Without All Symbols", "Square Minimap"]
+			}
+		},
+		
+		{
+			"name": "Macro Gear Icon",
+			"accent": {
+				"Default": [""],
+				"Remove": ["hide_macro_icon"]
+			}
+		},
+		
+		{
+			"name": "Chatlog Resize Symbol",
+			"main": {
+				"Default": [""],
+				"Show": ["Chatlog Resize Symbol BLACK Style"]
+			}
+		},
+		
+		{
+			"name": "Main Command Icons",
+			"main": {
+				"Default": [""],
+				"Transparent Background": ["MainCommand Icon Transparent Square Style"]
+			}
+		},
+		
+		{
+			"name": "Job Icons - Party List",
+			"main": {
+				"Glow": [""],
+				"Glow Different DPS Color": ["PartyList Glow Job Icon Diff Range DPS Color", ""],
+				"Square": ["Edge Background Job Icon"],
+				"Square Different DPS Color": ["Edge Background Job Icon Diff Range DPS Color", "Edge Background Job Icon"]
+			}
+		},
+		
+		{
+			"name": "Job Icons - Contents",
+			"main": {
+				"Default": [""],
+				"Glow": ["Contents Glow Job Icon"],
+				"Glow Different DPS Color": ["Contents Glow Job Icon Diff Range DPS Color", "Contents Glow Job Icon"]
+			}
+		},
+		
+		{
+			"name": "Job Icons - Macro",
+			"main": {
+				"Default": [""],
+				"Glow": ["Macro Glow Job Icon"],
+				"Glow Different DPS Color": ["Macro Glow Job Icon Diff Range DPS Color", "Macro Glow Job Icon"]
+			}
+		}
+	]
+}
