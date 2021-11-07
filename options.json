@@ -2,7 +2,7 @@
 	"color_options": [
 		{
 			"id": "party",
-			"name": "Party And Alliance List Target Color",
+			"name": "Party and Alliance List Target Color",
 			"default": {
 				"r": 255,
 				"g": 173,
@@ -95,6 +95,16 @@
 					"UI/HUD/WindowA_BgNormal_HV/OPTIONS/Non-Selected Window Transparency BLACK Style",
 					"UI/HUD/WindowA_BgNormal_V/OPTIONS/Non-Selected Window Transparency BLACK Style"
 				],
+			}
+		},
+		
+		{
+			"name": "Party and Alliance Background",
+			"options": {
+				"Default": ["ui/uld/alliance",
+				            "ui/uld/partylist_bg"],
+				"Transparent": ["ui/uld/alliance/option/no_party_bg",
+				                "ui/uld/partylist_bg/option/no_party_bg"],
 			}
 		},
 		
