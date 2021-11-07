@@ -81,17 +81,17 @@
 		{
 			"name": "Gauges",
 			"options": {
-				"Default": [
-					"UI/HUD/JobUI/HUDSAM1",
-					"UI/HUD/JobUI/HUDSimple_StackA",
-					"UI/HUD/JobUI/HUDSimple_StackB",
+				"Square": [
+					"UI/HUD/JobHUDSAM1",
+					"UI/HUD/JobHUDSimple_StackA",
+					"UI/HUD/JobHUDSimple_StackB",
 					"UI/HUD/Parameter_Gauge",
 					"UI/HUD/Parameter_Gauge2"
 				],
 				"Silver": [
-					"UI/HUD/JobUI/HUDSAM1/OPTIONS/Silver Frame Gaugebar",
-					"UI/HUD/JobUI/HUDSimple_StackA/OPTIONS/Silver Frame Gaugebar",
-					"UI/HUD/JobUI/HUDSimple_StackB/OPTIONS/Silver Frame Gaugebar",
+					"UI/HUD/JobHUDSAM1/OPTIONS/Silver Frame Gaugebar",
+					"UI/HUD/JobHUDSimple_StackA/OPTIONS/Silver Frame Gaugebar",
+					"UI/HUD/JobHUDSimple_StackB/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge2/OPTIONS/Silver Frame Gaugebar"
 				]
@@ -133,7 +133,7 @@
 		{
 			"name": "Macro Gear Icon",
 			"options": {
-				"Default": ["ui/uld/icona_frame"],
+				"Show": ["ui/uld/icona_frame"],
 				"Remove": ["ui/uld/icona_frame/option/hide_macro_icon"]
 			}
 		},
@@ -141,7 +141,7 @@
 		{
 			"name": "Chatlog Resize Symbol",
 			"options": {
-				"Default": ["UI/HUD/ChatLog"],
+				"Remove": ["UI/HUD/ChatLog"],
 				"Show": ["UI/HUD/ChatLog/OPTIONS/Chatlog Resize Symbol BLACK Style"]
 			}
 		},
@@ -149,7 +149,7 @@
 		{
 			"name": "Main Command Icons",
 			"options": {
-				"Default": ["UI/HUD/MainCommand_Icon"],
+				"Solid Background": ["UI/HUD/MainCommand_Icon"],
 				"Transparent Background": ["UI/HUD/MainCommand_Icon/OPTIONS/MainCommand Icon Transparent Square Style"]
 			}
 		},
