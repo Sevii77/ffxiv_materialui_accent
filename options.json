@@ -2,7 +2,7 @@
 	"color_options": [
 		{
 			"id": "party",
-			"name": "Party and Alliance List Target Color",
+			"name": "Party and Alliance List Target",
 			"default": {
 				"r": 255,
 				"g": 173,
@@ -12,7 +12,7 @@
 		
 		{
 			"id": "enemy",
-			"name": "Enemy List Target Color",
+			"name": "Enemy List Target",
 			"default": {
 				"r": 255,
 				"g": 173,
@@ -22,7 +22,7 @@
 		
 		{
 			"id": "proc",
-			"name": "Ability Proc Color",
+			"name": "Ability Proc",
 			"default": {
 				"r": 255,
 				"g": 173,
@@ -32,7 +32,7 @@
 		
 		{
 			"id": "shield",
-			"name": "Party List Shield Color",
+			"name": "Party List Shield",
 			"default": {
 				"r": 255,
 				"g": 211,
@@ -42,7 +42,7 @@
 		
 		{
 			"id": "targetcast",
-			"name": "Target Castbar Color",
+			"name": "Target Castbar",
 			"default": {
 				"r": 209,
 				"g": 134,
@@ -52,7 +52,7 @@
 		
 		{
 			"id": "targetcastinter",
-			"name": "Target Castbar Interrupt Color",
+			"name": "Target Castbar Interrupt",
 			"default": {
 				"r": 139,
 				"g": 15,
@@ -102,7 +102,7 @@
 			"name": "Party and Alliance Background",
 			"options": {
 				"Default": ["ui/uld/alliance",
-				            "ui/uld/partylist_bg"],
+				            "UI/HUD/PartyList_Bg"],
 				"Transparent": ["ui/uld/alliance/option/no_party_bg",
 				                "ui/uld/partylist_bg/option/no_party_bg"],
 			}
