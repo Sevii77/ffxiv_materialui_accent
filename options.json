@@ -40,25 +40,25 @@
 			}
 		},
 		
-		// {
-		// 	"id": "targetcast",
-		// 	"name": "Target Castbar Color",
-		// 	"default": {
-		// 		"r": 209,
-		// 		"g": 134,
-		// 		"b": 11
-		// 	}
-		// },
+		{
+			"id": "targetcast",
+			"name": "Target Castbar Color",
+			"default": {
+				"r": 209,
+				"g": 134,
+				"b": 11
+			}
+		},
 		
-		// {
-		// 	"id": "targetcastinter",
-		// 	"name": "Target Castbar Interrupt Color",
-		// 	"default": {
-		// 		"r": 139,
-		// 		"g": 15,
-		// 		"b": 15
-		// 	}
-		// }
+		{
+			"id": "targetcastinter",
+			"name": "Target Castbar Interrupt Color",
+			"default": {
+				"r": 139,
+				"g": 15,
+				"b": 15
+			}
+		}
 	],
 	
 	"penumbra": [
@@ -128,14 +128,14 @@
 			}
 		},
 		
-		{
-			"name": "Target Castbar",
-			"options": {
-				"Default": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Default Target Castbar"],
-				"Gray": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Gray Color Target Castbar"],
-				"Red": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Red Color Target Castbar"]
-			}
-		},
+		// {
+		// 	"name": "Target Castbar",
+		// 	"options": {
+		// 		"Default": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Default Target Castbar"],
+		// 		"Gray": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Gray Color Target Castbar"],
+		// 		"Red": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Red Color Target Castbar"]
+		// 	}
+		// },
 		
 		{
 			"name": "Minimap",
