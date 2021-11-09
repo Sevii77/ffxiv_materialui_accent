@@ -1,0 +1,11 @@
+{
+	"Author": "Sevii",
+	"Name": "MaterialUI",
+	"Punchline": "Auto updating Material UI with accent color.",
+	"Description": "Auto updating Material UI with accent color.",
+	"InternalName": "MaterialUI",
+	"ApplicableVersion": "any",
+	"DalamudApiLevel": 4,
+	"LoadPriority": 0,
+	"Tags": []
+}
