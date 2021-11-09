@@ -1,7 +1,7 @@
 [
 	{
 		"Author": "Sevii",
-		"Name": "Material UI Accent",
+		"Name": "MaterialUI",
 		"Description": "Auto updating Material UI with accent color.",
 		"InternalName": "MaterialUI",
 		"AssemblyVersion": "0.1.0.1",

@@ -3,8 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<Authors>Sevii</Authors>
-		<Title>MaterialUI</Title>
-		<Version>0.1.0.1</Version>
+		<Version>0.1.0.2</Version>
 	</PropertyGroup>
 	
 	<PropertyGroup>
