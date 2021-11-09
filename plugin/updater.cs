@@ -101,7 +101,7 @@ namespace MaterialUI {
 			FileVersion = 0;
 			Name = "Material UI Accent";
 			Author = "Sevii, skotlex";
-			Description = "TODO";
+			Description = "";
 			Version = "Latest, probably";
 			Website = "https://github.com/Sevii77/ffxiv_materialui_accent";
 			FileSwaps = new Dictionary<string, string>();
@@ -239,10 +239,10 @@ namespace MaterialUI {
 					OptionColor option = options.colorOptions[i];
 					Vector3 clr = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
 					
-					main.ui.colorOptions[i] = clr;
-					
 					if(!main.config.colorOptions.ContainsKey(option.id))
 						main.config.colorOptions[option.id] = clr;
+					
+					main.ui.colorOptions[i] = main.config.colorOptions[option.id];
 				}
 			});
 		}
@@ -300,7 +300,9 @@ namespace MaterialUI {
 				return;
 			}
 			
-			Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI Accent"), true);
+			try {
+				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI Accent"), true);
+			} catch(Exception e) {}
 			
 			// Used to check if an option exists, avoids cases where an option is used and the default ignored, thus creating the texture 2 times
 			List<string> optionPaths = new List<string>();
@@ -312,6 +314,15 @@ namespace MaterialUI {
 					}
 			
 			Meta meta = new Meta();
+			meta.Description = "Open the configurator with /materialui\n\nCurrent colors:";
+			
+			Vector3 clr = main.config.color;
+			meta.Description += string.Format("\nAccent: R:{0} G:{1} B:{2}", (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
+			
+			foreach(OptionColor optionColor in options.colorOptions) {
+				clr = main.config.colorOptions[optionColor.id];
+				meta.Description += string.Format("\n{0}: R:{1} G:{2} B:{3}", optionColor.name, (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
+			}
 			
 			// Create options now so its in the correct order
 			foreach(OptionPenumbra option in options.penumbraOptions) {

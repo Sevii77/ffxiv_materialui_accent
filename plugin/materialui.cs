@@ -1,7 +1,5 @@
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
-using System;
-using System.Threading.Tasks;
 
 namespace MaterialUI {
 	public class MaterialUI : IDalamudPlugin {
