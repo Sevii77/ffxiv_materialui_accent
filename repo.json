@@ -1,11 +1,11 @@
 [
 	{
 		"Author": "Sevii",
-		"Name": "MaterialUI",
+		"Name": "Material UI",
 		"Description": "Auto updating Material UI with accent color.",
 		"InternalName": "MaterialUI",
-		"AssemblyVersion": "0.1.0.2",
-		"TestingAssemblyVersion": "0.1.0.2",
+		"AssemblyVersion": "1.0.0",
+		"TestingAssemblyVersion": "1.0.0",
 		"RepoUrl": "https://github.com/Sevii77/ffxiv_materialui_accent",
 		"ApplicableVersion": "any",
 		"DalamudApiLevel": 4,
@@ -13,8 +13,8 @@
 		"IsTestingExclusive": "False",
 		"DownloadCount": 0,
 		"LastUpdate": 0,
-		"DownloadLinkInstall": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/release.zip",
-		"DownloadLinkTesting": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/release.zip",
-		"DownloadLinkUpdate": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/release.zip"
+		"DownloadLinkInstall": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip",
+		"DownloadLinkTesting": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip",
+		"DownloadLinkUpdate": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip"
 	}
 ]
