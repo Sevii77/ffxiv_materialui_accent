@@ -1,5 +1,7 @@
 Check out Material UI by skotlex [here](https://github.com/skotlex/ffxiv-material-ui)
 
+![preview](imgs/preview.png)
+
 Auto updating Material UI with custom accent color.
 Includes some custom options and some things are different due to artistic reason (orchestrion checkmark, readycheck checkmark)
 
