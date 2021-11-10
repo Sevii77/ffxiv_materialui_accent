@@ -85,6 +85,24 @@ namespace MaterialUI {
 					main.updater.Apply();
 				}
 				
+				ImGui.SameLine();
+				
+				if(ImGui.Button("Reset")) {
+					colorAccent = new Vector3(99 / 255f, 60 / 255f, 181 / 255f);
+					main.config.color = colorAccent;
+					
+					for(int i = 0; i < main.updater.options.colorOptions.Length; i++) {
+						OptionColor option = main.updater.options.colorOptions[i];
+						Vector3 clr = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
+						
+						main.config.colorOptions[option.id] = clr;
+						colorOptions[i] = clr;
+					}
+					
+					main.pluginInterface.SavePluginConfig(main.config);
+					main.updater.Apply();
+				}
+				
 				ImGui.Text("\nBe sure UI Resolution is set to 4K.\nSystem Configuration > Graphics Settings.\n\nAfter applying be sure to enable Material UI Accent\nin Penumbra and to Rediscover Mods.\nA relog is also required.\n(some textures might still not update)");
 			}
 			
