@@ -62,7 +62,7 @@ namespace MaterialUI {
 				
 				ImGui.Separator();
 				
-				ImGui.Checkbox("Accent Only", ref accentOnly);
+				ImGui.Checkbox("Colors Only", ref accentOnly);
 				if(ImGui.IsItemHovered())
 					ImGui.SetTooltip("For those that have a frankenstein setup, using both TexTools and Penumbra");
 					
@@ -103,7 +103,7 @@ namespace MaterialUI {
 					main.updater.Apply();
 				}
 				
-				ImGui.Text("\nBe sure UI Resolution is set to 4K.\nSystem Configuration > Graphics Settings.\n\nAfter applying be sure to enable Material UI Accent\nin Penumbra and to Rediscover Mods.\nA relog is also required.\n(some textures might still not update)");
+				ImGui.Text("\nBe sure UI Resolution is set to 4K.\nSystem Configuration > Graphics Settings.\n\nAfter applying be sure to enable Material UI\nin Penumbra and to Rediscover Mods.\nA relog is also required.\n(some textures might still not update)");
 			}
 			
 			ImGui.End();

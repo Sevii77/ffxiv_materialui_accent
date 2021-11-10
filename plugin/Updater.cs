@@ -99,7 +99,7 @@ namespace MaterialUI {
 		
 		public Meta() {
 			FileVersion = 0;
-			Name = "Material UI Accent";
+			Name = "Material UI";
 			Author = "Sevii, skotlex";
 			Description = "";
 			Version = "Latest, probably";
@@ -301,7 +301,7 @@ namespace MaterialUI {
 			}
 			
 			try {
-				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI Accent"), true);
+				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);
 			} catch(Exception e) {}
 			
 			// Used to check if an option exists, avoids cases where an option is used and the default ignored, thus creating the texture 2 times
@@ -348,14 +348,14 @@ namespace MaterialUI {
 											break;
 										}
 									
-									string path = Path.GetFullPath(penumbraPath + "/Material UI Accent/" + optionName + "/" + subOptionName + "/" + gamePath);
+									string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath);
 									
 									meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
 									Directory.CreateDirectory(Path.GetDirectoryName(path));
 									tex.Save(path + "_hr1.tex");
 								}
 				} else {
-					string path = Path.GetFullPath(penumbraPath + "/Material UI Accent/" + gamePath);
+					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath);
 					Directory.CreateDirectory(Path.GetDirectoryName(path));
 					tex.Save(path + "_hr1.tex");
 				}
@@ -439,7 +439,7 @@ namespace MaterialUI {
 				}
 			}
 			
-			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI Accent/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
+			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
 		}
 	}
 }

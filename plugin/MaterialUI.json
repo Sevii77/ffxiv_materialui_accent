@@ -7,5 +7,5 @@
 	"ApplicableVersion": "any",
 	"DalamudApiLevel": 4,
 	"LoadPriority": 0,
-	"Tags": []
+	"Tags": ["ui", "penumbra", "material", "skotlex", "sevii", "accent", "color"]
 }
