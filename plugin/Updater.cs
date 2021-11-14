@@ -182,47 +182,47 @@ namespace MaterialUI {
 			}
 			
 			// Download and cache new shas
-			int todo = 0;
-			foreach(KeyValuePair<string, Dir> sha in shaLatest)
-				if(!shaCurrent.Contains(sha.Key))
-					todo++;
-			
-			if(todo > 0)
-				downloading = true;
-			
-			async Task download(Dir dir, string path) {
-				Directory.CreateDirectory(Path.GetDirectoryName(path));
-				
-				foreach(KeyValuePair<string, string> file in dir.files)
-					if(file.Key.Contains(".dds"))
-						File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
+			List<(Dir, string)> queue = new List<(Dir, string)>();
+			void addToQueue(Dir dir, string path) {
+				if(dir.files.Count > 0)
+					queue.Add((dir, path));
 				
 				foreach(KeyValuePair<string, Dir> dir2 in dir.dirs)
-					await download(dir2.Value, path + dir2.Key + "/");
-			}
-			
-			// is this stupid? yes, does it work? yes
-			async Task download2(Dir dir, string path) {
-				await download(dir, path);
-				// is this status text inaccurate? yes, does it look better than putting it in download? yes
-				// progress bars and the likes are only used so that the user knows something is going on anyways :D
-				statusText = "Downloading\n" + dir.name;
-				todo--;
-				
-				if(todo == 0)
-					downloading = false;
-			}
-			
-			async void download3(Dir dir, string path) {
-				await download2(dir, path);
+					addToQueue(dir2.Value, path + dir2.Key + "/");
 			}
 			
 			List<string> changes = new List<string>();
 			foreach(KeyValuePair<string, Dir> sha in shaLatest)
 				if(!shaCurrent.Contains(sha.Key)) {
 					changes.Add(sha.Value.name);
-					download3(sha.Value, main.pluginInterface.ConfigDirectory + "/" + sha.Key + "/");
+					addToQueue(sha.Value, main.pluginInterface.ConfigDirectory + "/" + sha.Key + "/");
 				}
+			
+			async void download(Dir dir, string path) {
+				statusText = "Downloading\n" + dir.name;
+				Directory.CreateDirectory(Path.GetDirectoryName(path));
+				
+				foreach(KeyValuePair<string, string> file in dir.files)
+					if(file.Key.Contains(".dds"))
+						File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
+			}
+			
+			async void downloader() {
+				downloading = true;
+				
+				while(queue.Count > 0) {
+					for(int i = 0; i < Math.Min(queue.Count, 50); i++) {
+						download(queue[0].Item1, queue[0].Item2);
+						queue.RemoveAt(0);
+					}
+					
+					await Task.Delay(1000);
+				}
+				
+				downloading = false;
+			}
+			
+			downloader();
 			
 			return changes;
 		}
