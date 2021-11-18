@@ -158,7 +158,7 @@ namespace MaterialUI {
 			return dir;
 		}
 		
-		private List<string> UpdateCache(Dir[] dirs) {
+		private async Task<List<string>> UpdateCache(Dir[] dirs) {
 			// Get all latest shas
 			List<string> texturesLatest = new List<string>();
 			Dictionary<string, Dir> shaLatest = new Dictionary<string, Dir>();
@@ -197,9 +197,11 @@ namespace MaterialUI {
 					changes.Add(sha.Value.name);
 					addToQueue(sha.Value, main.pluginInterface.ConfigDirectory + "/" + sha.Key + "/");
 				}
+			int total = queue.Count;
 			
 			async void download(Dir dir, string path) {
-				statusText = "Downloading\n" + dir.name;
+				// statusText = "Downloading\n" + dir.name;
+				statusText = string.Format("Downloading ({0}/{1})\n{2}", total - queue.Count, total, dir.name);
 				Directory.CreateDirectory(Path.GetDirectoryName(path));
 				
 				foreach(KeyValuePair<string, string> file in dir.files)
@@ -207,7 +209,7 @@ namespace MaterialUI {
 						File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
 			}
 			
-			async void downloader() {
+			async Task downloader() {
 				downloading = true;
 				
 				while(queue.Count > 0) {
@@ -222,14 +224,20 @@ namespace MaterialUI {
 				downloading = false;
 			}
 			
-			downloader();
+			await downloader();
 			
 			return changes;
 		}
 		
 		public void LoadOptions() {
 			Task.Run(async() => {
+				#if RELEASE
 				string resp = await httpClient.GetStringAsync(String.Format("https://raw.githubusercontent.com/{0}/master/options.json", repoAccent));
+				#elif DEBUG
+				string resp = await httpClient.GetStringAsync("https://sevii.dev/materialui/options.json");
+				PluginLog.LogDebug("debug options");
+				#endif
+				
 				resp = Regex.Replace(resp, "//[^\n]*", "");
 				options = JsonConvert.DeserializeObject<Options>(resp);
 				
@@ -257,22 +265,54 @@ namespace MaterialUI {
 				Repo dataAccent = JsonConvert.DeserializeObject<Repo>(respAccent);
 				dirAccent = PopulateDir(dataAccent, repoAccent);
 				
-				List<string> changes = UpdateCache(new Dir[3] {
+				if(main.config.openOnStart)
+					main.ui.settingsVisible = true;
+				
+				List<string> changes = await UpdateCache(new Dir[3] {
 					dirAccent.dirs["elements_" + main.config.style].dirs["ui"].dirs["uld"],
 					dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"].dirs["UI"].dirs["HUD"],
 					dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"].dirs["UI"].dirs["Icon"].dirs["Icon"]
 				});
 				
-				if(main.config.openOnStart)
-					main.ui.settingsVisible = true;
-				
 				if(main.config.firstTime)
 					return;
 				
-				if(changes.Count == 0)
+				List<string> optionsNew = new List<string>();
+				string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
+				if(File.Exists(penumbraConfigPath)) {
+					dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
+					string penumbraPath = (string)penumbraData?.ModDirectory;
+					if(penumbraPath != "") {
+						string metaPath = Path.GetFullPath(penumbraPath + "/Material UI/meta.json");
+						if(File.Exists(metaPath)) {
+							List<(string, string)> optionsCurrent = new List<(string, string)>();
+							
+							Meta meta = JsonConvert.DeserializeObject<Meta>(File.ReadAllText(metaPath));
+							foreach(MetaGroup group in meta.Groups.Values)
+								foreach(MetaGroupOption option in group.Options)
+									optionsCurrent.Add((group.GroupName, option.OptionName));
+							
+							foreach(OptionPenumbra group in options.penumbraOptions) {
+								List<string> optionStr = new List<string>();
+								foreach(string option in group.options.Keys)
+									if(!optionsCurrent.Contains((group.name, option)))
+										optionStr.Add(" " + option);
+								
+								if(optionStr.Count > 0)
+									optionsNew.Add(group.name + "\n" + string.Join("\n", optionStr));
+							}
+						}
+					}
+				}
+				
+				if(changes.Count == 0 && optionsNew.Count == 0)
 					return;
 				
-				main.ui.ShowNotice("Material UI has been updated\n\n" + string.Join("\n", changes));
+				if(optionsNew.Count > 0)
+					main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n{1}", string.Join("\n\n", optionsNew), string.Join("\n", changes)));
+				else
+					main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
+				
 				Apply();
 			});
 		}
