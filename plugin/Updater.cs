@@ -465,18 +465,18 @@ namespace MaterialUI {
 				}
 				
 				walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null, null);
-			} else {
-				// Get rid of unused options
-				foreach(KeyValuePair<string, MetaGroup> group in meta.Groups) {
-					List<MetaGroupOption> options2 = new List<MetaGroupOption>();
-					foreach(MetaGroupOption option in group.Value.Options) {
-						if(option.OptionFiles.Count > 0) {
-							options2.Add(option);
-						}
-					}
+			// } else {
+			// 	// Get rid of unused options
+			// 	foreach(KeyValuePair<string, MetaGroup> group in meta.Groups) {
+			// 		List<MetaGroupOption> options2 = new List<MetaGroupOption>();
+			// 		foreach(MetaGroupOption option in group.Value.Options) {
+			// 			if(option.OptionFiles.Count > 0) {
+			// 				options2.Add(option);
+			// 			}
+			// 		}
 					
-					group.Value.Options = options2;
-				}
+			// 		group.Value.Options = options2;
+			// 	}
 			}
 			
 			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));

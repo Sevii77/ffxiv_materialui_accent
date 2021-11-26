@@ -6,6 +6,6 @@
 	"InternalName": "MaterialUI",
 	"ApplicableVersion": "any",
 	"DalamudApiLevel": 4,
-	"LoadPriority": 0,
+	"LoadPriority": 1,
 	"Tags": ["ui", "penumbra", "material", "skotlex", "sevii", "accent", "color"]
 }
