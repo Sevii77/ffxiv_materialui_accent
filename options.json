@@ -128,15 +128,6 @@
 			}
 		},
 		
-		// {
-		// 	"name": "Target Castbar",
-		// 	"options": {
-		// 		"Default": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Default Target Castbar"],
-		// 		"Gray": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Gray Color Target Castbar"],
-		// 		"Red": ["UI/HUD/PartyList_GaugeCast/OPTIONS/Red Color Target Castbar"]
-		// 	}
-		// },
-		
 		{
 			"name": "Minimap",
 			"options": {
@@ -228,7 +219,9 @@
 					"UI/Icon/Icon/062137",
 					"UI/Icon/Icon/062138",
 					"UI/Icon/Icon/062139",
-					"UI/Icon/Icon/062141"
+					"UI/Icon/Icon/062140",
+					"UI/Icon/Icon/062141",
+					"UI/Icon/Icon/062143"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062105/OPTIONS/PartyList Glow Job Icon Diff Range DPS Color",
@@ -271,7 +264,9 @@
 					"UI/Icon/Icon/062134",
 					"UI/Icon/Icon/062137",
 					"UI/Icon/Icon/062139",
-					"UI/Icon/Icon/062141"
+					"UI/Icon/Icon/062140",
+					"UI/Icon/Icon/062141",
+					"UI/Icon/Icon/062143"
 				],
 				"Square": [
 					"UI/Icon/Icon/062040/OPTIONS/Edge Background Job Icon",
@@ -314,7 +309,9 @@
 					"UI/Icon/Icon/062137/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062138/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062139/OPTIONS/Edge Background Job Icon",
-					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon"
+					"UI/Icon/Icon/062140/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon"
 				],
 				"Square Different DPS Color": [
 					"UI/Icon/Icon/062105/OPTIONS/Edge Background Job Icon Diff Range DPS Color",
@@ -357,7 +354,9 @@
 					"UI/Icon/Icon/062134/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062137/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062139/OPTIONS/Edge Background Job Icon",
-					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon"
+					"UI/Icon/Icon/062140/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon"
 				]
 			}
 		},
@@ -403,7 +402,9 @@
 					"UI/Icon/Icon/062035",
 					"UI/Icon/Icon/062036",
 					"UI/Icon/Icon/062037",
-					"UI/Icon/Icon/062038"
+					"UI/Icon/Icon/062038",
+					"UI/Icon/Icon/062039",
+					"UI/Icon/Icon/062040"
 				],
 				"Glow": [
 					"UI/Icon/Icon/062001/OPTIONS/Contents Glow Job Icon",
@@ -443,7 +444,9 @@
 					"UI/Icon/Icon/062035/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062036/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062037/OPTIONS/Contents Glow Job Icon",
-					"UI/Icon/Icon/062038/OPTIONS/Contents Glow Job Icon"
+					"UI/Icon/Icon/062038/OPTIONS/Contents Glow Job Icon",
+					"UI/Icon/Icon/062039",
+					"UI/Icon/Icon/062040"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062005/OPTIONS/Contents Glow Job Icon Diff Range DPS Color",
@@ -483,7 +486,9 @@
 					"UI/Icon/Icon/062032/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062033/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062034/OPTIONS/Contents Glow Job Icon",
-					"UI/Icon/Icon/062037/OPTIONS/Contents Glow Job Icon"
+					"UI/Icon/Icon/062037/OPTIONS/Contents Glow Job Icon",
+					"UI/Icon/Icon/062039",
+					"UI/Icon/Icon/062040"
 				]
 			}
 		},
@@ -529,7 +534,9 @@
 					"UI/Icon/Icon/062835",
 					"UI/Icon/Icon/062836",
 					"UI/Icon/Icon/062837",
-					"UI/Icon/Icon/062838"
+					"UI/Icon/Icon/062838",
+					"UI/Icon/Icon/062839",
+					"UI/Icon/Icon/062840"
 				],
 				"Glow": [
 					"UI/Icon/Icon/062801/OPTIONS/Macro Glow Job Icon",
@@ -569,7 +576,9 @@
 					"UI/Icon/Icon/062835/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062836/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062837/OPTIONS/Macro Glow Job Icon",
-					"UI/Icon/Icon/062838/OPTIONS/Macro Glow Job Icon"
+					"UI/Icon/Icon/062838/OPTIONS/Macro Glow Job Icon",
+					"UI/Icon/Icon/062839",
+					"UI/Icon/Icon/062840"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062805/OPTIONS/Macro Glow Job Icon Diff Range DPS Color",
@@ -609,7 +618,9 @@
 					"UI/Icon/Icon/062832/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062833/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062834/OPTIONS/Macro Glow Job Icon",
-					"UI/Icon/Icon/062837/OPTIONS/Macro Glow Job Icon"
+					"UI/Icon/Icon/062837/OPTIONS/Macro Glow Job Icon",
+					"UI/Icon/Icon/062839",
+					"UI/Icon/Icon/062840"
 				]
 			}
 		}
