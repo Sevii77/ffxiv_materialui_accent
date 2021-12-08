@@ -319,20 +319,20 @@ namespace MaterialUI {
 		
 		// TODO: use penumbra api once its ready
 		public void Apply() {
+			try {
+				main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
+			} catch(Exception e) {
+				return;
+			}
+			
 			string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
 			if(!File.Exists(penumbraConfigPath)) {
-				main.ui.ShowNotice("Can't find Penumbra Config,\nis it even installed?");
+				main.ui.ShowNotice("Can't find Penumbra Config.");
 				
 				return;
 			}
 			
 			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
-			if(!(bool)penumbraData?.IsEnabled) {
-				main.ui.ShowNotice("Penumbra is disabled.");
-				
-				return;
-			}
-			
 			string penumbraPath = (string)penumbraData?.ModDirectory;
 			if(penumbraPath == "") {
 				main.ui.ShowNotice("Penumbra Mod Directory has not been set.");

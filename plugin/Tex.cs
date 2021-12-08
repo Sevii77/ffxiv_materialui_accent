@@ -1,3 +1,5 @@
+// TODO: Maby allow non A8R8G8B8 to be colored by decompressing them (https://www.khronos.org/opengl/wiki/S3_Texture_Compression)
+
 using System;
 using System.IO;
 using System.Numerics;

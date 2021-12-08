@@ -179,7 +179,7 @@
 			"name": "Job Icons - Party List",
 			"options": {
 				"Glow": [
-					"UI/Icon/Icon/062040",
+					"UI/Icon/Icon/062042",
 					"UI/Icon/Icon/062101",
 					"UI/Icon/Icon/062102",
 					"UI/Icon/Icon/062103",
@@ -234,7 +234,7 @@
 					"UI/Icon/Icon/062135/OPTIONS/PartyList Glow Job Icon Diff Range DPS Color",
 					"UI/Icon/Icon/062136/OPTIONS/PartyList Glow Job Icon Diff Range DPS Color",
 					"UI/Icon/Icon/062138/OPTIONS/PartyList Glow Job Icon Diff Range DPS Color",
-					"UI/Icon/Icon/062040",
+					"UI/Icon/Icon/062042",
 					"UI/Icon/Icon/062101",
 					"UI/Icon/Icon/062102",
 					"UI/Icon/Icon/062103",
@@ -269,7 +269,7 @@
 					"UI/Icon/Icon/062143"
 				],
 				"Square": [
-					"UI/Icon/Icon/062040/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062042/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062101/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062102/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062103/OPTIONS/Edge Background Job Icon",
@@ -324,7 +324,7 @@
 					"UI/Icon/Icon/062135/OPTIONS/Edge Background Job Icon Diff Range DPS Color",
 					"UI/Icon/Icon/062136/OPTIONS/Edge Background Job Icon Diff Range DPS Color",
 					"UI/Icon/Icon/062138/OPTIONS/Edge Background Job Icon Diff Range DPS Color",
-					"UI/Icon/Icon/062040/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062042/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062101/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062102/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062103/OPTIONS/Edge Background Job Icon",
