@@ -206,7 +206,15 @@ namespace MaterialUI {
 				
 				foreach(KeyValuePair<string, string> file in dir.files)
 					if(file.Key.Contains(".dds"))
-						File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
+						// File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
+						try {
+							using(Stream download = await (await httpClient.GetAsync(file.Value, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
+								using(Stream write = File.Open(Path.GetFullPath(path + file.Key), FileMode.Create))
+									await download.CopyToAsync(write);
+						} catch(Exception e) {
+							// It failed, just add it back to the queue
+							queue.Add((dir, path));
+						}
 			}
 			
 			async Task downloader() {
@@ -257,6 +265,15 @@ namespace MaterialUI {
 		
 		public void Update() {
 			Task.Run(async() => {
+				if(main.config.openOnStart)
+					main.ui.settingsVisible = true;
+				
+				try {
+					main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
+				} catch(Exception e) {
+					return;
+				}
+				
 				string respMaster = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
 				Repo dataMaster = JsonConvert.DeserializeObject<Repo>(respMaster);
 				dirMaster = PopulateDir(dataMaster, repoMaster);
@@ -264,9 +281,6 @@ namespace MaterialUI {
 				string respAccent = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
 				Repo dataAccent = JsonConvert.DeserializeObject<Repo>(respAccent);
 				dirAccent = PopulateDir(dataAccent, repoAccent);
-				
-				if(main.config.openOnStart)
-					main.ui.settingsVisible = true;
 				
 				List<string> changes = await UpdateCache(new Dir[3] {
 					dirAccent.dirs["elements_" + main.config.style].dirs["ui"].dirs["uld"],
@@ -478,6 +492,8 @@ namespace MaterialUI {
 			// 		group.Value.Options = options2;
 			// 	}
 			}
+			
+			GC.Collect();
 			
 			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
 		}
