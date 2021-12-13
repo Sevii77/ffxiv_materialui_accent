@@ -2,10 +2,10 @@
 	{
 		"Author": "Sevii",
 		"Name": "Material UI",
-		"Description": "Auto updating Material UI with accent color.",
+		"Description": "Auto updating Material UI with customizable accent color and more. Icon by Meconate",
 		"InternalName": "MaterialUI",
-		"AssemblyVersion": "1.1.5",
-		"TestingAssemblyVersion": "1.1.5",
+		"AssemblyVersion": "1.2.0",
+		"TestingAssemblyVersion": "1.2.0",
 		"RepoUrl": "https://github.com/Sevii77/ffxiv_materialui_accent",
 		"ApplicableVersion": "any",
 		"DalamudApiLevel": 5,
@@ -15,6 +15,7 @@
 		"LastUpdate": 0,
 		"DownloadLinkInstall": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip",
 		"DownloadLinkTesting": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip",
-		"DownloadLinkUpdate": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip"
+		"DownloadLinkUpdate": "https://github.com/Sevii77/ffxiv_materialui_accent/raw/master/latest.zip",
+		"IconUrl": "https://raw.githubusercontent.com/Sevii77/ffxiv_materialui_accent/master/images/icon.png"
 	}
 ]

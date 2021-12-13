@@ -41,6 +41,8 @@
 		// Our options that will be displayed in Penumbra
 		// For options that exists it must have all the same textures as the existing ones
 		// (This also applies to options that are in other mods that came before)
+		// Suboptions can be named the same as existing ones, this will overwrite them
+		// (Replacing windows to have rounded corners but without the need of the user to switch to it manually)
 		// For new options, keep things specific and the names descriptive
 		// Use the main options.json file as an example
 		// (Except for things labeled as Default, please dont do that, i regret every moment)

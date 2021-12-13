@@ -9,6 +9,7 @@ using System.IO;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ImGuiScene;
 
 namespace MaterialUI {
 	public struct RepoFile {
@@ -37,6 +38,19 @@ namespace MaterialUI {
 			files = new Dictionary<string, string>();
 			dirs = new Dictionary<string, Dir>();
 		}
+		
+		public Dir GetPathDir(string path) {
+			// dirAccent.dirs["elements_" + main.config.style].dirs["ui"].dirs["uld"]
+			Dir dir = this;
+			foreach(string subpath in path.Split("/")) {
+				if(!dir.dirs.ContainsKey(subpath))
+					return null;
+				
+				dir = dir.dirs[subpath];
+			}
+			
+			return dir;
+		}
 	}
 	
 	public struct Color {
@@ -57,6 +71,14 @@ namespace MaterialUI {
 	}
 	
 	public struct Options {
+		// Mod properties
+		public string author;
+		[JsonProperty("author_contact")]
+		public string authorContact;
+		public string name;
+		public string description;
+		
+		// Generic
 		[JsonProperty("color_options")]
 		public OptionColor[] colorOptions;
 		[JsonProperty("penumbra")]
@@ -102,29 +124,48 @@ namespace MaterialUI {
 			Name = "Material UI";
 			Author = "Sevii, skotlex";
 			Description = "";
-			Version = "Latest, probably";
+			Version = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
 			Website = "https://github.com/Sevii77/ffxiv_materialui_accent";
 			FileSwaps = new Dictionary<string, string>();
 			Groups = new Dictionary<string, MetaGroup>();
 		}
 	}
 	
+	public class Mod {
+		public string id;
+		public Options options;
+		public Dir dir;
+		public TextureWrap preview;
+		
+		public Mod(string id, Options options, Dir dir, TextureWrap preview) {
+			this.id = id;
+			this.options = options;
+			this.dir = dir;
+			this.preview = preview;
+		}
+	}
+	
 	public class Updater {
-		private const string repoMaster = "skotlex/ffxiv-material-ui";
-		private const string repoAccent = "sevii77/ffxiv_materialui_accent";
+		public const string repoMaster = "skotlex/ffxiv-material-ui";
+		public const string repoAccent = "sevii77/ffxiv_materialui_accent";
 		
 		private HttpClient httpClient;
 		private MaterialUI main;
 		
-		public Options options {get; private set;}
+		// public Options options {get; private set;}
 		public Dir dirMaster {get; private set;}
 		public Dir dirAccent {get; private set;}
+		public Dictionary<string, Dir> dirMods {get; private set;}
+		public Dictionary<string, Mod> mods {get; private set;}
 		
 		public bool downloading {get; private set;} = false;
 		public string statusText {get; private set;} = "";
 		
 		public Updater(MaterialUI main) {
 			this.main = main;
+			
+			dirMods = new Dictionary<string, Dir>();
+			mods = new Dictionary<string, Mod>();
 			
 			var handler = new HttpClientHandler();
 			handler.Proxy = null;
@@ -158,16 +199,18 @@ namespace MaterialUI {
 			return dir;
 		}
 		
-		private async Task<List<string>> UpdateCache(Dir[] dirs) {
+		private async Task<List<string>> UpdateCache(List<Dir> dirs) {
 			// Get all latest shas
 			List<string> texturesLatest = new List<string>();
 			Dictionary<string, Dir> shaLatest = new Dictionary<string, Dir>();
 			foreach(Dir dir in dirs)
-				foreach(KeyValuePair<string, Dir> d in dir.dirs) {
-					string name = d.Key.ToLower();
-					if(!texturesLatest.Contains(name)) {
-						texturesLatest.Add(name);
-						shaLatest[d.Value.sha] = d.Value;
+				if(dir != null) {
+					foreach(KeyValuePair<string, Dir> d in dir.dirs) {
+						string name = d.Key.ToLower();
+						if(!texturesLatest.Contains(name) || dir.name == dir.name.ToLower()) {
+							texturesLatest.Add(name);
+							shaLatest[d.Value.sha] = d.Value;
+						}
 					}
 				}
 			
@@ -237,17 +280,43 @@ namespace MaterialUI {
 			return changes;
 		}
 		
+		public async Task<List<string>> UpdateCache() {
+			List<Dir> toDownload = new List<Dir>();
+			
+			// Add paths from accent
+			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
+			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
+			
+			// Add paths from main
+			string mainStyleName = char.ToUpper(main.config.style[0]) + main.config.style.Substring(1);
+			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/HUD", mainStyleName)));
+			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/Icon/Icon", mainStyleName)));
+			
+			// Add paths from mods
+			foreach(KeyValuePair<string, Mod> mod in mods)
+				if(mod.Key != "base" && main.config.modOptions[mod.Key].enabled) {
+					toDownload.Add(mod.Value.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
+					toDownload.Add(mod.Value.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
+				}
+			
+			return await UpdateCache(toDownload);
+		}
+		
 		public void LoadOptions() {
 			Task.Run(async() => {
-				#if RELEASE
-				string resp = await httpClient.GetStringAsync(String.Format("https://raw.githubusercontent.com/{0}/master/options.json", repoAccent));
-				#elif DEBUG
-				string resp = await httpClient.GetStringAsync("https://sevii.dev/materialui/options.json");
-				PluginLog.LogDebug("debug options");
-				#endif
+				string resp = Regex.Replace(await httpClient.GetStringAsync(String.Format("https://raw.githubusercontent.com/{0}/master/options.json", repoAccent)), "//[^\n]*", "");
+				Options options = JsonConvert.DeserializeObject<Options>(resp);
+				mods["base"] = new Mod(
+					"base",
+					options,
+					null,
+					null
+				);
 				
-				resp = Regex.Replace(resp, "//[^\n]*", "");
-				options = JsonConvert.DeserializeObject<Options>(resp);
+				// TODO: use this instead
+				// foreach(OptionColor option in options.colorOptions)
+				// 	if(!main.config.colorOptions.ContainsKey(option.id))
+				// 		main.config.colorOptions[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
 				
 				main.ui.colorOptions = new Vector3[options.colorOptions.Length];
 				
@@ -263,6 +332,45 @@ namespace MaterialUI {
 			});
 		}
 		
+		public async Task LoadMods() {
+			string resp;
+			Repo data;
+			
+			foreach(string thirdparty in main.config.thirdPartyModRepos) {
+				try {
+					resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", thirdparty));
+					data = JsonConvert.DeserializeObject<Repo>(resp);
+					dirMods[thirdparty] = PopulateDir(data, thirdparty).GetPathDir("mods");
+				} catch(Exception e) {
+					PluginLog.LogError(e, "Failed loading third party mod repository " + thirdparty);
+				}
+			}
+			
+			foreach(KeyValuePair<string, Dir> modRepo in dirMods)
+				foreach(KeyValuePair<string, Dir> mod in modRepo.Value.dirs) {
+					try {
+						resp = Regex.Replace(await httpClient.GetStringAsync(mod.Value.files["options.json"]), "//[^\n]*", "");
+						Options options = JsonConvert.DeserializeObject<Options>(resp);
+						if(!mods.ContainsKey(mod.Key))
+							mods[mod.Key] = new Mod(
+								mod.Key,
+								options,
+								mod.Value,
+								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await httpClient.GetByteArrayAsync(mod.Value.files["preview.png"])) : null
+							);
+						
+						if(!main.config.modOptions.ContainsKey(mod.Key))
+							main.config.modOptions[mod.Key] = new ModConfig();
+						
+						foreach(OptionColor option in options.colorOptions)
+							if(!main.config.modOptions[mod.Key].colors.ContainsKey(option.id))
+								main.config.modOptions[mod.Key].colors[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
+					} catch(Exception e) {
+						PluginLog.LogError(e, "Failed prepairing third party mod repository " + mod.Key);
+					}
+				}
+		}
+		
 		public void Update() {
 			Task.Run(async() => {
 				if(main.config.openOnStart)
@@ -274,19 +382,19 @@ namespace MaterialUI {
 					return;
 				}
 				
-				string respMaster = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
-				Repo dataMaster = JsonConvert.DeserializeObject<Repo>(respMaster);
-				dirMaster = PopulateDir(dataMaster, repoMaster);
+				string resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
+				Repo data = JsonConvert.DeserializeObject<Repo>(resp);
+				dirMaster = PopulateDir(data, repoMaster);
 				
-				string respAccent = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
-				Repo dataAccent = JsonConvert.DeserializeObject<Repo>(respAccent);
-				dirAccent = PopulateDir(dataAccent, repoAccent);
+				resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
+				data = JsonConvert.DeserializeObject<Repo>(resp);
+				dirAccent = PopulateDir(data, repoAccent);
+				mods["base"].dir = dirAccent;
 				
-				List<string> changes = await UpdateCache(new Dir[3] {
-					dirAccent.dirs["elements_" + main.config.style].dirs["ui"].dirs["uld"],
-					dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"].dirs["UI"].dirs["HUD"],
-					dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"].dirs["UI"].dirs["Icon"].dirs["Icon"]
-				});
+				dirMods["Material UI"] = dirAccent.GetPathDir("mods");
+				await LoadMods();
+				
+				List<string> changes = await UpdateCache();
 				
 				if(main.config.firstTime)
 					return;
@@ -306,11 +414,11 @@ namespace MaterialUI {
 								foreach(MetaGroupOption option in group.Options)
 									optionsCurrent.Add((group.GroupName, option.OptionName));
 							
-							foreach(OptionPenumbra group in options.penumbraOptions) {
+							foreach(OptionPenumbra group in mods["base"].options.penumbraOptions) {
 								List<string> optionStr = new List<string>();
 								foreach(string option in group.options.Keys)
 									if(!optionsCurrent.Contains((group.name, option)))
-										optionStr.Add(" " + option);
+										optionStr.Add("\t" + option);
 								
 								if(optionStr.Count > 0)
 									optionsNew.Add(group.name + "\n" + string.Join("\n", optionStr));
@@ -360,12 +468,14 @@ namespace MaterialUI {
 			
 			// Used to check if an option exists, avoids cases where an option is used and the default ignored, thus creating the texture 2 times
 			List<string> optionPaths = new List<string>();
-			foreach(OptionPenumbra option in options.penumbraOptions)
-				foreach(KeyValuePair<string, string[]> subOptions in option.options)
-					foreach(string path in subOptions.Value) {
-						optionPaths.Add(path);
-						optionPaths.Add(path.Split("/option/")[0].Split("/OPTIONS/")[0]);
-					}
+			foreach(Mod mod in mods.Values)
+				if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+					foreach(OptionPenumbra option in mod.options.penumbraOptions)
+						foreach(KeyValuePair<string, string[]> subOptions in option.options)
+							foreach(string path in subOptions.Value) {
+								optionPaths.Add(path);
+								optionPaths.Add(path.Split("/option/")[0].Split("/OPTIONS/")[0]);
+							}
 			
 			Meta meta = new Meta();
 			meta.Description = "Open the configurator with /materialui\n\nCurrent colors:";
@@ -373,45 +483,61 @@ namespace MaterialUI {
 			Vector3 clr = main.config.color;
 			meta.Description += string.Format("\nAccent: R:{0} G:{1} B:{2}", (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
 			
-			foreach(OptionColor optionColor in options.colorOptions) {
-				clr = main.config.colorOptions[optionColor.id];
-				meta.Description += string.Format("\n{0}: R:{1} G:{2} B:{3}", optionColor.name, (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
-			}
+			foreach(Mod mod in mods.Values)
+				if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+					foreach(OptionColor optionColor in mod.options.colorOptions) {
+						if(mod.id == "base")
+							clr = main.config.colorOptions[optionColor.id];
+						else
+							clr = main.config.modOptions[mod.id].colors[optionColor.id];
+						
+						meta.Description += string.Format("\n{0}: R:{1} G:{2} B:{3}", optionColor.name, (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
+					}
 			
 			// Create options now so its in the correct order
-			foreach(OptionPenumbra option in options.penumbraOptions) {
-				meta.Groups[option.name] = new MetaGroup(option.name);
-				
-				foreach(KeyValuePair<string, string[]> subOptions in option.options)
-					meta.Groups[option.name].Options.Add(new MetaGroupOption(subOptions.Key));
-			}
+			foreach(Mod mod in mods.Values)
+				if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+					foreach(OptionPenumbra option in mod.options.penumbraOptions) {
+						if(!meta.Groups.ContainsKey(option.name))
+							meta.Groups[option.name] = new MetaGroup(option.name);
+						
+						foreach(KeyValuePair<string, string[]> subOptions in option.options)
+							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOptions.Key));
+					}
 			
 			void writeTex(Tex tex, string texturePath, string gamePath) {
 				if(optionPaths.Contains(texturePath)) {
-					foreach(OptionPenumbra option in options.penumbraOptions)
-						foreach(KeyValuePair<string, string[]> subOptions in option.options)
-							foreach(string p in subOptions.Value)
-								if(p == texturePath) {
-									string optionName = option.name;
-									string subOptionName = subOptions.Key;
-									
-									int index = -1;
-									for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
-										if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
-											index = i;
-											break;
+					foreach(Mod mod in mods.Values)
+						if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+							foreach(OptionPenumbra option in mod.options.penumbraOptions)
+								foreach(KeyValuePair<string, string[]> subOptions in option.options)
+									foreach(string p in subOptions.Value)
+										if(p == texturePath) {
+											string optionName = option.name;
+											string subOptionName = subOptions.Key;
+											
+											int index = -1;
+											for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
+												if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
+													index = i;
+													break;
+												}
+											
+											string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
+											if(File.Exists(path))
+												return;
+											
+											meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
+											Directory.CreateDirectory(Path.GetDirectoryName(path));
+											tex.Save(path);
 										}
-									
-									string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath);
-									
-									meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
-									Directory.CreateDirectory(Path.GetDirectoryName(path));
-									tex.Save(path + "_hr1.tex");
-								}
 				} else {
-					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath);
+					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath + "_hr1.tex");
+					if(File.Exists(path))
+						return;
+					
 					Directory.CreateDirectory(Path.GetDirectoryName(path));
-					tex.Save(path + "_hr1.tex");
+					tex.Save(path);
 				}
 			}
 			
@@ -419,7 +545,8 @@ namespace MaterialUI {
 			foreach(var dir in main.pluginInterface.ConfigDirectory.GetDirectories())
 				shas.Add(dir.Name);
 			
-			void walkDirAccent(Dir dir, string fullPath, string cachePath) {
+			void walkDirAccent(Dir dir, string fullPath, string cachePath, Mod mod) {
+				PluginLog.Log(fullPath);
 				if(shas.Contains(dir.sha))
 					cachePath = "/" + dir.sha + "/";
 				else if(cachePath != null)
@@ -433,11 +560,14 @@ namespace MaterialUI {
 					overlay.Paint(main.config.color);
 					tex.Overlay(overlay);
 					
-					foreach(OptionColor optionColor in options.colorOptions) {
+					foreach(OptionColor optionColor in mod.options.colorOptions) {
 						string overlayColorName = string.Format("overlay_{0}.dds", optionColor.id);
 						if(dir.files.ContainsKey(overlayColorName)) {
 							Tex overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(path + overlayColorName)));
-							overlayColor.Paint(main.config.colorOptions[optionColor.id]);
+							if(mod.id == "base")
+								overlayColor.Paint(main.config.colorOptions[optionColor.id]);
+							else
+								overlayColor.Paint(main.config.modOptions[mod.id].colors[optionColor.id]);
 							tex.Overlay(overlayColor);
 						}
 					}
@@ -447,10 +577,13 @@ namespace MaterialUI {
 				}
 				
 				foreach(KeyValuePair<string, Dir> d in dir.dirs)
-					walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), cachePath);
+					walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), cachePath, mod);
 			}
 			
-			walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, null);
+			foreach(Mod mod in mods.Values)
+				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+					walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, null, mod);
+			walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, null, mods["base"]);
 			
 			if(!main.config.accentOnly) {
 				void walkDirMain(Dir dir, string fullPath, string cachePath) {
@@ -479,18 +612,6 @@ namespace MaterialUI {
 				}
 				
 				walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null, null);
-			// } else {
-			// 	// Get rid of unused options
-			// 	foreach(KeyValuePair<string, MetaGroup> group in meta.Groups) {
-			// 		List<MetaGroupOption> options2 = new List<MetaGroupOption>();
-			// 		foreach(MetaGroupOption option in group.Value.Options) {
-			// 			if(option.OptionFiles.Count > 0) {
-			// 				options2.Add(option);
-			// 			}
-			// 		}
-					
-			// 		group.Value.Options = options2;
-			// 	}
 			}
 			
 			GC.Collect();
