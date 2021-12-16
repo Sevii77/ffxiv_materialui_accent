@@ -17,6 +17,7 @@ namespace MaterialUI {
 		private bool openOnStart;
 		private bool accentOnly;
 		private Vector3 colorAccent;
+		private string localInput = "";
 		private string repoInput = "";
 		public Vector3[] colorOptions;
 		
@@ -66,7 +67,13 @@ namespace MaterialUI {
 					
 					return;
 				}
+				
+				if(!main.updater.mods.ContainsKey("base")) {
+					ImGui.End();
 					
+					return;
+				}
+				
 				ImGui.BeginTabBar("MaterialUISettings");
 				
 				if(ImGui.BeginTabItem("Main")) {
@@ -135,6 +142,7 @@ namespace MaterialUI {
 						Dir dir = mod.Value.dir;
 						var preview = mod.Value.preview;
 						
+						ImGui.PushID("Mod" + id);
 						if(ImGui.Checkbox("", ref main.config.modOptions[id].enabled)) {
 							main.pluginInterface.SavePluginConfig(main.config);
 							main.updater.UpdateCache();
@@ -218,15 +226,17 @@ namespace MaterialUI {
 							}
 							
 							if(options.colorOptions.Length > 0)
-								if(ImGui.Button("Reset")) {
+								if(ImGui.Button("Reset"))
 									foreach(OptionColor option in options.colorOptions) {
 										main.config.modOptions[id].colors[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
 										main.pluginInterface.SavePluginConfig(main.config);
 									}
-								}
 							
 							ImGui.TreePop();
 						}
+						
+						ImGui.Separator();
+						ImGui.PopID();
 					}
 					
 					ImGui.EndChild();
@@ -236,36 +246,58 @@ namespace MaterialUI {
 				if(ImGui.BeginTabItem("Advanced")) {
 					ImGui.BeginChild("MaterialUIAdvanced");
 					
-					ImGui.Text("Mod Repositories (User/Repo)");
+					{ // Local Mods
+						ImGui.Text("Local Mods");
+						ImGui.TextWrapped("Path to mod directory, used for development");
+						
+						ImGui.PushID("localPathEnabled");
+						if(ImGui.Checkbox("", ref main.config.localEnabled))
+							main.pluginInterface.SavePluginConfig(main.config);
+						ImGui.PopID();
+						ImGui.PushID("localPathInput");
+						ImGui.SameLine();
+						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth());
+						if(ImGui.InputText("", ref main.config.localPath, 200))
+							main.pluginInterface.SavePluginConfig(main.config);
+						ImGui.PopID();
+					}
 					
 					ImGui.Separator();
 					
-					ImGui.Button("  ");
-					ImGui.SameLine();
-					ImGui.Text(Updater.repoAccent);
-					
-					foreach(string repo in main.config.thirdPartyModRepos) {
-						if(ImGui.Button("-")) {
-							main.config.thirdPartyModRepos.Remove(repo);
+					{ // Mod repos
+						ImGui.Text("Mod Repositories (User/Repo)");
+						
+						ImGui.Button("  ");
+						ImGui.SameLine();
+						ImGui.Text(Updater.repoAccent);
+						
+						foreach(string repo in main.config.thirdPartyModRepos) {
+							ImGui.PushID("modRepo" + repo);
+							if(ImGui.Button("-")) {
+								main.config.thirdPartyModRepos.Remove(repo);
+								main.pluginInterface.SavePluginConfig(main.config);
+								
+								break;
+							}
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.Text(repo);
+						}
+						
+						if(ImGui.Button("+")) {
+							main.config.thirdPartyModRepos.Add(repoInput);
+							repoInput = "";
 							main.pluginInterface.SavePluginConfig(main.config);
-							
-							break;
 						}
 						ImGui.SameLine();
-						ImGui.Text(repo);
+						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth());
+						ImGui.InputText("", ref repoInput, 200);
 					}
-					
-					if(ImGui.Button("+")) {
-						main.config.thirdPartyModRepos.Add(repoInput);
-						repoInput = "";
-						main.pluginInterface.SavePluginConfig(main.config);
-						main.updater.LoadMods();
-					}
-					ImGui.SameLine();
-					ImGui.InputText("", ref repoInput, 200);
 					
 					ImGui.Separator();
-					ImGui.TextWrapped("I know you can't remove any repo unless it's the first in the list, no clue why thats the case.\nTODO: fix that");
+					
+					if(ImGui.Button("Reload Mods"))
+						main.updater.LoadMods();
 					
 					ImGui.EndChild();
 					ImGui.EndTabItem();

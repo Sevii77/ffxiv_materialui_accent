@@ -22,6 +22,8 @@ namespace MaterialUI {
 		public Dictionary<string, Vector3> colorOptions {get; set;} = new Dictionary<string, Vector3>();
 		
 		// public List<string> enabledMods = new List<string>();
+		public bool localEnabled = false;
+		public string localPath = "";
 		public Dictionary<string, ModConfig> modOptions = new Dictionary<string, ModConfig>();
 		public List<string> thirdPartyModRepos = new List<string>();
 	}

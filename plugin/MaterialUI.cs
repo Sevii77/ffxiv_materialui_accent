@@ -20,7 +20,6 @@ namespace MaterialUI {
 			updater = new Updater(this);
 			ui = new UI(this);
 			
-			updater.LoadOptions();
 			updater.Update();
 			
 			commandManager.AddHandler(command, new CommandInfo(OnCommand) {

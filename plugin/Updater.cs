@@ -40,7 +40,6 @@ namespace MaterialUI {
 		}
 		
 		public Dir GetPathDir(string path) {
-			// dirAccent.dirs["elements_" + main.config.style].dirs["ui"].dirs["uld"]
 			Dir dir = this;
 			foreach(string subpath in path.Split("/")) {
 				if(!dir.dirs.ContainsKey(subpath))
@@ -133,12 +132,14 @@ namespace MaterialUI {
 	
 	public class Mod {
 		public string id;
+		public string repo;
 		public Options options;
 		public Dir dir;
 		public TextureWrap preview;
 		
-		public Mod(string id, Options options, Dir dir, TextureWrap preview) {
+		public Mod(string id, string repo, Options options, Dir dir, TextureWrap preview) {
 			this.id = id;
+			this.repo = repo;
 			this.options = options;
 			this.dir = dir;
 			this.preview = preview;
@@ -173,6 +174,20 @@ namespace MaterialUI {
 			
 			httpClient = new HttpClient(handler);
 			httpClient.DefaultRequestHeaders.Add("User-Agent", "FFXIV-MaterialUI-Accent");
+		}
+		
+		private async Task<string> GetStringAsync(string path) {
+			if(path.Substring(0, 4) == "http")
+				return await httpClient.GetStringAsync(path);
+			
+			return File.ReadAllText(path);
+		}
+		
+		private async Task<byte[]> GetBytesAsync(string path) {
+			if(path.Substring(0, 4) == "http")
+				return await httpClient.GetByteArrayAsync(path);
+			
+			return File.ReadAllBytes(path);
 		}
 		
 		private Dir PopulateDir(Repo repo, string repoName) {
@@ -293,20 +308,21 @@ namespace MaterialUI {
 			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/Icon/Icon", mainStyleName)));
 			
 			// Add paths from mods
-			foreach(KeyValuePair<string, Mod> mod in mods)
-				if(mod.Key != "base" && main.config.modOptions[mod.Key].enabled) {
-					toDownload.Add(mod.Value.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
-					toDownload.Add(mod.Value.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
+			foreach(Mod mod in mods.Values)
+				if(mod.id != "base" && mod.repo != "local" && main.config.modOptions[mod.id].enabled) {
+					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
+					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
 				}
 			
 			return await UpdateCache(toDownload);
 		}
 		
-		public void LoadOptions() {
-			Task.Run(async() => {
+		public async Task LoadOptions() {
+			// Task.Run(async() => {
 				string resp = Regex.Replace(await httpClient.GetStringAsync(String.Format("https://raw.githubusercontent.com/{0}/master/options.json", repoAccent)), "//[^\n]*", "");
 				Options options = JsonConvert.DeserializeObject<Options>(resp);
 				mods["base"] = new Mod(
+					"base",
 					"base",
 					options,
 					null,
@@ -329,13 +345,21 @@ namespace MaterialUI {
 					
 					main.ui.colorOptions[i] = main.config.colorOptions[option.id];
 				}
-			});
+			// });
 		}
 		
 		public async Task LoadMods() {
+			dirMods.Clear();
+			mods.Clear();
+			
+			await LoadOptions();
+			mods["base"].dir = dirAccent;
+			dirMods["Material UI"] = dirAccent.GetPathDir("mods");
+			
 			string resp;
 			Repo data;
 			
+			// 3rd party
 			foreach(string thirdparty in main.config.thirdPartyModRepos) {
 				try {
 					resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", thirdparty));
@@ -346,17 +370,42 @@ namespace MaterialUI {
 				}
 			}
 			
+			// Local
+			if(main.config.localEnabled) {
+				void walk(DirectoryInfo folder, Dir dir) {
+					foreach(var file in folder.GetFiles()) {
+						dir.files[file.Name] = file.FullName;
+						PluginLog.Log(file.FullName);
+					}
+					
+					foreach(var sub in folder.GetDirectories()) {
+						dir.dirs[sub.Name] = new Dir(sub.Name, "");
+						walk(sub, dir.dirs[sub.Name]);
+					}
+				}
+				
+				DirectoryInfo local = new DirectoryInfo(main.config.localPath);
+				if(local.Exists) {
+					Dir dir = new Dir("", "");
+					walk(local, dir);
+					dirMods["local"] = dir;
+				}
+			}
+			
+			// Create mod structure
 			foreach(KeyValuePair<string, Dir> modRepo in dirMods)
 				foreach(KeyValuePair<string, Dir> mod in modRepo.Value.dirs) {
+					PluginLog.Log(mod.Key);
 					try {
-						resp = Regex.Replace(await httpClient.GetStringAsync(mod.Value.files["options.json"]), "//[^\n]*", "");
+						resp = Regex.Replace(await GetStringAsync(mod.Value.files["options.json"]), "//[^\n]*", "");
 						Options options = JsonConvert.DeserializeObject<Options>(resp);
 						if(!mods.ContainsKey(mod.Key))
 							mods[mod.Key] = new Mod(
 								mod.Key,
+								modRepo.Key,
 								options,
 								mod.Value,
-								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await httpClient.GetByteArrayAsync(mod.Value.files["preview.png"])) : null
+								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await GetBytesAsync(mod.Value.files["preview.png"])) : null
 							);
 						
 						if(!main.config.modOptions.ContainsKey(mod.Key))
@@ -366,7 +415,7 @@ namespace MaterialUI {
 							if(!main.config.modOptions[mod.Key].colors.ContainsKey(option.id))
 								main.config.modOptions[mod.Key].colors[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
 					} catch(Exception e) {
-						PluginLog.LogError(e, "Failed prepairing third party mod repository " + mod.Key);
+						PluginLog.LogError(e, "Failed prepairing mod repository " + mod.Key);
 					}
 				}
 		}
@@ -376,10 +425,20 @@ namespace MaterialUI {
 				if(main.config.openOnStart)
 					main.ui.settingsVisible = true;
 				
-				try {
-					main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-				} catch(Exception e) {
-					return;
+				for(int i = 0; i < 5; i++) {
+					try {
+						main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
+						
+						break;
+					} catch(Exception e) {
+						if(i == 4) {
+							PluginLog.Log("Penumbra not found, exiting updater");
+							
+							return;
+						}
+					}
+					
+					await Task.Delay(1000);
 				}
 				
 				string resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
@@ -389,11 +448,8 @@ namespace MaterialUI {
 				resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
 				data = JsonConvert.DeserializeObject<Repo>(resp);
 				dirAccent = PopulateDir(data, repoAccent);
-				mods["base"].dir = dirAccent;
 				
-				dirMods["Material UI"] = dirAccent.GetPathDir("mods");
 				await LoadMods();
-				
 				List<string> changes = await UpdateCache();
 				
 				if(main.config.firstTime)
@@ -505,32 +561,46 @@ namespace MaterialUI {
 							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOptions.Key));
 					}
 			
-			void writeTex(Tex tex, string texturePath, string gamePath) {
-				if(optionPaths.Contains(texturePath)) {
-					foreach(Mod mod in mods.Values)
-						if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
-							foreach(OptionPenumbra option in mod.options.penumbraOptions)
-								foreach(KeyValuePair<string, string[]> subOptions in option.options)
-									foreach(string p in subOptions.Value)
-										if(p == texturePath) {
-											string optionName = option.name;
-											string subOptionName = subOptions.Key;
-											
-											int index = -1;
-											for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
-												if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
-													index = i;
-													break;
-												}
-											
-											string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
-											if(File.Exists(path))
-												return;
-											
-											meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
-											Directory.CreateDirectory(Path.GetDirectoryName(path));
-											tex.Save(path);
-										}
+			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
+				// Used to allow game style format for the options in main
+				string texturePath2 = texturePath.ToLower().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
+				
+				if(optionPaths.Contains(texturePath) || optionPaths.Contains(texturePath2)) {
+					List<Mod> priority = new List<Mod>();
+					if(modid == "base" || modid == "main") {
+						priority.Add(mods["base"]);
+						
+						foreach(Mod mod in mods.Values)
+							if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+								priority.Add(mod);
+					} else {
+						priority.Add(mods[modid]);
+					}
+					
+					foreach(Mod mod in priority)
+						foreach(OptionPenumbra option in mod.options.penumbraOptions)
+							foreach(KeyValuePair<string, string[]> subOptions in option.options)
+								foreach(string p in subOptions.Value)
+									if(p == texturePath || p == texturePath2) {
+										string optionName = option.name;
+										string subOptionName = subOptions.Key;
+										
+										int index = -1;
+										for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
+											if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
+												index = i;
+												break;
+											}
+										
+										string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
+										if(File.Exists(path))
+											return;
+										
+										meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
+										
+										Directory.CreateDirectory(Path.GetDirectoryName(path));
+										tex.Save(path);
+									}
 				} else {
 					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath + "_hr1.tex");
 					if(File.Exists(path))
@@ -546,34 +616,64 @@ namespace MaterialUI {
 				shas.Add(dir.Name);
 			
 			void walkDirAccent(Dir dir, string fullPath, string cachePath, Mod mod) {
-				PluginLog.Log(fullPath);
 				if(shas.Contains(dir.sha))
 					cachePath = "/" + dir.sha + "/";
 				else if(cachePath != null)
 					cachePath += dir.name + "/";
 				
-				if(dir.files.Count > 0 && cachePath != null) {
-					string path = main.pluginInterface.ConfigDirectory + cachePath;
+				if(dir.files.Count > 0) {
+					string path = null;
+					if(cachePath != null)
+						path = main.pluginInterface.ConfigDirectory + cachePath;
 					
-					Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "underlay.dds")));
-					Tex overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "overlay.dds")));
-					overlay.Paint(main.config.color);
-					tex.Overlay(overlay);
+					Tex tex = null;
+					if(dir.files.ContainsKey("underlay.dds"))
+						if(path != null)
+							tex = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "underlay.dds")));
+						else
+							tex = new Tex(File.ReadAllBytes(dir.files["underlay.dds"]));
+							
+					
+					if(dir.files.ContainsKey("overlay.dds")) {
+						Tex overlay;
+						if(path != null)
+							overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "overlay.dds")));
+						else
+							overlay = new Tex(File.ReadAllBytes(dir.files["overlay.dds"]));
+						
+						overlay.Paint(main.config.color);
+						
+						if(tex != null)
+							tex.Overlay(overlay);
+						else
+							tex = overlay;
+					}
 					
 					foreach(OptionColor optionColor in mod.options.colorOptions) {
 						string overlayColorName = string.Format("overlay_{0}.dds", optionColor.id);
 						if(dir.files.ContainsKey(overlayColorName)) {
-							Tex overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(path + overlayColorName)));
+							Tex overlayColor;
+							if(path != null)
+								overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(path + overlayColorName)));
+							else
+								overlayColor = new Tex(File.ReadAllBytes(dir.files[overlayColorName]));
+							
 							if(mod.id == "base")
 								overlayColor.Paint(main.config.colorOptions[optionColor.id]);
 							else
 								overlayColor.Paint(main.config.modOptions[mod.id].colors[optionColor.id]);
-							tex.Overlay(overlayColor);
+							
+							if(tex != null)
+								tex.Overlay(overlayColor);
+							else
+								tex = overlayColor;
 						}
 					}
 					
 					string gamePath = fullPath.Split("/option/")[0];
-					writeTex(tex, fullPath, gamePath);
+					if(gamePath.Contains("/icon/"))
+						gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+					writeTex(tex, fullPath, gamePath, mod.id);
 				}
 				
 				foreach(KeyValuePair<string, Dir> d in dir.dirs)
@@ -603,7 +703,7 @@ namespace MaterialUI {
 							string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
 							if(gamePath.Contains("/icon/icon/"))
 								gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
-							writeTex(tex, fullPath, gamePath);
+							writeTex(tex, fullPath, gamePath, "main");
 						}
 					}
 					
@@ -614,9 +714,9 @@ namespace MaterialUI {
 				walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null, null);
 			}
 			
-			GC.Collect();
-			
 			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
+			
+			GC.Collect();
 		}
 	}
 }
