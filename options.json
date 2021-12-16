@@ -65,15 +65,30 @@
 		{
 			"name": "Selected Window",
 			"options": {
-				"Default": [
+				"Bar": [
 					"ui/uld/windowa_bgselected_corner",
 					"ui/uld/windowa_bgselected_h",
+					"UI/HUD/WindowA_BgSelected_V",
+					"UI/HUD/WindowA_BgSelected_HV",
+					
 					"ui/uld/windowf_bgnormal_corner",
 					"ui/uld/windowf_bgnormal_h"
 				],
-				"No Accent Bar": [
+				"Border": [
+					"ui/uld/windowa_bgselected_corner/option/full_window_border",
+					"ui/uld/windowa_bgselected_h/option/full_window_border",
+					"ui/uld/windowa_bgselected_v/option/full_window_border",
+					"UI/HUD/WindowA_BgSelected_HV",
+					
+					"ui/uld/windowf_bgnormal_corner",
+					"ui/uld/windowf_bgnormal_h"
+				],
+				"Clean": [
 					"ui/uld/windowa_bgselected_corner/option/no_window_border",
 					"ui/uld/windowa_bgselected_h/option/no_window_border",
+					"UI/HUD/WindowA_BgSelected_V",
+					"UI/HUD/WindowA_BgSelected_HV",
+					
 					"ui/uld/windowf_bgnormal_corner/option/no_window_border",
 					"ui/uld/windowf_bgnormal_h/option/no_window_border"
 				],
@@ -83,13 +98,13 @@
 		{
 			"name": "Non-Selected Window",
 			"options": {
-				"Default": [
+				"Solid": [
 					"UI/HUD/WindowA_BgNormal_Corner",
 					"UI/HUD/WindowA_BgNormal_H",
 					"UI/HUD/WindowA_BgNormal_HV",
 					"UI/HUD/WindowA_BgNormal_V"
 				],
-				"Transparent Background": [
+				"Transparent": [
 					"UI/HUD/WindowA_BgNormal_Corner/OPTIONS/Non-Selected Window Transparency BLACK Style",
 					"UI/HUD/WindowA_BgNormal_H/OPTIONS/Non-Selected Window Transparency BLACK Style",
 					"UI/HUD/WindowA_BgNormal_HV/OPTIONS/Non-Selected Window Transparency BLACK Style",
