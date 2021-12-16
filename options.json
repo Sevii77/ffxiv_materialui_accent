@@ -68,29 +68,50 @@
 				"Bar": [
 					"ui/uld/windowa_bgselected_corner",
 					"ui/uld/windowa_bgselected_h",
-					"UI/HUD/WindowA_BgSelected_V",
 					"UI/HUD/WindowA_BgSelected_HV",
+					"UI/HUD/WindowA_BgSelected_V",
+					
+					"UI/HUD/WindowPVP_BgSelected_Corner",
+					"UI/HUD/WindowPVP_BgSelected_H",
+					"UI/HUD/WindowPVP_BgSelected_HV",
+					"UI/HUD/WindowPVP_BgSelected_V",
 					
 					"ui/uld/windowf_bgnormal_corner",
-					"ui/uld/windowf_bgnormal_h"
+					"ui/uld/windowf_bgnormal_h",
+					"UI/HUD/WindowF_BgNormal_HV",
+					"UI/HUD/WindowF_BgNormal_V"
 				],
 				"Border": [
 					"ui/uld/windowa_bgselected_corner/option/full_window_border",
 					"ui/uld/windowa_bgselected_h/option/full_window_border",
-					"ui/uld/windowa_bgselected_v/option/full_window_border",
 					"UI/HUD/WindowA_BgSelected_HV",
+					"ui/uld/windowa_bgselected_v/option/full_window_border",
+					
+					"ui/uld/windowpvp_bgselected_corner/option/full_window_border",
+					"ui/uld/windowpvp_bgselected_h/option/full_window_border",
+					"UI/HUD/WindowPVP_BgSelected_HV",
+					"ui/uld/windowpvp_bgselected_v/option/full_window_border",
 					
 					"ui/uld/windowf_bgnormal_corner",
-					"ui/uld/windowf_bgnormal_h"
+					"ui/uld/windowf_bgnormal_h",
+					"UI/HUD/WindowF_BgNormal_HV",
+					"UI/HUD/WindowF_BgNormal_V"
 				],
 				"Clean": [
 					"ui/uld/windowa_bgselected_corner/option/no_window_border",
 					"ui/uld/windowa_bgselected_h/option/no_window_border",
-					"UI/HUD/WindowA_BgSelected_V",
 					"UI/HUD/WindowA_BgSelected_HV",
+					"UI/HUD/WindowA_BgSelected_V",
+					
+					"ui/uld/windowpvp_bgselected_corner/option/no_window_border",
+					"ui/uld/windowpvp_bgselected_h/option/no_window_border",
+					"UI/HUD/WindowPVP_BgSelected_HV",
+					"UI/HUD/WindowPVP_BgSelected_V",
 					
 					"ui/uld/windowf_bgnormal_corner/option/no_window_border",
-					"ui/uld/windowf_bgnormal_h/option/no_window_border"
+					"ui/uld/windowf_bgnormal_h/option/no_window_border",
+					"UI/HUD/WindowF_BgNormal_HV",
+					"UI/HUD/WindowF_BgNormal_V"
 				],
 			}
 		},
