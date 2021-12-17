@@ -522,8 +522,10 @@ namespace MaterialUI {
 					foreach(OptionPenumbra option in mod.options.penumbraOptions)
 						foreach(KeyValuePair<string, string[]> subOptions in option.options)
 							foreach(string path in subOptions.Value) {
-								optionPaths.Add(path);
-								optionPaths.Add(path.Split("/option/")[0].Split("/OPTIONS/")[0]);
+								string gamePath = path.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
+								if(gamePath.Contains("/icon/icon/"))
+									gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+								optionPaths.Add(gamePath);
 							}
 			
 			Meta meta = new Meta();
@@ -558,7 +560,7 @@ namespace MaterialUI {
 				// Used to allow game style format for the options in main
 				string texturePath2 = texturePath.ToLower().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
 				
-				if(optionPaths.Contains(texturePath) || optionPaths.Contains(texturePath2)) {
+				if(optionPaths.Contains(gamePath)) {
 					List<Mod> priority = new List<Mod>();
 					if(modid == "base" || modid == "main") {
 						priority.Add(mods["base"]);
