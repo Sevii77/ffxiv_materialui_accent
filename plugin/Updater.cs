@@ -216,18 +216,11 @@ namespace MaterialUI {
 		
 		private async Task<List<string>> UpdateCache(List<Dir> dirs) {
 			// Get all latest shas
-			List<string> texturesLatest = new List<string>();
 			Dictionary<string, Dir> shaLatest = new Dictionary<string, Dir>();
 			foreach(Dir dir in dirs)
-				if(dir != null) {
-					foreach(KeyValuePair<string, Dir> d in dir.dirs) {
-						string name = d.Key.ToLower();
-						if(!texturesLatest.Contains(name) || dir.name == dir.name.ToLower()) {
-							texturesLatest.Add(name);
-							shaLatest[d.Value.sha] = d.Value;
-						}
-					}
-				}
+				if(dir != null)
+					foreach(KeyValuePair<string, Dir> d in dir.dirs)
+						shaLatest[d.Value.sha] = d.Value;
 			
 			// Get rid of caches textures that are outdated
 			List<string> shaCurrent = new List<string>();
