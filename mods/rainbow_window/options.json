@@ -14,6 +14,11 @@
 	"color_options": [
 		// Our custom colors, id is the part after overlay
 		// "overlay_second.dds" "overlay_third.dds"
+		// ids are unique to each mod, but the ids from the
+		//   base options.json file are forbidden, as they are
+		//   applied to mods aswell
+		//   (naming a file overlay_enemy.dds will cause it to
+		//    be colored by the base Enemy List Target color)
 		// Name is the name displayed, can be anything
 		// Default is the default color, 0-255
 		{
@@ -55,8 +60,18 @@
 					
 					// We have to add these since the default option has them aswell
 					// It will first try to fallback on the textures in this repo, then on the ones in main
+					"ui/uld/windowa_bgselected_hv",
+					"ui/uld/windowa_bgselected_v",
+					
+					"ui/uld/windowpvp_bgselected_corner",
+					"ui/uld/windowpvp_bgselected_h",
+					"ui/uld/windowpvp_bgselected_hv",
+					"ui/uld/windowpvp_bgselected_v",
+					
 					"ui/uld/windowf_bgnormal_corner",
-					"ui/uld/windowf_bgnormal_h"
+					"ui/uld/windowf_bgnormal_h",
+					"ui/uld/windowf_bgnormal_hv",
+					"ui/uld/windowf_bgnormal_v"
 				]
 			}
 		}

@@ -56,7 +56,7 @@ namespace MaterialUI {
 			ImGui.SetNextWindowSize(new Vector2(300, 450), ImGuiCond.FirstUseEver);
 			ImGui.Begin("Material UI Settings", ref settingsVisible);
 			
-			if(main.updater.downloading) {
+			if(main.updater.busy) {
 				ImGui.Text(main.updater.statusText);
 			} else {
 				try {
