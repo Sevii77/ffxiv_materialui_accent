@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<Authors>Sevii</Authors>
-		<Version>1.2.4</Version>
+		<Version>1.2.5</Version>
 	</PropertyGroup>
 	
 	<PropertyGroup>

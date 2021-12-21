@@ -30,13 +30,13 @@ namespace MaterialUI {
 	public class Dir {
 		public string name;
 		public string sha;
-		public Dictionary<string, string> files;
+		public Dictionary<string, (string, string)> files;
 		public Dictionary<string, Dir> dirs;
 		
 		public Dir(string name, string sha) {
 			this.name = name;
 			this.sha = sha;
-			files = new Dictionary<string, string>();
+			files = new Dictionary<string, (string, string)>();
 			dirs = new Dictionary<string, Dir>();
 		}
 		
@@ -208,7 +208,7 @@ namespace MaterialUI {
 					for(int i = 0; i < path.Length - 1; i++)
 						curdir = curdir.dirs[path[i]];
 					
-					curdir.files[path[path.Length - 1]] = String.Format("https://raw.githubusercontent.com/{0}/master/{1}", repoName, file.path);
+					curdir.files[path[path.Length - 1]] = (file.sha, String.Format("https://raw.githubusercontent.com/{0}/master/{1}", repoName, file.path));
 				}
 			}
 			
@@ -217,70 +217,74 @@ namespace MaterialUI {
 		
 		private async Task<List<string>> UpdateCache(List<Dir> dirs) {
 			// Get all latest shas
-			Dictionary<string, Dir> shaLatest = new Dictionary<string, Dir>();
+			Dictionary<string, (string, string)> shaLatest = new Dictionary<string, (string, string)>();
+			void walkDir(Dir dir, string path) {
+				foreach(KeyValuePair<string, (string, string)> file in dir.files)
+					if(file.Key.Contains(".dds"))
+						shaLatest[file.Value.Item1] = (file.Value.Item2, path + "/" + file.Key);
+				
+				foreach(Dir subdir in dir.dirs.Values)
+					walkDir(subdir, path + "/" + subdir.name);
+			}
+			
 			foreach(Dir dir in dirs)
 				if(dir != null)
-					foreach(KeyValuePair<string, Dir> d in dir.dirs)
-						shaLatest[d.Value.sha] = d.Value;
+					walkDir(dir, "");
+			
+			// Get rid old cache system files
+			foreach(var dir in main.pluginInterface.ConfigDirectory.GetDirectories()) {
+				Directory.Delete(dir.FullName, true);
+			}
 			
 			// Get rid of caches textures that are outdated
 			List<string> shaCurrent = new List<string>();
-			foreach(var dir in main.pluginInterface.ConfigDirectory.GetDirectories()) {
-				string sha = dir.Name;
+			foreach(var file in main.pluginInterface.ConfigDirectory.GetFiles()) {
+				string sha = file.Name;
 				if(shaLatest.ContainsKey(sha))
 					shaCurrent.Add(sha);
 				else
-					Directory.Delete(Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha), true);
+					file.Delete();
 			}
-			
+			//
 			// Download and cache new shas
-			List<(Dir, string)> queue = new List<(Dir, string)>();
-			void addToQueue(Dir dir, string path) {
-				if(dir.files.Count > 0)
-					queue.Add((dir, path));
-				
-				foreach(KeyValuePair<string, Dir> dir2 in dir.dirs)
-					addToQueue(dir2.Value, path + dir2.Key + "/");
-			}
-			
 			List<string> changes = new List<string>();
-			foreach(KeyValuePair<string, Dir> sha in shaLatest)
+			List<(string, string, string)> queue = new List<(string, string, string)>();
+			foreach(KeyValuePair<string, (string, string)> sha in shaLatest)
 				if(!shaCurrent.Contains(sha.Key)) {
-					changes.Add(sha.Value.name);
-					addToQueue(sha.Value, main.pluginInterface.ConfigDirectory + "/" + sha.Key + "/");
+					queue.Add((sha.Value.Item1, sha.Value.Item2, sha.Key));
+					changes.Add(sha.Value.Item2);
 				}
 			int total = queue.Count;
 			
-			async void download(Dir dir, string path) {
-				// statusText = "Downloading\n" + dir.name;
-				statusText = string.Format("Downloading ({0}/{1})\n{2}", total - queue.Count, total, dir.name);
-				Directory.CreateDirectory(Path.GetDirectoryName(path));
+			int busycount = 0;
+			async Task download(string url, string name, string sha) {
+				statusText = string.Format("Downloading ({0}/{1})\n{2}", total - queue.Count, total, name);
+				busycount++;
 				
-				foreach(KeyValuePair<string, string> file in dir.files)
-					if(file.Key.Contains(".dds"))
-						// File.WriteAllBytes(Path.GetFullPath(path + file.Key), await httpClient.GetByteArrayAsync(file.Value));
-						try {
-							using(Stream download = await (await httpClient.GetAsync(file.Value, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
-								using(Stream write = File.Open(Path.GetFullPath(path + file.Key), FileMode.Create))
-									await download.CopyToAsync(write);
-						} catch(Exception e) {
-							// It failed, just add it back to the queue
-							queue.Add((dir, path));
-						}
+				try {
+					using(Stream download = await (await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
+						using(Stream write = File.Open(Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha), FileMode.Create))
+							await download.CopyToAsync(write);
+				} catch(Exception e) {
+					// It failed, just add it back to the queue
+					// queue.Add((dir, path));
+				}
+				
+				busycount--;
 			}
 			
 			async Task downloader() {
 				busy = true;
-				
 				while(queue.Count > 0) {
 					for(int i = 0; i < Math.Min(queue.Count, 50); i++) {
-						download(queue[0].Item1, queue[0].Item2);
+						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
-					await Task.Delay(1000);
+					while(busycount > 0) {
+						await Task.Delay(1000);
+					}
 				}
-				
 				busy = false;
 			}
 			
@@ -293,19 +297,22 @@ namespace MaterialUI {
 			List<Dir> toDownload = new List<Dir>();
 			
 			// Add paths from accent
-			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
-			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
+			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}", main.config.style)));
+			// toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
+			// toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
 			
 			// Add paths from main
 			string mainStyleName = char.ToUpper(main.config.style[0]) + main.config.style.Substring(1);
-			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/HUD", mainStyleName)));
-			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/Icon/Icon", mainStyleName)));
+			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved", mainStyleName)));
+			// toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/HUD", mainStyleName)));
+			// toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/Icon/Icon", mainStyleName)));
 			
 			// Add paths from mods
 			foreach(Mod mod in mods.Values)
 				if(mod.id != "base" && mod.repo != "local" && main.config.modOptions[mod.id].enabled) {
-					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
-					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
+					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}", main.config.style)));
+					// toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
+					// toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
 				}
 			
 			return await UpdateCache(toDownload);
@@ -368,7 +375,7 @@ namespace MaterialUI {
 			if(main.config.localEnabled) {
 				void walk(DirectoryInfo folder, Dir dir) {
 					foreach(var file in folder.GetFiles())
-						dir.files[file.Name] = file.FullName;
+						dir.files[file.Name] = (null, file.FullName);
 					
 					foreach(var sub in folder.GetDirectories()) {
 						dir.dirs[sub.Name] = new Dir(sub.Name, "");
@@ -389,7 +396,7 @@ namespace MaterialUI {
 				foreach(KeyValuePair<string, Dir> mod in modRepo.Value.dirs) {
 					PluginLog.Log(mod.Key);
 					try {
-						resp = Regex.Replace(await GetStringAsync(mod.Value.files["options.json"]), "//[^\n]*", "");
+						resp = Regex.Replace(await GetStringAsync(mod.Value.files["options.json"].Item2), "//[^\n]*", "");
 						Options options = JsonConvert.DeserializeObject<Options>(resp);
 						if(!mods.ContainsKey(mod.Key))
 							mods[mod.Key] = new Mod(
@@ -397,7 +404,7 @@ namespace MaterialUI {
 								modRepo.Key,
 								options,
 								mod.Value,
-								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await GetBytesAsync(mod.Value.files["preview.png"])) : null
+								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await GetBytesAsync(mod.Value.files["preview.png"].Item2)) : null
 							);
 						
 						if(!main.config.modOptions.ContainsKey(mod.Key))
@@ -626,35 +633,42 @@ namespace MaterialUI {
 					}
 				}
 				
+				byte[] readFile(string path) {
+					try {
+						return File.ReadAllBytes(path);
+					} catch(Exception e) {
+						statusText = "Failed reading file\n\n" + e;
+					}
+					
+					return null;
+				}
+				
 				List<string> shas = new List<string>();
 				foreach(var dir in main.pluginInterface.ConfigDirectory.GetDirectories())
 					shas.Add(dir.Name);
 				
-				void walkDirAccent(Dir dir, string fullPath, string cachePath, string modid) {
-					if(shas.Contains(dir.sha))
-						cachePath = "/" + dir.sha + "/";
-					else if(cachePath != null)
-						cachePath += dir.name + "/";
-					
+				string cachepath = main.pluginInterface.ConfigDirectory + "/";
+				void walkDirAccent(Dir dir, string fullPath, string modid) {
 					if(dir.files.Count > 0) {
-						string path = null;
-						if(cachePath != null)
-							path = main.pluginInterface.ConfigDirectory + cachePath;
-						
 						Tex tex = null;
-						if(dir.files.ContainsKey("underlay.dds"))
-							if(path != null)
-								tex = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "underlay.dds")));
+						if(dir.files.ContainsKey("underlay.dds")) {
+							var file = dir.files["underlay.dds"];
+							
+							if(file.Item2 != null)
+								tex = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
 							else
-								tex = new Tex(File.ReadAllBytes(dir.files["underlay.dds"]));
+								tex = new Tex(readFile(file.Item2));
+						}
 								
 						
 						if(dir.files.ContainsKey("overlay.dds")) {
+							(string, string) file = dir.files["overlay.dds"];
+							
 							Tex overlay;
-							if(path != null)
-								overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(path + "overlay.dds")));
+							if(file.Item2 != null)
+								overlay = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
 							else
-								overlay = new Tex(File.ReadAllBytes(dir.files["overlay.dds"]));
+								overlay = new Tex(readFile(file.Item2));
 							
 							overlay.Paint(main.config.color);
 							
@@ -669,11 +683,13 @@ namespace MaterialUI {
 								foreach(OptionColor optionColor in mod.options.colorOptions) {
 									string overlayColorName = string.Format("overlay_{0}.dds", optionColor.id);
 									if(dir.files.ContainsKey(overlayColorName)) {
+										(string, string) file = dir.files[overlayColorName];
+										
 										Tex overlayColor;
-										if(path != null)
-											overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(path + overlayColorName)));
+										if(file.Item2 != null)
+											overlayColor = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
 										else
-											overlayColor = new Tex(File.ReadAllBytes(dir.files[overlayColorName]));
+											overlayColor = new Tex(readFile(file.Item2));
 										
 										if(mod.id == "base")
 											overlayColor.Paint(main.config.colorOptions[optionColor.id]);
@@ -694,28 +710,22 @@ namespace MaterialUI {
 					}
 					
 					foreach(KeyValuePair<string, Dir> d in dir.dirs)
-						walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), cachePath, modid);
+						walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), modid);
 				}
 				
 				foreach(Mod mod in mods.Values)
 					if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-						walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, null, mod.id);
-				walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, null, "base");
+						walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, mod.id);
+				walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, "base");
 				
 				if(!main.config.accentOnly) {
-					void walkDirMain(Dir dir, string fullPath, string cachePath) {
-						if(shas.Contains(dir.sha))
-							cachePath = "/" + dir.sha + "/";
-						else if(cachePath != null)
-							cachePath += dir.name + "/";
-						
-						if(dir.files.Count > 0 && cachePath != null) {
-							foreach(string filename in dir.files.Keys) {
-								if(!filename.Contains(".dds"))
+					void walkDirMain(Dir dir, string fullPath) {
+						if(dir.files.Count > 0) {
+							foreach(KeyValuePair<string, (string, string)> file in dir.files) {
+								if(!file.Key.Contains(".dds"))
 									continue;
 								
-								string path = main.pluginInterface.ConfigDirectory + cachePath;
-								Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(path + filename)));
+								Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
 								
 								string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
 								if(gamePath.Contains("/icon/icon/"))
@@ -725,10 +735,10 @@ namespace MaterialUI {
 						}
 						
 						foreach(KeyValuePair<string, Dir> d in dir.dirs)
-							walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), cachePath);
+							walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key));
 					}
 					
-					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null, null);
+					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 				}
 				
 				File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
