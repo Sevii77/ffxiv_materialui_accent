@@ -4,20 +4,20 @@ using ImGuiNET;
 using System;
 using System.Numerics;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MaterialUI {
 	public class UI : IDisposable {
 		public bool settingsVisible = false;
-		public bool noticeVisible = false;
 		
-		private string noticeText = "";
+		private bool noticeVisible = false;
+		private List<string> noticeText;
 		
 		private MaterialUI main;
 		
 		private bool openOnStart;
 		private bool accentOnly;
 		private Vector3 colorAccent;
-		private string localInput = "";
 		private string repoInput = "";
 		public Vector3[] colorOptions;
 		
@@ -26,6 +26,8 @@ namespace MaterialUI {
 			
 			// settingsVisible = true;
 			// noticeVisible = true;
+			
+			noticeText = new List<string>();
 			
 			openOnStart = main.config.openOnStart;
 			accentOnly = main.config.accentOnly;
@@ -40,24 +42,42 @@ namespace MaterialUI {
 		}
 		
 		public void ShowNotice(string text) {
-			noticeText = text;
 			noticeVisible = true;
+			noticeText.Clear();
+			noticeText.Add(text);
+		}
+		
+		public void ShowNotice(List<string> text) {
+			noticeVisible = true;
+			noticeText = text;
+		}
+		
+		public void CloseNotice() {
+			noticeVisible = false;
 		}
 		
 		private void Draw() {
 			if(settingsVisible)
 				DrawSettings();
 			
-			if(noticeVisible)
-				DrawNotice();
+			// if(noticeVisible)
+			// 	DrawNotice();
 		}
 		
 		private void DrawSettings() {
 			ImGui.SetNextWindowSize(new Vector2(300, 450), ImGuiCond.FirstUseEver);
 			ImGui.Begin("Material UI Settings", ref settingsVisible);
 			
-			if(main.updater.busy) {
-				ImGui.Text(main.updater.statusText);
+			// if(main.updater.busy) {
+			// 	ImGui.Text(main.updater.statusText);
+			if(noticeVisible) {
+				ImGui.BeginChild("MaterialUINotice", new Vector2(ImGui.GetWindowContentRegionWidth(), ImGui.GetWindowHeight() - 60));
+				foreach(string text in noticeText)
+					ImGui.Text(text);
+				ImGui.EndChild();
+				
+				if(ImGui.Button("Close"))
+					CloseNotice();
 			} else {
 				try {
 					main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
@@ -108,7 +128,7 @@ namespace MaterialUI {
 					}
 					
 					ImGui.SameLine();
-					if(ImGui.Button("Reset")) {
+					if(ImGui.Button("Reset Colors")) {
 						colorAccent = new Vector3(99 / 255f, 60 / 255f, 181 / 255f);
 						main.config.color = colorAccent;
 						
@@ -132,6 +152,8 @@ namespace MaterialUI {
 				
 				if(ImGui.BeginTabItem("Mod Browser")) {
 					ImGui.BeginChild("MaterialUIModBrowser");
+					ImGui.TextWrapped("You'll need to Apply in the main tab after selecting and configuring the desired mods");
+					ImGui.Separator();
 					
 					foreach(KeyValuePair<string, Mod> mod in main.updater.mods) {
 						string id = mod.Key;
@@ -226,7 +248,7 @@ namespace MaterialUI {
 							}
 							
 							if(options.colorOptions.Length > 0)
-								if(ImGui.Button("Reset"))
+								if(ImGui.Button("Reset Colors"))
 									foreach(OptionColor option in options.colorOptions) {
 										main.config.modOptions[id].colors[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
 										main.pluginInterface.SavePluginConfig(main.config);
@@ -248,7 +270,7 @@ namespace MaterialUI {
 					
 					{ // Local Mods
 						ImGui.Text("Local Mods");
-						ImGui.TextWrapped("Path to mod directory, used for development");
+						ImGui.Text("Path to mod directory, used for development");
 						
 						ImGui.PushID("localPathEnabled");
 						if(ImGui.Checkbox("", ref main.config.localEnabled))
@@ -295,9 +317,12 @@ namespace MaterialUI {
 					}
 					
 					ImGui.Separator();
-					
 					if(ImGui.Button("Reload Mods"))
 						main.updater.LoadMods();
+					
+					ImGui.Separator();
+					if(ImGui.Button("Check Integrity"))
+						main.updater.Repair();
 					
 					ImGui.EndChild();
 					ImGui.EndTabItem();
@@ -309,10 +334,10 @@ namespace MaterialUI {
 			ImGui.End();
 		}
 		
-		private void DrawNotice() {
-			ImGui.Begin("Material UI Notice", ref noticeVisible);
-			ImGui.Text(noticeText);
-			ImGui.End();
-		}
+		// private void DrawNotice() {
+		// 	ImGui.Begin("Material UI Notice", ref noticeVisible);
+		// 	ImGui.Text(noticeText);
+		// 	ImGui.End();
+		// }
 	}
 }

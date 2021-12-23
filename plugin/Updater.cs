@@ -1,5 +1,4 @@
 // TODO: Make it less of a mess
-// TODO: Generate Default suboption if the option is from a mod
 
 using Dalamud.Logging;
 using Newtonsoft.Json;
@@ -160,9 +159,6 @@ namespace MaterialUI {
 		public Dictionary<string, Dir> dirMods {get; private set;}
 		public Dictionary<string, Mod> mods {get; private set;}
 		
-		public bool busy {get; private set;} = false;
-		public string statusText {get; private set;} = "";
-		
 		public Updater(MaterialUI main) {
 			this.main = main;
 			
@@ -245,7 +241,7 @@ namespace MaterialUI {
 				else
 					file.Delete();
 			}
-			//
+			
 			// Download and cache new shas
 			List<string> changes = new List<string>();
 			List<(string, string, string)> queue = new List<(string, string, string)>();
@@ -254,41 +250,52 @@ namespace MaterialUI {
 					queue.Add((sha.Value.Item1, sha.Value.Item2, sha.Key));
 					changes.Add(sha.Value.Item2);
 				}
+			
 			int total = queue.Count;
+			int done = 0;
+			int failcount = 0;
 			
 			int busycount = 0;
 			async Task download(string url, string name, string sha) {
-				statusText = string.Format("Downloading ({0}/{1})\n{2}", total - queue.Count, total, name);
 				busycount++;
 				
 				try {
 					using(Stream download = await (await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
 						using(Stream write = File.Open(Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha), FileMode.Create))
 							await download.CopyToAsync(write);
+					
+					main.ui.ShowNotice(string.Format("Downloading ({0}/{1})\n{2}", done, total, name));
 				} catch(Exception e) {
 					// It failed, just add it back to the queue
-					// queue.Add((dir, path));
+					queue.Add((url, name, sha));
+					failcount++;
 				}
 				
 				busycount--;
+				done++;
 			}
 			
 			async Task downloader() {
-				busy = true;
 				while(queue.Count > 0) {
 					for(int i = 0; i < Math.Min(queue.Count, 50); i++) {
 						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
+					if(failcount >= 20) {
+						main.ui.ShowNotice("Too many downloads failed, download has been stopped");
+						
+						return;
+					}
+					
 					while(busycount > 0) {
 						await Task.Delay(1000);
 					}
 				}
-				busy = false;
 			}
 			
 			await downloader();
+			main.ui.CloseNotice();
 			
 			return changes;
 		}
@@ -298,22 +305,15 @@ namespace MaterialUI {
 			
 			// Add paths from accent
 			toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}", main.config.style)));
-			// toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
-			// toDownload.Add(dirAccent.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
 			
 			// Add paths from main
 			string mainStyleName = char.ToUpper(main.config.style[0]) + main.config.style.Substring(1);
 			toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved", mainStyleName)));
-			// toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/HUD", mainStyleName)));
-			// toDownload.Add(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved/UI/Icon/Icon", mainStyleName)));
 			
 			// Add paths from mods
 			foreach(Mod mod in mods.Values)
-				if(mod.id != "base" && mod.repo != "local" && main.config.modOptions[mod.id].enabled) {
+				if(mod.id != "base" && mod.repo != "local" && main.config.modOptions[mod.id].enabled)
 					toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}", main.config.style)));
-					// toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style)));
-					// toDownload.Add(mod.dir.GetPathDir(string.Format("elements_{0}/ui/icon", main.config.style)));
-				}
 			
 			return await UpdateCache(toDownload);
 		}
@@ -430,7 +430,7 @@ namespace MaterialUI {
 						
 						break;
 					} catch(Exception e) {
-						if(i == 4) {
+						if(i == 10) {
 							PluginLog.Log("Penumbra not found, exiting updater");
 							
 							return;
@@ -440,16 +440,23 @@ namespace MaterialUI {
 					await Task.Delay(1000);
 				}
 				
+				main.ui.ShowNotice("Loading " + repoMaster);
 				string resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
 				Repo data = JsonConvert.DeserializeObject<Repo>(resp);
 				dirMaster = PopulateDir(data, repoMaster);
 				
+				main.ui.ShowNotice("Loading " + repoAccent);
 				resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
 				data = JsonConvert.DeserializeObject<Repo>(resp);
 				dirAccent = PopulateDir(data, repoAccent);
+				main.ui.CloseNotice();
 				
 				await LoadMods();
 				List<string> changes = await UpdateCache();
+				
+				List<string> integrity = CheckIntegrity();
+				if(integrity.Count > 0)
+					main.ui.ShowNotice(integrity);
 				
 				if(main.config.firstTime)
 					return;
@@ -490,8 +497,56 @@ namespace MaterialUI {
 				else
 					main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
 				
-				Apply();
+				// Apply();
 			});
+		}
+		
+		public void Repair() {
+			Task.Run(async() => {
+				List<string> errors = CheckIntegrity();
+				int foundErrorCount = errors.Count;
+				
+				if(foundErrorCount > 0) {
+					foreach(string sha in errors) {
+						string path = main.pluginInterface.ConfigDirectory + "/" + sha;
+						if(File.Exists(path))
+							File.Delete(path);
+					}
+					
+					await main.updater.UpdateCache();
+					main.ui.ShowNotice("Attempted to fix " + foundErrorCount + " issues");
+				} else
+					main.ui.ShowNotice("No issues found");
+			});
+		}
+		
+		public List<string> CheckIntegrity() {
+			List<string> errors = new List<string>();
+			
+			void walkDir(Dir dir) {
+				foreach(KeyValuePair<string, (string, string)> file in dir.files)
+					if(file.Key.Contains(".dds")) {
+						string sha = file.Value.Item1;
+						string cachepath = Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha);
+						
+						if(File.Exists(cachepath)) {
+							if(!(new Tex(File.ReadAllBytes(cachepath))).CheckIntegrity())
+								errors.Add(sha);
+						} else
+							errors.Add(sha);
+					}
+				
+				foreach(Dir subdir in dir.dirs.Values)
+					walkDir(subdir);
+			}
+			
+			walkDir(dirAccent.GetPathDir(string.Format("elements_{0}", main.config.style)));
+			walkDir(dirMaster.GetPathDir(string.Format("4K resolution/{0}/Saved", char.ToUpper(main.config.style[0]) + main.config.style.Substring(1))));
+			foreach(Mod mod in mods.Values)
+				if(mod.id != "base" && mod.repo != "local" && main.config.modOptions[mod.id].enabled)
+					walkDir(mod.dir.GetPathDir(string.Format("elements_{0}", main.config.style)));
+			
+			return errors;
 		}
 		
 		// TODO: use penumbra api once its ready
@@ -518,8 +573,6 @@ namespace MaterialUI {
 			}
 			
 			Task.Run(async() => {
-				busy = true;
-				
 				try {
 					Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);
 				} catch(Exception e) {}
@@ -582,7 +635,7 @@ namespace MaterialUI {
 						createOptions(mod);
 				
 				void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
-					statusText = string.Format("Applying\n{0}/{1}", modid, gamePath);
+					main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
 					
 					// Used to allow game style format for the options in main
 					string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
@@ -633,20 +686,6 @@ namespace MaterialUI {
 					}
 				}
 				
-				byte[] readFile(string path) {
-					try {
-						return File.ReadAllBytes(path);
-					} catch(Exception e) {
-						statusText = "Failed reading file\n\n" + e;
-					}
-					
-					return null;
-				}
-				
-				List<string> shas = new List<string>();
-				foreach(var dir in main.pluginInterface.ConfigDirectory.GetDirectories())
-					shas.Add(dir.Name);
-				
 				string cachepath = main.pluginInterface.ConfigDirectory + "/";
 				void walkDirAccent(Dir dir, string fullPath, string modid) {
 					if(dir.files.Count > 0) {
@@ -655,9 +694,9 @@ namespace MaterialUI {
 							var file = dir.files["underlay.dds"];
 							
 							if(file.Item2 != null)
-								tex = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
+								tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 							else
-								tex = new Tex(readFile(file.Item2));
+								tex = new Tex(File.ReadAllBytes(file.Item2));
 						}
 								
 						
@@ -666,9 +705,9 @@ namespace MaterialUI {
 							
 							Tex overlay;
 							if(file.Item2 != null)
-								overlay = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
+								overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 							else
-								overlay = new Tex(readFile(file.Item2));
+								overlay = new Tex(File.ReadAllBytes(file.Item2));
 							
 							overlay.Paint(main.config.color);
 							
@@ -687,9 +726,9 @@ namespace MaterialUI {
 										
 										Tex overlayColor;
 										if(file.Item2 != null)
-											overlayColor = new Tex(readFile(Path.GetFullPath(cachepath + file.Item1)));
+											overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 										else
-											overlayColor = new Tex(readFile(file.Item2));
+											overlayColor = new Tex(File.ReadAllBytes(file.Item2));
 										
 										if(mod.id == "base")
 											overlayColor.Paint(main.config.colorOptions[optionColor.id]);
@@ -713,39 +752,43 @@ namespace MaterialUI {
 						walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), modid);
 				}
 				
-				foreach(Mod mod in mods.Values)
-					if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-						walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, mod.id);
-				walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, "base");
-				
-				if(!main.config.accentOnly) {
-					void walkDirMain(Dir dir, string fullPath) {
-						if(dir.files.Count > 0) {
-							foreach(KeyValuePair<string, (string, string)> file in dir.files) {
-								if(!file.Key.Contains(".dds"))
-									continue;
-								
-								Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
-								
-								string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
-								if(gamePath.Contains("/icon/icon/"))
-									gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
-								writeTex(tex, fullPath, gamePath, "main");
-							}
+				void walkDirMain(Dir dir, string fullPath) {
+					if(dir.files.Count > 0) {
+						foreach(KeyValuePair<string, (string, string)> file in dir.files) {
+							if(!file.Key.Contains(".dds"))
+								continue;
+							
+							Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
+							
+							string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
+							if(gamePath.Contains("/icon/icon/"))
+								gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+							writeTex(tex, fullPath, gamePath, "main");
 						}
-						
-						foreach(KeyValuePair<string, Dir> d in dir.dirs)
-							walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key));
 					}
 					
-					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
+					foreach(KeyValuePair<string, Dir> d in dir.dirs)
+						walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key));
+				}
+				
+				try {
+					foreach(Mod mod in mods.Values)
+						if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+							walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, mod.id);
+					walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, "base");
+					
+					if(!main.config.accentOnly)
+						walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
+				} catch(Exception e) {
+					main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
+					
+					return;
 				}
 				
 				File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
+				main.ui.CloseNotice();
 				
 				GC.Collect();
-				
-				busy = false;
 			});
 		}
 	}

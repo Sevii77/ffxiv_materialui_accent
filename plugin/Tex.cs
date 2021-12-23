@@ -1,14 +1,17 @@
 // TODO: Maby allow non A8R8G8B8 to be colored by decompressing them (https://www.khronos.org/opengl/wiki/S3_Texture_Compression)
-// TODO: Make alpha blending not garbage
 
 using System;
 using System.IO;
 using System.Numerics;
+using Dalamud.Logging;
 
 namespace MaterialUI {
 	public class Tex {
 		public byte[] header {get; private set;}
 		public byte[] body {get; private set;}
+		public short format {get; private set;}
+		public short width {get; private set;}
+		public short height {get; private set;}
 		
 		public Tex(Tex tex) {
 			header = (byte[])tex.header.Clone();
@@ -19,9 +22,15 @@ namespace MaterialUI {
 			BinaryReader reader = new BinaryReader(new MemoryStream(dds));
 			
 			reader.BaseStream.Seek(12, SeekOrigin.Begin);
-			byte[] h = BitConverter.GetBytes((short)reader.ReadInt32());
-			byte[] w = BitConverter.GetBytes((short)reader.ReadInt32());
-			byte[] f = BitConverter.GetBytes(GetFormat(reader));
+			
+			height = (short)reader.ReadInt32();
+			byte[] h = BitConverter.GetBytes(height);
+			
+			width = (short)reader.ReadInt32();
+			byte[] w = BitConverter.GetBytes(width);
+			
+			format = GetFormat(reader);
+			byte[] f = BitConverter.GetBytes(format);
 			
 			// https://docs.google.com/document/d/1-874zlRLfxGyVei3XR0UHTpxdLnmqJwKms2kGFSBAQo
 			header = new byte[80] {
@@ -32,10 +41,11 @@ namespace MaterialUI {
 				0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
 			};
 			
-			
-			body = new byte[dds.Length - 128];
-			for(int i = 128; i < dds.Length; i++)
-				body[i - 128] = dds[i];
+			// Trim size to what is expected, some files are bigger than what they should be and idk why
+			int size = Math.Min(dds.Length - 128, ExpectedSize());
+			body = new byte[size];
+			for(int i = 0; i < size; i++)
+				body[i] = dds[i + 128];
 		}
 		
 		private short GetFormat(BinaryReader dds) {
@@ -79,6 +89,33 @@ namespace MaterialUI {
 			}
 		}
 		
+		public bool CheckIntegrity() {
+			return ExpectedSize() == body.Length;
+		}
+		
+		public int ExpectedSize() {
+			switch(format) {
+				case 13344:
+					return width * height / 2;
+				case 13360:
+					return width * height;
+				case 13361:
+					return width * height;
+				case 9312:
+					return width * height * 8;
+				case 4401:
+					return width * height;
+				case 5200:
+					return width * height * 4;
+				case 5185:
+					return width * height * 2;
+				case 5184:
+					return width * height * 2;
+				default:
+					return 0;
+			}
+		}
+		
 		// This assumes the format is A8R8G8B8
 		public void Paint(Vector3 clr) {
 			float r = clr.X;
@@ -99,9 +136,9 @@ namespace MaterialUI {
 				float ab = body[i + 3] / 255f;
 				float ao = over[i + 3] / 255f;
 				
-				body[i + 3] += (byte)(over[i + 3] * (1f - ab));
+				body[i + 3] = (byte)(over[i + 3] + body[i + 3] * (1f - ao));
 				for(int j = i; j < i + 3; j++) {
-					body[j] = (byte)((body[j] * ab + over[j] * ao) / (ab + ao));
+					body[j] = (byte)((over[j] * ao + body[j] * ab * (1f - ao)) / (body[i + 3] / 255f));
 				}
 			}
 		}
