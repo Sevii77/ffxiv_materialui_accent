@@ -1,0 +1,62 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Bar Enmity",
+	
+	"description": "Meconate's Bar Enmity Icons, now fully color customisable. Including all 3 variants; solid colored, multicolored and filled.",
+	
+	"color_options": [
+		{
+			"id": "enmity1",
+			"name": "Enmity Level 1",
+			"default": {
+				"r": 63,
+				"g": 175,
+				"b": 121
+			}
+		},
+		
+		{
+			"id": "enmity2",
+			"name": "Enmity Level 2",
+			"default": {
+				"r": 255,
+				"g": 196,
+				"b": 52
+			}
+		},
+		
+		{
+			"id": "enmity3",
+			"name": "Enmity Level 3",
+			"default": {
+				"r": 230,
+				"g": 151,
+				"b": 74
+			}
+		},
+		
+		{
+			"id": "enmity4",
+			"name": "Enmity Level 4",
+			"default": {
+				"r": 208,
+				"g": 84,
+				"b": 82
+			}
+		}
+	],
+	
+	"penumbra": [
+		{
+			"name": "Enmity Symbol",
+			"options": {
+				"Bar Fill": ["ui/uld/enemylist/option/fill"],
+				"Bar Solid": ["ui/uld/enemylist/option/solid"],
+				"Bar Multi": ["ui/uld/enemylist/option/multi"]
+			}
+		}
+	]
+}
