@@ -693,7 +693,7 @@ namespace MaterialUI {
 						if(dir.files.ContainsKey("underlay.dds")) {
 							var file = dir.files["underlay.dds"];
 							
-							if(file.Item2 != null)
+							if(file.Item1 != null)
 								tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 							else
 								tex = new Tex(File.ReadAllBytes(file.Item2));
@@ -704,7 +704,7 @@ namespace MaterialUI {
 							(string, string) file = dir.files["overlay.dds"];
 							
 							Tex overlay;
-							if(file.Item2 != null)
+							if(file.Item1 != null)
 								overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 							else
 								overlay = new Tex(File.ReadAllBytes(file.Item2));
@@ -725,7 +725,7 @@ namespace MaterialUI {
 										(string, string) file = dir.files[overlayColorName];
 										
 										Tex overlayColor;
-										if(file.Item2 != null)
+										if(file.Item1 != null)
 											overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
 										else
 											overlayColor = new Tex(File.ReadAllBytes(file.Item2));
@@ -780,6 +780,7 @@ namespace MaterialUI {
 					if(!main.config.accentOnly)
 						walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 				} catch(Exception e) {
+					PluginLog.LogError(e, "Failed writing textures");
 					main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
 					
 					return;
