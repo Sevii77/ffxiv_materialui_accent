@@ -43,13 +43,12 @@ namespace MaterialUI {
 		
 		public void ShowNotice(string text) {
 			noticeVisible = true;
-			noticeText.Clear();
-			noticeText.Add(text);
+			noticeText = new List<string>() {text};
 		}
 		
 		public void ShowNotice(List<string> text) {
 			noticeVisible = true;
-			noticeText = text;
+			noticeText = new List<string>(text);
 		}
 		
 		public void CloseNotice() {
@@ -68,8 +67,6 @@ namespace MaterialUI {
 			ImGui.SetNextWindowSize(new Vector2(300, 450), ImGuiCond.FirstUseEver);
 			ImGui.Begin("Material UI Settings", ref settingsVisible);
 			
-			// if(main.updater.busy) {
-			// 	ImGui.Text(main.updater.statusText);
 			if(noticeVisible) {
 				ImGui.BeginChild("MaterialUINotice", new Vector2(ImGui.GetWindowContentRegionWidth(), ImGui.GetWindowHeight() - 60));
 				foreach(string text in noticeText)
@@ -199,12 +196,19 @@ namespace MaterialUI {
 							ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 							
 							if(ImGui.TreeNode("Options")) {
+								ImGui.Text("Options that will be added to Penumbra");
+								ImGui.Separator();
+								
 								foreach(OptionPenumbra option in options.penumbraOptions) {
 									ImGui.Text(option.name);
 									
+									// Dont display Default option, as thats scuffed shit done by the Apply
 									int i = 0;
-									int count = option.options.Count;
+									int count = option.options.Count - (option.options.ContainsKey("Default") ? 1 : 0);
 									foreach(string suboption in option.options.Keys) {
+										if(suboption == "Default")
+											continue;
+										
 										i++;
 										ImGui.Text((i == count ? "└ " : "├ ") + suboption);
 									}

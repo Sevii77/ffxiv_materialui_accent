@@ -454,10 +454,6 @@ namespace MaterialUI {
 				await LoadMods();
 				List<string> changes = await UpdateCache();
 				
-				List<string> integrity = CheckIntegrity();
-				if(integrity.Count > 0)
-					main.ui.ShowNotice(integrity);
-				
 				if(main.config.firstTime)
 					return;
 				
