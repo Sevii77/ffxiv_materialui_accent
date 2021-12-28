@@ -24,9 +24,6 @@ namespace MaterialUI {
 		public UI(MaterialUI main) {
 			this.main = main;
 			
-			// settingsVisible = true;
-			// noticeVisible = true;
-			
 			noticeText = new List<string>();
 			
 			openOnStart = main.config.openOnStart;
@@ -35,10 +32,16 @@ namespace MaterialUI {
 			colorOptions = new Vector3[0];
 			
 			main.pluginInterface.UiBuilder.Draw += Draw;
+			main.pluginInterface.UiBuilder.OpenConfigUi += ShowSettings;
 		}
 		
 		public void Dispose() {
 			main.pluginInterface.UiBuilder.Draw -= Draw;
+			main.pluginInterface.UiBuilder.OpenConfigUi -= ShowSettings;
+		}
+		
+		public void ShowSettings() {
+			settingsVisible = true;
 		}
 		
 		public void ShowNotice(string text) {
@@ -58,9 +61,6 @@ namespace MaterialUI {
 		private void Draw() {
 			if(settingsVisible)
 				DrawSettings();
-			
-			// if(noticeVisible)
-			// 	DrawNotice();
 		}
 		
 		private void DrawSettings() {
@@ -337,11 +337,5 @@ namespace MaterialUI {
 			
 			ImGui.End();
 		}
-		
-		// private void DrawNotice() {
-		// 	ImGui.Begin("Material UI Notice", ref noticeVisible);
-		// 	ImGui.Text(noticeText);
-		// 	ImGui.End();
-		// }
 	}
 }
