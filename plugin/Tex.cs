@@ -112,7 +112,8 @@ namespace MaterialUI {
 				case 5184:
 					return width * height * 2;
 				default:
-					return 0;
+					// file has invalid format, possibly corrupt, just give max int so CheckIntegrity can catch it
+					return int.Max;
 			}
 		}
 		
