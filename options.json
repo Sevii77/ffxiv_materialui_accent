@@ -148,14 +148,18 @@
 			"name": "Gauges",
 			"options": {
 				"Square": [
+					"UI/HUD/JobHudMNK0",
 					"UI/HUD/JobHudSAM1",
+					"UI/HUD/JobHudSMN1",
 					"UI/HUD/JobHudSimple_StackA",
 					"UI/HUD/JobHudSimple_StackB",
 					"UI/HUD/Parameter_Gauge",
 					"UI/HUD/Parameter_Gauge2"
 				],
 				"Silver": [
+					"UI/HUD/JobHudMNK0/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSAM1/OPTIONS/Silver Frame Gaugebar",
+					"UI/HUD/JobHudSMN1/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSimple_StackA/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSimple_StackB/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge/OPTIONS/Silver Frame Gaugebar",
@@ -481,8 +485,8 @@
 					"UI/Icon/Icon/062036/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062037/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062038/OPTIONS/Contents Glow Job Icon",
-					"UI/Icon/Icon/062039",
-					"UI/Icon/Icon/062040"
+					"UI/Icon/Icon/062039/OPTIONS/Contents Glow Job Icon",
+					"UI/Icon/Icon/062040/OPTIONS/Contents Glow Job Icon"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062005/OPTIONS/Contents Glow Job Icon Diff Range DPS Color",
@@ -523,8 +527,8 @@
 					"UI/Icon/Icon/062033/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062034/OPTIONS/Contents Glow Job Icon",
 					"UI/Icon/Icon/062037/OPTIONS/Contents Glow Job Icon",
-					"UI/Icon/Icon/062039",
-					"UI/Icon/Icon/062040"
+					"UI/Icon/Icon/062039/OPTIONS/Contents Glow Job Icon",
+					"UI/Icon/Icon/062040/OPTIONS/Contents Glow Job Icon"
 				]
 			}
 		},
@@ -613,8 +617,8 @@
 					"UI/Icon/Icon/062836/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062837/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062838/OPTIONS/Macro Glow Job Icon",
-					"UI/Icon/Icon/062839",
-					"UI/Icon/Icon/062840"
+					"UI/Icon/Icon/062839/OPTIONS/Macro Glow Job Icon",
+					"UI/Icon/Icon/062840/OPTIONS/Macro Glow Job Icon"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062805/OPTIONS/Macro Glow Job Icon Diff Range DPS Color",
@@ -655,8 +659,8 @@
 					"UI/Icon/Icon/062833/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062834/OPTIONS/Macro Glow Job Icon",
 					"UI/Icon/Icon/062837/OPTIONS/Macro Glow Job Icon",
-					"UI/Icon/Icon/062839",
-					"UI/Icon/Icon/062840"
+					"UI/Icon/Icon/062839/OPTIONS/Macro Glow Job Icon",
+					"UI/Icon/Icon/062840/OPTIONS/Macro Glow Job Icon"
 				]
 			}
 		}
