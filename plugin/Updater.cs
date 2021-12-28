@@ -283,6 +283,7 @@ namespace MaterialUI {
 					}
 					
 					if(failcount >= 20) {
+						await Task.Delay(2000);
 						main.ui.ShowNotice("Too many downloads failed, download has been stopped");
 						
 						return;
@@ -488,12 +489,17 @@ namespace MaterialUI {
 				if(changes.Count == 0 && optionsNew.Count == 0)
 					return;
 				
-				if(optionsNew.Count > 0)
-					main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n{1}", string.Join("\n\n", optionsNew), string.Join("\n", changes)));
-				else
-					main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
+				Apply();
 				
-				// Apply();
+				if(optionsNew.Count > 0) {
+					changes.Insert(0, string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n", string.Join("\n\n", optionsNew)));
+					// main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n{1}", string.Join("\n\n", optionsNew), string.Join("\n", changes)));
+				} else {
+					changes.Insert(0, "Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n");
+					// main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
+				}
+				
+				main.ui.ShowNotice(changes);
 			});
 		}
 		
@@ -546,7 +552,7 @@ namespace MaterialUI {
 		}
 		
 		// TODO: use penumbra api once its ready
-		public void Apply() {
+		public async Task Apply() {
 			try {
 				main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
 			} catch(Exception e) {
@@ -568,224 +574,229 @@ namespace MaterialUI {
 				return;
 			}
 			
-			Task.Run(async() => {
-				try {
-					Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);
-				} catch(Exception e) {}
-				
-				// Used to check if an option exists, avoids cases where an option is used and the default ignored, thus creating the texture 2 times
-				List<string> optionPaths = new List<string>();
-				foreach(Mod mod in mods.Values)
-					if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
-						foreach(OptionPenumbra option in mod.options.penumbraOptions)
-							foreach(KeyValuePair<string, string[]> subOptions in option.options)
-								foreach(string path in subOptions.Value) {
-									string gamePath = path.Split("/OPTIONS/")[0].Split("/option/")[0].ToLower().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
-									if(gamePath.Contains("/icon/"))
-										gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
-									optionPaths.Add(gamePath);
-								}
-				
-				Meta meta = new Meta();
-				meta.Description = "Open the configurator with /materialui\n\nCurrent colors:";
-				
-				Vector3 clr = main.config.color;
-				meta.Description += string.Format("\nAccent: R:{0} G:{1} B:{2}", (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
-				
-				foreach(Mod mod in mods.Values)
-					if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
-						foreach(OptionColor optionColor in mod.options.colorOptions) {
-							if(mod.id == "base")
-								clr = main.config.colorOptions[optionColor.id];
-							else
-								clr = main.config.modOptions[mod.id].colors[optionColor.id];
-							
-							meta.Description += string.Format("\n{0}: R:{1} G:{2} B:{3}", optionColor.name, (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
-						}
-				
-				// Create options now so its in the correct order
-				void createOptions(Mod mod) {
-					foreach(OptionPenumbra option in mod.options.penumbraOptions) {
-						if(!meta.Groups.ContainsKey(option.name)) {
-							meta.Groups[option.name] = new MetaGroup(option.name);
-							
-							if(mod.id != "base") {
-								meta.Groups[option.name].Options.Add(new MetaGroupOption("Default"));
-								foreach(string[] textures in option.options.Values) {
-									option.options["Default"] = textures;
-									
-									break;
-								}
+			
+			try {
+				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);
+			} catch(Exception e) {}
+			
+			// Used to check if an option exists, avoids cases where an option is used and the default ignored, thus creating the texture 2 times
+			List<string> optionPaths = new List<string>();
+			foreach(Mod mod in mods.Values)
+				if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+					foreach(OptionPenumbra option in mod.options.penumbraOptions)
+						foreach(KeyValuePair<string, string[]> subOptions in option.options)
+							foreach(string path in subOptions.Value) {
+								string gamePath = path.Split("/OPTIONS/")[0].Split("/option/")[0].ToLower().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
+								if(gamePath.Contains("/icon/"))
+									gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+								optionPaths.Add(gamePath);
+							}
+			
+			Meta meta = new Meta();
+			meta.Description = "Open the configurator with /materialui\n\nCurrent colors:";
+			
+			Vector3 clr = main.config.color;
+			meta.Description += string.Format("\nAccent: R:{0} G:{1} B:{2}", (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
+			
+			foreach(Mod mod in mods.Values)
+				if(mod.id == "base" || main.config.modOptions[mod.id].enabled)
+					foreach(OptionColor optionColor in mod.options.colorOptions) {
+						if(mod.id == "base")
+							clr = main.config.colorOptions[optionColor.id];
+						else
+							clr = main.config.modOptions[mod.id].colors[optionColor.id];
+						
+						meta.Description += string.Format("\n{0}: R:{1} G:{2} B:{3}", optionColor.name, (byte)(clr.X * 255), (byte)(clr.Y * 255), (byte)(clr.Z * 255));
+					}
+			
+			// Create options now so its in the correct order
+			void createOptions(Mod mod) {
+				foreach(OptionPenumbra option in mod.options.penumbraOptions) {
+					if(!meta.Groups.ContainsKey(option.name)) {
+						meta.Groups[option.name] = new MetaGroup(option.name);
+						
+						if(mod.id != "base") {
+							meta.Groups[option.name].Options.Add(new MetaGroupOption("Default"));
+							foreach(string[] textures in option.options.Values) {
+								option.options["Default"] = textures;
+								
+								break;
 							}
 						}
-						
-						foreach(string subOption in option.options.Keys)
-							if(mod.id == "base" || subOption != "Default")
-								meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption));
 					}
-				}
-				
-				createOptions(mods["base"]);
-				foreach(Mod mod in mods.Values)
-					if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-						createOptions(mod);
-				
-				void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
-					main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
 					
-					// Used to allow game style format for the options in main
-					string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
-					
-					if(optionPaths.Contains(gamePath)) {
-						List<Mod> priority = new List<Mod>();
-						if(modid == "base" || modid == "main") {
-							priority.Add(mods["base"]);
-							
-							foreach(Mod mod in mods.Values)
-								if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-									priority.Add(mod);
-						} else {
-							priority.Add(mods[modid]);
-						}
-						
-						foreach(Mod mod in priority)
-							foreach(OptionPenumbra option in mod.options.penumbraOptions)
-								foreach(KeyValuePair<string, string[]> subOptions in option.options)
-									foreach(string p in subOptions.Value)
-										if(p == texturePath || p == texturePath2) {
-											string optionName = option.name;
-											string subOptionName = subOptions.Key;
-											
-											int index = -1;
-											for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
-												if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
-													index = i;
-													break;
-												}
-											
-											string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
-											if(File.Exists(path))
-												return;
-											
-											meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
-											
-											Directory.CreateDirectory(Path.GetDirectoryName(path));
-											tex.Save(path);
-										}
-					} else {
-						string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath + "_hr1.tex");
-						if(File.Exists(path))
-							return;
-						
-						Directory.CreateDirectory(Path.GetDirectoryName(path));
-						tex.Save(path);
-					}
+					foreach(string subOption in option.options.Keys)
+						if(mod.id == "base" || subOption != "Default")
+							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption));
 				}
+			}
+			
+			createOptions(mods["base"]);
+			foreach(Mod mod in mods.Values)
+				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+					createOptions(mod);
+			
+			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
+				main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
 				
-				string cachepath = main.pluginInterface.ConfigDirectory + "/";
-				void walkDirAccent(Dir dir, string fullPath, string modid) {
-					if(dir.files.Count > 0) {
-						Tex tex = null;
-						if(dir.files.ContainsKey("underlay.dds")) {
-							var file = dir.files["underlay.dds"];
-							
-							if(file.Item1 != null)
-								tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
-							else
-								tex = new Tex(File.ReadAllBytes(file.Item2));
-						}
-								
-						
-						if(dir.files.ContainsKey("overlay.dds")) {
-							(string, string) file = dir.files["overlay.dds"];
-							
-							Tex overlay;
-							if(file.Item1 != null)
-								overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
-							else
-								overlay = new Tex(File.ReadAllBytes(file.Item2));
-							
-							overlay.Paint(main.config.color);
-							
-							if(tex != null)
-								tex.Overlay(overlay);
-							else
-								tex = overlay;
-						}
+				// Used to allow game style format for the options in main
+				string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
+				
+				if(optionPaths.Contains(gamePath)) {
+					List<Mod> priority = new List<Mod>();
+					if(modid == "base" || modid == "main") {
+						priority.Add(mods["base"]);
 						
 						foreach(Mod mod in mods.Values)
-							if(mod.id == modid || mod.id == "base")
-								foreach(OptionColor optionColor in mod.options.colorOptions) {
-									string overlayColorName = string.Format("overlay_{0}.dds", optionColor.id);
-									if(dir.files.ContainsKey(overlayColorName)) {
-										(string, string) file = dir.files[overlayColorName];
+							if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+								priority.Add(mod);
+					} else {
+						priority.Add(mods[modid]);
+					}
+					
+					foreach(Mod mod in priority)
+						foreach(OptionPenumbra option in mod.options.penumbraOptions)
+							foreach(KeyValuePair<string, string[]> subOptions in option.options)
+								foreach(string p in subOptions.Value)
+									if(p == texturePath || p == texturePath2) {
+										string optionName = option.name;
+										string subOptionName = subOptions.Key;
 										
-										Tex overlayColor;
-										if(file.Item1 != null)
-											overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
-										else
-											overlayColor = new Tex(File.ReadAllBytes(file.Item2));
+										int index = -1;
+										for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
+											if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
+												index = i;
+												break;
+											}
 										
-										if(mod.id == "base")
-											overlayColor.Paint(main.config.colorOptions[optionColor.id]);
-										else
-											overlayColor.Paint(main.config.modOptions[mod.id].colors[optionColor.id]);
+										string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
+										if(File.Exists(path))
+											return;
 										
-										if(tex != null)
-											tex.Overlay(overlayColor);
-										else
-											tex = overlayColor;
+										meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
+										
+										Directory.CreateDirectory(Path.GetDirectoryName(path));
+										tex.Save(path);
 									}
-								}
+				} else {
+					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath + "_hr1.tex");
+					if(File.Exists(path))
+						return;
+					
+					Directory.CreateDirectory(Path.GetDirectoryName(path));
+					tex.Save(path);
+				}
+			}
+			
+			string cachepath = main.pluginInterface.ConfigDirectory + "/";
+			void walkDirAccent(Dir dir, string fullPath, string modid) {
+				if(dir.files.Count > 0) {
+					Tex tex = null;
+					if(dir.files.ContainsKey("underlay.dds")) {
+						var file = dir.files["underlay.dds"];
 						
-						string gamePath = fullPath.Split("/option/")[0];
-						if(gamePath.Contains("/icon/"))
-							gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
-						writeTex(tex, fullPath, gamePath, modid);
+						if(file.Item1 != null)
+							tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
+						else
+							tex = new Tex(File.ReadAllBytes(file.Item2));
+					}
+							
+					
+					if(dir.files.ContainsKey("overlay.dds")) {
+						(string, string) file = dir.files["overlay.dds"];
+						
+						Tex overlay;
+						if(file.Item1 != null)
+							overlay = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
+						else
+							overlay = new Tex(File.ReadAllBytes(file.Item2));
+						
+						overlay.Paint(main.config.color);
+						
+						if(tex != null)
+							tex.Overlay(overlay);
+						else
+							tex = overlay;
 					}
 					
-					foreach(KeyValuePair<string, Dir> d in dir.dirs)
-						walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), modid);
-				}
-				
-				void walkDirMain(Dir dir, string fullPath) {
-					if(dir.files.Count > 0) {
-						foreach(KeyValuePair<string, (string, string)> file in dir.files) {
-							if(!file.Key.Contains(".dds"))
-								continue;
-							
-							Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
-							
-							string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
-							if(gamePath.Contains("/icon/icon/"))
-								gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
-							writeTex(tex, fullPath, gamePath, "main");
-						}
-					}
-					
-					foreach(KeyValuePair<string, Dir> d in dir.dirs)
-						walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key));
-				}
-				
-				try {
 					foreach(Mod mod in mods.Values)
-						if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-							walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, mod.id);
-					walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, "base");
+						if(mod.id == modid || mod.id == "base")
+							foreach(OptionColor optionColor in mod.options.colorOptions) {
+								string overlayColorName = string.Format("overlay_{0}.dds", optionColor.id);
+								if(dir.files.ContainsKey(overlayColorName)) {
+									(string, string) file = dir.files[overlayColorName];
+									
+									Tex overlayColor;
+									if(file.Item1 != null)
+										overlayColor = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Item1)));
+									else
+										overlayColor = new Tex(File.ReadAllBytes(file.Item2));
+									
+									if(mod.id == "base")
+										overlayColor.Paint(main.config.colorOptions[optionColor.id]);
+									else
+										overlayColor.Paint(main.config.modOptions[mod.id].colors[optionColor.id]);
+									
+									if(tex != null)
+										tex.Overlay(overlayColor);
+									else
+										tex = overlayColor;
+								}
+							}
 					
-					if(!main.config.accentOnly)
-						walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
-				} catch(Exception e) {
-					PluginLog.LogError(e, "Failed writing textures");
-					main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
-					
-					return;
+					string gamePath = fullPath.Split("/option/")[0];
+					if(gamePath.Contains("/icon/"))
+						gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+					writeTex(tex, fullPath, gamePath, modid);
 				}
 				
-				File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
-				main.ui.CloseNotice();
+				foreach(KeyValuePair<string, Dir> d in dir.dirs)
+					walkDirAccent(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key), modid);
+			}
+			
+			void walkDirMain(Dir dir, string fullPath) {
+				if(dir.files.Count > 0) {
+					foreach(KeyValuePair<string, (string, string)> file in dir.files) {
+						if(!file.Key.Contains(".dds"))
+							continue;
+						
+						Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
+						
+						string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
+						if(gamePath.Contains("/icon/icon/"))
+							gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
+						writeTex(tex, fullPath, gamePath, "main");
+					}
+				}
 				
-				GC.Collect();
+				foreach(KeyValuePair<string, Dir> d in dir.dirs)
+					walkDirMain(d.Value, fullPath == null ? d.Key : (fullPath + "/" + d.Key));
+			}
+			
+			try {
+				foreach(Mod mod in mods.Values)
+					if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
+						walkDirAccent(mod.dir.dirs["elements_" + main.config.style], null, mod.id);
+				walkDirAccent(dirAccent.dirs["elements_" + main.config.style], null, "base");
+				
+				if(!main.config.accentOnly)
+					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
+			} catch(Exception e) {
+				PluginLog.LogError(e, "Failed writing textures");
+				main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
+				
+				return;
+			}
+			
+			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
+			main.ui.CloseNotice();
+			
+			GC.Collect();
+		}
+		
+		public void ApplyAsync() {
+			Task.Run(async() => {
+				Apply();
 			});
 		}
 	}

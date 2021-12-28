@@ -121,7 +121,7 @@ namespace MaterialUI {
 						}
 						
 						main.pluginInterface.SavePluginConfig(main.config);
-						main.updater.Apply();
+						main.updater.ApplyAsync();
 					}
 					
 					ImGui.SameLine();
@@ -138,7 +138,7 @@ namespace MaterialUI {
 						}
 						
 						main.pluginInterface.SavePluginConfig(main.config);
-						main.updater.Apply();
+						main.updater.ApplyAsync();
 					}
 					
 					ImGui.Separator();
