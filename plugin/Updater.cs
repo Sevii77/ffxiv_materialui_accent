@@ -518,8 +518,12 @@ namespace MaterialUI {
 						string cachepath = Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha);
 						
 						if(File.Exists(cachepath)) {
-							if(!(new Tex(File.ReadAllBytes(cachepath))).CheckIntegrity())
+							try {
+								if(!(new Tex(File.ReadAllBytes(cachepath))).CheckIntegrity())
+									errors.Add(sha);
+							} catch(Exception e) {
 								errors.Add(sha);
+							}
 						} else
 							errors.Add(sha);
 					}
