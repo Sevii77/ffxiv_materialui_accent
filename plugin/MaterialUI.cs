@@ -1,10 +1,13 @@
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
+using System;
 
 namespace MaterialUI {
 	public class MaterialUI : IDalamudPlugin {
 		public string Name => "Material UI";
 		private const string command = "/materialui";
+		
+		public bool penumbraFound {get; private set;} = false;
 		
 		public DalamudPluginInterface pluginInterface {get; private set;}
 		public CommandManager commandManager {get; private set;}
@@ -20,16 +23,27 @@ namespace MaterialUI {
 			updater = new Updater(this);
 			ui = new UI(this);
 			
-			updater.Update();
-			
 			commandManager.AddHandler(command, new CommandInfo(OnCommand) {
 				HelpMessage = "Opens the Material UI configuration window"
 			});
+			
+			CheckPenumbra();
+			updater.Update();
 		}
 		
 		public void Dispose() {
 			commandManager.RemoveHandler(command);
 			ui.Dispose();
+		}
+		
+		public void CheckPenumbra() {
+			try {
+				pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
+				
+				penumbraFound = true;
+			} catch(Exception e) {
+				penumbraFound = false;
+			}
 		}
 		
 		private void OnCommand(string cmd, string args) {

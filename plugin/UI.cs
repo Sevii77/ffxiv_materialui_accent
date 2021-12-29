@@ -76,10 +76,12 @@ namespace MaterialUI {
 				if(ImGui.Button("Close"))
 					CloseNotice();
 			} else {
-				try {
-					main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-				} catch(Exception e) {
-					ImGui.Text("Penumbra is not installed.");
+				if(!main.penumbraFound) {
+					ImGui.Text("Penumbra not found.");
+					if(ImGui.Button("Retry")) {
+						main.CheckPenumbra();
+						main.updater.Update();
+					}
 					ImGui.End();
 					
 					return;
@@ -192,30 +194,31 @@ namespace MaterialUI {
 							}
 							
 							ImGui.PopStyleVar();
-							ImGui.Separator();
-							ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 							
-							if(ImGui.TreeNode("Options")) {
-								ImGui.Text("Options that will be added to Penumbra");
+							if(options.penumbraOptions.Length > 0) {
 								ImGui.Separator();
-								
-								foreach(OptionPenumbra option in options.penumbraOptions) {
-									ImGui.Text(option.name);
+								ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+								if(ImGui.TreeNode("Options")) {
+									ImGui.Text("Options that will be added to Penumbra");
+									ImGui.Separator();
 									
-									int i = 0;
-									foreach(string suboption in option.options.Keys) {
-										i++;
-										ImGui.Text((i == option.options.Count ? "└ " : "├ ") + suboption);
+									foreach(OptionPenumbra option in options.penumbraOptions) {
+										ImGui.Text(option.name);
+										
+										int i = 0;
+										foreach(string suboption in option.options.Keys) {
+											i++;
+											ImGui.Text((i == option.options.Count ? "└ " : "├ ") + suboption);
+										}
 									}
+									
+									ImGui.TreePop();
 								}
-								
-								ImGui.TreePop();
+								ImGui.PopStyleVar();
 							}
 							
-							ImGui.PopStyleVar();
 							ImGui.Separator();
 							ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
-							
 							if(ImGui.TreeNode("Files")) {
 								Dir uld = dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style));
 								if(uld != null) {
@@ -233,8 +236,8 @@ namespace MaterialUI {
 								
 								ImGui.TreePop();
 							}
-							
 							ImGui.PopStyleVar();
+							
 							ImGui.Separator();
 							
 							foreach(OptionColor option in options.colorOptions) {

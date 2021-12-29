@@ -277,20 +277,19 @@ namespace MaterialUI {
 			
 			async Task downloader() {
 				while(queue.Count > 0) {
-					for(int i = 0; i < Math.Min(queue.Count, 50); i++) {
+					for(int i = 0; i < Math.Min(queue.Count, 100); i++) {
 						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
+					while(busycount > 0) {
+						await Task.Delay(1000);
+					}
+					
 					if(failcount >= 20) {
-						await Task.Delay(2000);
 						main.ui.ShowNotice("Too many downloads failed, download has been stopped");
 						
 						return;
-					}
-					
-					while(busycount > 0) {
-						await Task.Delay(1000);
 					}
 				}
 			}
@@ -425,21 +424,8 @@ namespace MaterialUI {
 				if(main.config.openOnStart)
 					main.ui.settingsVisible = true;
 				
-				for(int i = 0; i < 5; i++) {
-					try {
-						main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-						
-						break;
-					} catch(Exception e) {
-						if(i == 10) {
-							PluginLog.Log("Penumbra not found, exiting updater");
-							
-							return;
-						}
-					}
-					
-					await Task.Delay(1000);
-				}
+				if(!main.penumbraFound)
+					return;
 				
 				main.ui.ShowNotice("Loading " + repoMaster);
 				string resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
@@ -638,7 +624,17 @@ namespace MaterialUI {
 					}
 					
 					foreach(KeyValuePair<string, string[]> subOption in option.options) {
-						meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption.Key));
+						bool subExists = false;
+						foreach(MetaGroupOption metaSub in meta.Groups[option.name].Options)
+							if(metaSub.OptionName == subOption.Key) {
+								subExists = true;
+								
+								break;
+							}
+						
+						if(!subExists)
+							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption.Key));
+						
 						optionTextures[mod.id][(option.name, subOption.Key)] = subOption.Value;
 					}
 				}
@@ -648,10 +644,6 @@ namespace MaterialUI {
 			foreach(Mod mod in mods.Values)
 				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
 					createOptions(mod);
-			
-			foreach(KeyValuePair<string, Dictionary<(string, string), string[]>> a in optionTextures)
-				foreach(KeyValuePair<(string, string), string[]> b in a.Value)
-					PluginLog.Log($"[{a.Key}] {b.Key.Item1}/{b.Key.Item2} ({b.Value.Length})");
 			
 			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
 				main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
@@ -798,7 +790,7 @@ namespace MaterialUI {
 					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 			} catch(Exception e) {
 				PluginLog.LogError(e, "Failed writing textures");
-				main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
+				main.ui.ShowNotice($"Failed writing textures\n{e.Message}\n\nTry a Integrity Check in the Advanced tab");
 				
 				return;
 			}
