@@ -76,6 +76,10 @@
 					"UI/HUD/WindowPVP_BgSelected_HV",
 					"UI/HUD/WindowPVP_BgSelected_V",
 					
+					"ui/uld/harpoonwindowa_selected_corner",
+					"ui/uld/harpoonwindowa_selected_h",
+					"UI/HUD/HarpoonWindowA_Selected_V",
+					
 					"ui/uld/windowf_bgnormal_corner",
 					"ui/uld/windowf_bgnormal_h",
 					"UI/HUD/WindowF_BgNormal_HV",
@@ -92,6 +96,10 @@
 					"UI/HUD/WindowPVP_BgSelected_HV",
 					"ui/uld/windowpvp_bgselected_v/option/full_window_border",
 					
+					"ui/uld/harpoonwindowa_selected_corner/option/full_window_border",
+					"ui/uld/harpoonwindowa_selected_h/option/full_window_border",
+					"ui/uld/harpoonwindowa_selected_v/option/full_window_border",
+					
 					"ui/uld/windowf_bgnormal_corner",
 					"ui/uld/windowf_bgnormal_h",
 					"UI/HUD/WindowF_BgNormal_HV",
@@ -107,6 +115,10 @@
 					"ui/uld/windowpvp_bgselected_h/option/no_window_border",
 					"UI/HUD/WindowPVP_BgSelected_HV",
 					"UI/HUD/WindowPVP_BgSelected_V",
+					
+					"ui/uld/harpoonwindowa_selected_corner/option/no_window_border",
+					"ui/uld/harpoonwindowa_selected_h/option/no_window_border",
+					"UI/HUD/HarpoonWindowA_Selected_V",
 					
 					"ui/uld/windowf_bgnormal_corner/option/no_window_border",
 					"ui/uld/windowf_bgnormal_h/option/no_window_border",

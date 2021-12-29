@@ -610,24 +610,37 @@ namespace MaterialUI {
 					}
 			
 			// Create options now so its in the correct order
+			List<string> baseoOptions = new List<string>();
+			foreach(OptionPenumbra option in mods["base"].options.penumbraOptions)
+				baseoOptions.Add(option.name);
+			
+			Dictionary<string, Dictionary<(string, string), string[]>> optionTextures = new();
 			void createOptions(Mod mod) {
+				optionTextures[mod.id] = new();
+				
 				foreach(OptionPenumbra option in mod.options.penumbraOptions) {
 					if(!meta.Groups.ContainsKey(option.name)) {
 						meta.Groups[option.name] = new MetaGroup(option.name);
 						
-						if(mod.id != "base") {
+						if(!baseoOptions.Contains(option.name)) {
+							baseoOptions.Add(option.name);
 							meta.Groups[option.name].Options.Add(new MetaGroupOption("Default"));
+							
 							foreach(string[] textures in option.options.Values) {
-								option.options["Default"] = textures;
+								string[] texts = new string[textures.Length];
+								for(int i = 0; i < textures.Length; i++)
+									texts[i] = textures[i].Split("/option/")[0];
+								optionTextures["base"][(option.name, "Default")] = texts;
 								
 								break;
 							}
 						}
 					}
 					
-					foreach(string subOption in option.options.Keys)
-						if(mod.id == "base" || subOption != "Default")
-							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption));
+					foreach(KeyValuePair<string, string[]> subOption in option.options) {
+						meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption.Key));
+						optionTextures[mod.id][(option.name, subOption.Key)] = subOption.Value;
+					}
 				}
 			}
 			
@@ -636,6 +649,10 @@ namespace MaterialUI {
 				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
 					createOptions(mod);
 			
+			foreach(KeyValuePair<string, Dictionary<(string, string), string[]>> a in optionTextures)
+				foreach(KeyValuePair<(string, string), string[]> b in a.Value)
+					PluginLog.Log($"[{a.Key}] {b.Key.Item1}/{b.Key.Item2} ({b.Value.Length})");
+			
 			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
 				main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
 				
@@ -643,41 +660,39 @@ namespace MaterialUI {
 				string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
 				
 				if(optionPaths.Contains(gamePath)) {
-					List<Mod> priority = new List<Mod>();
+					List<string> priority = new();
 					if(modid == "base" || modid == "main") {
-						priority.Add(mods["base"]);
+						priority.Add("base");
 						
 						foreach(Mod mod in mods.Values)
 							if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
-								priority.Add(mod);
+								priority.Add(mod.id);
 					} else {
-						priority.Add(mods[modid]);
+						priority.Add(modid);
 					}
 					
-					foreach(Mod mod in priority)
-						foreach(OptionPenumbra option in mod.options.penumbraOptions)
-							foreach(KeyValuePair<string, string[]> subOptions in option.options)
-								foreach(string p in subOptions.Value)
-									if(p == texturePath || p == texturePath2) {
-										string optionName = option.name;
-										string subOptionName = subOptions.Key;
-										
-										int index = -1;
-										for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
-											if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
-												index = i;
-												break;
-											}
-										
-										string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
-										if(File.Exists(path))
-											return;
-										
-										meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
-										
-										Directory.CreateDirectory(Path.GetDirectoryName(path));
-										tex.Save(path);
+					foreach(string mod in priority)
+						foreach(KeyValuePair<(string, string), string[]> optionTexture in optionTextures[mod])
+							if(Array.IndexOf(optionTexture.Value, texturePath) != -1 || Array.IndexOf(optionTexture.Value, texturePath2) != -1) {
+								string optionName = optionTexture.Key.Item1;
+								string subOptionName = optionTexture.Key.Item2;
+								
+								int index = -1;
+								for(int i = 0; i < meta.Groups[optionName].Options.Count; i++)
+									if(meta.Groups[optionName].Options[i].OptionName == subOptionName) {
+										index = i;
+										break;
 									}
+								
+								string path = Path.GetFullPath(penumbraPath + "/Material UI/" + optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex");
+								if(File.Exists(path))
+									continue;
+								
+								meta.Groups[optionName].Options[index].OptionFiles[(optionName + "/" + subOptionName + "/" + gamePath + "_hr1.tex").Replace("/", "\\")] = new string[1] {gamePath + "_hr1.tex"};
+								
+								Directory.CreateDirectory(Path.GetDirectoryName(path));
+								tex.Save(path);
+							}
 				} else {
 					string path = Path.GetFullPath(penumbraPath + "/Material UI/" + gamePath + "_hr1.tex");
 					if(File.Exists(path))

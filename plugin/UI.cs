@@ -202,15 +202,10 @@ namespace MaterialUI {
 								foreach(OptionPenumbra option in options.penumbraOptions) {
 									ImGui.Text(option.name);
 									
-									// Dont display Default option, as thats scuffed shit done by the Apply
 									int i = 0;
-									int count = option.options.Count - (option.options.ContainsKey("Default") ? 1 : 0);
 									foreach(string suboption in option.options.Keys) {
-										if(suboption == "Default")
-											continue;
-										
 										i++;
-										ImGui.Text((i == count ? "└ " : "├ ") + suboption);
+										ImGui.Text((i == option.options.Count ? "└ " : "├ ") + suboption);
 									}
 								}
 								
