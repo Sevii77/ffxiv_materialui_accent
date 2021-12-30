@@ -16,6 +16,7 @@
 			"name": "Target Cursor",
 			"options": {
 				"Minimal": ["ui/uld/targetcursor"],
+				"Minimal Alt": ["ui/uld/targetcursor/option/alt"],
 			}
 		}
 	]
