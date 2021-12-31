@@ -7,6 +7,12 @@
 	
 	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
 	
+	"dalamud": {
+		"WindowRounding": 11,
+		"FrameRounding": 11,
+		"TabRounding": 4
+	},
+	
 	"color_options": [
 		
 	],
