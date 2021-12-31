@@ -9,7 +9,8 @@
 	
 	"dalamud": {
 		"WindowRounding": 11,
-		"FrameRounding": 11,
+		"FrameRounding": 12,
+		"PopupRounding": 12,
 		"TabRounding": 4
 	},
 	

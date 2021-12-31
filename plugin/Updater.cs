@@ -78,6 +78,8 @@ namespace MaterialUI {
 		public string description;
 		
 		// Generic
+		[JsonProperty("dalamud")] // TODO: allow options other than just a number
+		public Dictionary<string, int> styleOptions;
 		[JsonProperty("color_options")]
 		public OptionColor[] colorOptions;
 		[JsonProperty("penumbra")]
@@ -421,10 +423,8 @@ namespace MaterialUI {
 		
 		public void Update() {
 			Task.Run(async() => {
-				if(main.config.openOnStart)
-					main.ui.settingsVisible = true;
-				
-				if(!main.penumbraFound)
+				main.CheckPenumbra();
+				if(main.penumbraIssue != null)
 					return;
 				
 				main.ui.ShowNotice("Loading " + repoMaster);
@@ -543,27 +543,13 @@ namespace MaterialUI {
 		
 		// TODO: use penumbra api once its ready
 		public async Task Apply() {
-			try {
-				main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-			} catch(Exception e) {
+			main.CheckPenumbra();
+			if(main.penumbraIssue != null)
 				return;
-			}
 			
 			string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
-			if(!File.Exists(penumbraConfigPath)) {
-				main.ui.ShowNotice("Can't find Penumbra Config.");
-				
-				return;
-			}
-			
 			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
 			string penumbraPath = (string)penumbraData?.ModDirectory;
-			if(penumbraPath == "") {
-				main.ui.ShowNotice("Penumbra Mod Directory has not been set.");
-				
-				return;
-			}
-			
 			
 			try {
 				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);

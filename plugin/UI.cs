@@ -76,8 +76,8 @@ namespace MaterialUI {
 				if(ImGui.Button("Close"))
 					CloseNotice();
 			} else {
-				if(!main.penumbraFound) {
-					ImGui.Text("Penumbra not found.");
+				if(main.penumbraIssue != null) {
+					ImGui.Text(main.penumbraIssue);
 					if(ImGui.Button("Retry")) {
 						main.CheckPenumbra();
 						main.updater.Update();
@@ -88,6 +88,11 @@ namespace MaterialUI {
 				}
 				
 				if(!main.updater.mods.ContainsKey("base")) {
+					ImGui.Text("Failed loading remote data");
+					if(ImGui.Button("Retry")) {
+						main.CheckPenumbra();
+						main.updater.Update();
+					}
 					ImGui.End();
 					
 					return;
@@ -124,6 +129,31 @@ namespace MaterialUI {
 						
 						main.pluginInterface.SavePluginConfig(main.config);
 						main.updater.ApplyAsync();
+					}
+					
+					ImGui.SameLine();
+					if(ImGui.Button("Apply Dalamud Style")) {
+						main.CheckPenumbra();
+						if(main.penumbraIssue != null) {
+							ImGui.End();
+							
+							return;
+						}
+						
+						main.config.color = colorAccent;
+						
+						Dictionary<string, int> styleOverrides = new();
+						foreach(Mod mod in main.updater.mods.Values) {
+							string id = mod.id;
+							if(id == "base")
+								continue;
+							
+							if(main.config.modOptions[id].enabled && mod.options.styleOptions != null)
+								foreach(KeyValuePair<string, int> val in mod.options.styleOptions)
+									styleOverrides[val.Key] = val.Value;
+						}
+						
+						DalamudStyle.Apply(main.config, styleOverrides);
 					}
 					
 					ImGui.SameLine();
@@ -325,6 +355,10 @@ namespace MaterialUI {
 					ImGui.Separator();
 					if(ImGui.Button("Check Integrity"))
 						main.updater.Repair();
+					
+					// ImGui.Separator();
+					// if(ImGui.Button("Dalamud test"))
+					// 	DalamudStyle.Apply(main.config);
 					
 					ImGui.EndChild();
 					ImGui.EndTabItem();
