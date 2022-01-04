@@ -1,0 +1,56 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Minimal Gauges",
+	
+	"description": "Minimal HP/MP, Limit Break and Simple Job gauges. Customisable color options available for Limit Break.",
+	
+	"color_options": [
+	{
+			"id": "limitbreak1",
+			"name": "Filling Gauge",
+			"Default": {
+				"r": 98,
+				"g": 114,
+				"b": 164
+			}
+		},
+		
+		{
+			"id": "limitbreak2",
+			"name": "Full Gauge",
+			"Default": {
+				"r": 139,
+				"g": 223,
+				"b": 253
+			}
+		}
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Limit Break",
+			"options": {
+				"Minimal": ["ui/uld/limitbreak"],
+				
+			}
+		},
+		
+		{
+			"name": "Gauges",
+			"options": {
+				"Minimal": ["ui/uld/jobhudmnk0",
+							"ui/uld/jobhudsam1",
+							"ui/uld/jobhudsmn1",
+							"ui/uld/jobhudsimple_stacka",
+							"ui/uld/jobhudsimple_stackb",
+							"ui/uld/parameter_gauge",
+							"ui/uld/parameter_gauge2"],
+				
+			}
+		}
+	]
+}
