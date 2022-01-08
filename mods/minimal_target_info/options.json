@@ -5,7 +5,7 @@
 	
 	"name": "Minimal Target Info",
 	
-	"description": "A minimal target info mod. Thinner target health, reduced animations and smaller elements.",
+	"description": "A minimal target info mod. Slimmer health bars, reworked elements, removal of auto-attack symbol and reduced animations. Includes option for object line restoration.",
 	
 	"color_options": [
 		
@@ -16,7 +16,7 @@
 			"name": "Target Info",
 			"options": {
 				"Minimal": ["ui/uld/targetinfo/option/minimal"],
-				"Minimal (with object line)": ["ui/uld/targetinfo/option/minimalwline"],
+				"Minimal (with object line)": ["ui/uld/targetinfo/option/minimal/wline"],
 				
 			}
 		}
