@@ -5,28 +5,9 @@
 	
 	"name": "Minimal Gauges",
 	
-	"description": "Minimal HP/MP, Limit Break and Simple Job gauges. Customisable color options available for Limit Break.",
+	"description": "Minimal HP/MP, Limit Break and Simple Job gauges.",
 	
 	"color_options": [
-	{
-			"id": "limitbreak1",
-			"name": "Filling Gauge",
-			"Default": {
-				"r": 98,
-				"g": 114,
-				"b": 164
-			}
-		},
-		
-		{
-			"id": "limitbreak2",
-			"name": "Full Gauge",
-			"Default": {
-				"r": 139,
-				"g": 223,
-				"b": 253
-			}
-		}
 		
 	],
 	
