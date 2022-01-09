@@ -44,13 +44,18 @@ namespace MaterialUI {
 			settingsVisible = true;
 		}
 		
-		public void ShowNotice(string text) {
-			settingsVisible = true;
+		public void ShowNotice(string text, bool force = false) {
+			if(force)
+				settingsVisible = true;
+			
 			noticeVisible = true;
 			noticeText = new List<string>() {text};
 		}
 		
-		public void ShowNotice(List<string> text) {
+		public void ShowNotice(List<string> text, bool force = false) {
+			if(force)
+				settingsVisible = true;
+			
 			noticeVisible = true;
 			noticeText = new List<string>(text);
 		}

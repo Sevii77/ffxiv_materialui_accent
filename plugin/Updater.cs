@@ -367,6 +367,7 @@ namespace MaterialUI {
 			await LoadOptions();
 			mods["base"].dir = dirAccent;
 			dirMods["Material UI"] = dirAccent.GetPathDir("mods");
+			main.ui.CloseNotice();
 			
 			string resp;
 			Repo data;
@@ -445,7 +446,6 @@ namespace MaterialUI {
 				resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
 				data = JsonConvert.DeserializeObject<Repo>(resp);
 				dirAccent = PopulateDir(data, repoAccent);
-				main.ui.CloseNotice();
 				
 				await LoadMods();
 				List<string> changes = await UpdateCache();
@@ -495,7 +495,7 @@ namespace MaterialUI {
 					// main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
 				}
 				
-				main.ui.ShowNotice(changes);
+				main.ui.ShowNotice(changes, true);
 			});
 		}
 		
@@ -792,7 +792,7 @@ namespace MaterialUI {
 					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 			} catch(Exception e) {
 				PluginLog.LogError(e, "Failed writing textures");
-				main.ui.ShowNotice($"Failed writing texture\n{curpath}\n{e.Message}\n\nTry a Integrity Check in the Advanced tab");
+				main.ui.ShowNotice($"Failed writing texture\n{curpath}\n{e.Message}\n\nTry a Integrity Check in the Advanced tab", true);
 				
 				return false;
 			}
