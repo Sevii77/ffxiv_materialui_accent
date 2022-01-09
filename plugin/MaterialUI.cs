@@ -34,7 +34,7 @@ namespace MaterialUI {
 				ui.settingsVisible = true;
 			
 			Task.Run(async() => {
-				for(int i = 0; i < 5; i++) {
+				for(int i = 0; i < 15; i++) {
 					CheckPenumbra();
 					if(penumbraIssue == null) {
 						updater.Update();

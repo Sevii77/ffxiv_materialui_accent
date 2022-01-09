@@ -45,6 +45,7 @@ namespace MaterialUI {
 		}
 		
 		public void ShowNotice(string text) {
+			settingsVisible = true;
 			noticeVisible = true;
 			noticeText = new List<string>() {text};
 		}

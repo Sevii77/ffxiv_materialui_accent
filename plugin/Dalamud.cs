@@ -29,9 +29,7 @@ namespace MaterialUI {
 			
 			style.WindowBorderSize = 1;
 			style.ChildBorderSize = 0;
-			// This is missing from the stylemodel, so we gotta set the active style to it instead
-			// style.PopupBorderSize = 1;
-			ImGui.GetStyle().PopupBorderSize = 1;
+			style.PopupBorderSize = 1;
 			style.FrameBorderSize = 0;
 			style.TabBorderSize = 0;
 			
@@ -137,8 +135,7 @@ namespace MaterialUI {
 				dynamic collectionData = JsonConvert.DeserializeObject(File.ReadAllText(collectionPath));
 				if(collectionData.Settings["Material UI"].Settings["Selected Window"] == 1) {
 					style.WindowBorderSize = 2;
-					// style.PopupBorderSize = 0;
-					ImGui.GetStyle().PopupBorderSize = 0;
+					style.PopupBorderSize = 0;
 					style.Colors["Border"] = accent;
 				}
 			} catch(Exception e) {

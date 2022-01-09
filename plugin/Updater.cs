@@ -253,10 +253,10 @@ namespace MaterialUI {
 					changes.Add(sha.Value.Item2);
 				}
 			
+			Object lockObj = new Object();
 			int total = queue.Count;
 			int done = 0;
 			int failcount = 0;
-			
 			int busycount = 0;
 			async Task download(string url, string name, string sha) {
 				busycount++;
@@ -268,25 +268,27 @@ namespace MaterialUI {
 					
 					main.ui.ShowNotice(string.Format("Downloading ({0}/{1})\n{2}", done, total, name));
 				} catch(Exception e) {
+					PluginLog.LogError(e, "Download failed");
 					// It failed, just add it back to the queue
 					queue.Add((url, name, sha));
 					failcount++;
 				}
 				
-				busycount--;
-				done++;
+				lock(lockObj) {
+					busycount--;
+					done++;
+				}
 			}
 			
 			async Task downloader() {
 				while(queue.Count > 0) {
-					for(int i = 0; i < Math.Min(queue.Count, 100); i++) {
+					int c = Math.Min(queue.Count, 100 - busycount);
+					for(int i = 0; i < c; i++) {
 						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
-					while(busycount > 0) {
-						await Task.Delay(1000);
-					}
+					await Task.Delay(1000);
 					
 					if(failcount >= 20) {
 						main.ui.ShowNotice("Too many downloads failed, download has been stopped");
@@ -297,8 +299,10 @@ namespace MaterialUI {
 			}
 			
 			await downloader();
-			main.ui.CloseNotice();
+			if(busycount < 20)
+				main.ui.CloseNotice();
 			
+			await Task.Delay(1000);
 			return changes;
 		}
 		
@@ -475,7 +479,8 @@ namespace MaterialUI {
 				if(changes.Count == 0 && optionsNew.Count == 0)
 					return;
 				
-				Apply();
+				if(!await Apply())
+					return;
 				
 				if(optionsNew.Count > 0) {
 					changes.Insert(0, string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n", string.Join("\n\n", optionsNew)));
@@ -542,10 +547,10 @@ namespace MaterialUI {
 		}
 		
 		// TODO: use penumbra api once its ready
-		public async Task Apply() {
+		public async Task<bool> Apply() {
 			main.CheckPenumbra();
 			if(main.penumbraIssue != null)
-				return;
+				return false;
 			
 			string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
 			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
@@ -635,8 +640,10 @@ namespace MaterialUI {
 				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
 					createOptions(mod);
 			
+			string curpath = "";
 			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
 				main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
+				curpath = modid + "/" + gamePath;
 				
 				// Used to allow game style format for the options in main
 				string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
@@ -780,15 +787,17 @@ namespace MaterialUI {
 					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 			} catch(Exception e) {
 				PluginLog.LogError(e, "Failed writing textures");
-				main.ui.ShowNotice($"Failed writing textures\n{e.Message}\n\nTry a Integrity Check in the Advanced tab");
+				main.ui.ShowNotice($"Failed writing texture\n{curpath}\n{e.Message}\n\nTry a Integrity Check in the Advanced tab");
 				
-				return;
+				return false;
 			}
 			
 			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
 			main.ui.CloseNotice();
 			
 			GC.Collect();
+			
+			return true;
 		}
 		
 		public void ApplyAsync() {
