@@ -259,7 +259,9 @@ namespace MaterialUI {
 			int failcount = 0;
 			int busycount = 0;
 			async Task download(string url, string name, string sha) {
-				busycount++;
+				lock(lockObj) {
+					busycount++;
+				}
 				
 				try {
 					using(Stream download = await (await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
@@ -299,10 +301,13 @@ namespace MaterialUI {
 			}
 			
 			await downloader();
-			if(busycount < 20)
+			
+			while(busycount > 0)
+				await Task.Delay(100);
+			
+			if(failcount < 20)
 				main.ui.CloseNotice();
 			
-			await Task.Delay(1000);
 			return changes;
 		}
 		
