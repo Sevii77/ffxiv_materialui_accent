@@ -58,6 +58,26 @@
 				"g": 15,
 				"b": 15
 			}
+		},
+		
+		{
+			"id": "limitbreak1",
+			"name": "Limit Break Filling",
+			"default": {
+				"r": 25,
+				"g": 220,
+				"b": 222
+			}
+		},
+		
+		{
+			"id": "limitbreak2",
+			"name": "Limit Break Full",
+			"default": {
+				"r": 190,
+				"g": 99,
+				"b": 221
+			}
 		}
 	],
 	
