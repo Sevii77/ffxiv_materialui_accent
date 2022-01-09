@@ -31,6 +31,11 @@
 	],
 	
 	"penumbra": [
-		
+		{
+			"name": "Limit Break",
+			"options": {
+				"Custom Color": ["ui/uld/limitbreak"],
+			}
+		}
 	]
 }
