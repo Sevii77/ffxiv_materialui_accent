@@ -21,6 +21,14 @@
 		},
 		
 		{
+			"name": "Target Castbar",
+			"options": {
+				"Minimal": ["ui/uld/partylist_gaugecast"],
+				
+			}
+		},
+		
+		{
 			"name": "Gauges",
 			"options": {
 				"Minimal": ["ui/uld/jobhudmnk0",
