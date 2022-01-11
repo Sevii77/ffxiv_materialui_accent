@@ -5,7 +5,7 @@
 	
 	"name": "Minimal Gauges",
 	
-	"description": "Minimal HP/MP, Limit Break and Simple Job gauges.",
+	"description": "Minimal HP/MP, Limit Break, and Simple Job gauges. Also includes a Target Castbar minimal option.",
 	
 	"color_options": [
 		
