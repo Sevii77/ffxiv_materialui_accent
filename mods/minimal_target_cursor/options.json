@@ -1,0 +1,23 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Minimal Target Cursor",
+	
+	"description": "A minimal style target cursor, with less clutter yet a vibrant focus target cursor, and improved lock-on reticle and circle.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Target Cursor",
+			"options": {
+				"Minimal": ["ui/uld/targetcursor"],
+				"Minimal Alt": ["ui/uld/targetcursor/option/alt"],
+			}
+		}
+	]
+}

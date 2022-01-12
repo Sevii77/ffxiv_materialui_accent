@@ -78,6 +78,8 @@ namespace MaterialUI {
 		public string description;
 		
 		// Generic
+		[JsonProperty("dalamud")] // TODO: allow options other than just a number
+		public Dictionary<string, int> styleOptions;
 		[JsonProperty("color_options")]
 		public OptionColor[] colorOptions;
 		[JsonProperty("penumbra")]
@@ -251,13 +253,15 @@ namespace MaterialUI {
 					changes.Add(sha.Value.Item2);
 				}
 			
+			Object lockObj = new Object();
 			int total = queue.Count;
 			int done = 0;
 			int failcount = 0;
-			
 			int busycount = 0;
 			async Task download(string url, string name, string sha) {
-				busycount++;
+				lock(lockObj) {
+					busycount++;
+				}
 				
 				try {
 					using(Stream download = await (await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)).Content.ReadAsStreamAsync())
@@ -266,37 +270,43 @@ namespace MaterialUI {
 					
 					main.ui.ShowNotice(string.Format("Downloading ({0}/{1})\n{2}", done, total, name));
 				} catch(Exception e) {
+					PluginLog.LogError(e, "Download failed");
 					// It failed, just add it back to the queue
 					queue.Add((url, name, sha));
 					failcount++;
 				}
 				
-				busycount--;
-				done++;
+				lock(lockObj) {
+					busycount--;
+					done++;
+				}
 			}
 			
 			async Task downloader() {
 				while(queue.Count > 0) {
-					for(int i = 0; i < Math.Min(queue.Count, 50); i++) {
+					int c = Math.Min(queue.Count, 100 - busycount);
+					for(int i = 0; i < c; i++) {
 						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
+					await Task.Delay(1000);
+					
 					if(failcount >= 20) {
-						await Task.Delay(2000);
 						main.ui.ShowNotice("Too many downloads failed, download has been stopped");
 						
 						return;
-					}
-					
-					while(busycount > 0) {
-						await Task.Delay(1000);
 					}
 				}
 			}
 			
 			await downloader();
-			main.ui.CloseNotice();
+			
+			while(busycount > 0)
+				await Task.Delay(100);
+			
+			if(failcount < 20)
+				main.ui.CloseNotice();
 			
 			return changes;
 		}
@@ -357,6 +367,7 @@ namespace MaterialUI {
 			await LoadOptions();
 			mods["base"].dir = dirAccent;
 			dirMods["Material UI"] = dirAccent.GetPathDir("mods");
+			main.ui.CloseNotice();
 			
 			string resp;
 			Repo data;
@@ -422,24 +433,9 @@ namespace MaterialUI {
 		
 		public void Update() {
 			Task.Run(async() => {
-				if(main.config.openOnStart)
-					main.ui.settingsVisible = true;
-				
-				for(int i = 0; i < 5; i++) {
-					try {
-						main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-						
-						break;
-					} catch(Exception e) {
-						if(i == 10) {
-							PluginLog.Log("Penumbra not found, exiting updater");
-							
-							return;
-						}
-					}
-					
-					await Task.Delay(1000);
-				}
+				main.CheckPenumbra();
+				if(main.penumbraIssue != null)
+					return;
 				
 				main.ui.ShowNotice("Loading " + repoMaster);
 				string resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoMaster));
@@ -450,7 +446,6 @@ namespace MaterialUI {
 				resp = await httpClient.GetStringAsync(String.Format("https://api.github.com/repos/{0}/git/trees/master?recursive=1", repoAccent));
 				data = JsonConvert.DeserializeObject<Repo>(resp);
 				dirAccent = PopulateDir(data, repoAccent);
-				main.ui.CloseNotice();
 				
 				await LoadMods();
 				List<string> changes = await UpdateCache();
@@ -489,7 +484,8 @@ namespace MaterialUI {
 				if(changes.Count == 0 && optionsNew.Count == 0)
 					return;
 				
-				Apply();
+				if(!await Apply())
+					return;
 				
 				if(optionsNew.Count > 0) {
 					changes.Insert(0, string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nNew Options:\n{0}\n\nUpdated Files:\n", string.Join("\n\n", optionsNew)));
@@ -499,7 +495,7 @@ namespace MaterialUI {
 					// main.ui.ShowNotice(string.Format("Material UI has been updated\nPlease rediscover mods in Penumbra\n\nUpdated Files:\n{0}", string.Join("\n", changes)));
 				}
 				
-				main.ui.ShowNotice(changes);
+				main.ui.ShowNotice(changes, true);
 			});
 		}
 		
@@ -532,8 +528,12 @@ namespace MaterialUI {
 						string cachepath = Path.GetFullPath(main.pluginInterface.ConfigDirectory + "/" + sha);
 						
 						if(File.Exists(cachepath)) {
-							if(!(new Tex(File.ReadAllBytes(cachepath))).CheckIntegrity())
+							try {
+								if(!(new Tex(File.ReadAllBytes(cachepath))).CheckIntegrity())
+									errors.Add(sha);
+							} catch(Exception e) {
 								errors.Add(sha);
+							}
 						} else
 							errors.Add(sha);
 					}
@@ -552,28 +552,14 @@ namespace MaterialUI {
 		}
 		
 		// TODO: use penumbra api once its ready
-		public async Task Apply() {
-			try {
-				main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-			} catch(Exception e) {
-				return;
-			}
+		public async Task<bool> Apply() {
+			main.CheckPenumbra();
+			if(main.penumbraIssue != null)
+				return false;
 			
 			string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
-			if(!File.Exists(penumbraConfigPath)) {
-				main.ui.ShowNotice("Can't find Penumbra Config.");
-				
-				return;
-			}
-			
 			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
 			string penumbraPath = (string)penumbraData?.ModDirectory;
-			if(penumbraPath == "") {
-				main.ui.ShowNotice("Penumbra Mod Directory has not been set.");
-				
-				return;
-			}
-			
 			
 			try {
 				Directory.Delete(Path.GetFullPath(penumbraPath + "/Material UI"), true);
@@ -638,7 +624,17 @@ namespace MaterialUI {
 					}
 					
 					foreach(KeyValuePair<string, string[]> subOption in option.options) {
-						meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption.Key));
+						bool subExists = false;
+						foreach(MetaGroupOption metaSub in meta.Groups[option.name].Options)
+							if(metaSub.OptionName == subOption.Key) {
+								subExists = true;
+								
+								break;
+							}
+						
+						if(!subExists)
+							meta.Groups[option.name].Options.Add(new MetaGroupOption(subOption.Key));
+						
 						optionTextures[mod.id][(option.name, subOption.Key)] = subOption.Value;
 					}
 				}
@@ -649,12 +645,10 @@ namespace MaterialUI {
 				if(mod.id != "base" && main.config.modOptions[mod.id].enabled)
 					createOptions(mod);
 			
-			foreach(KeyValuePair<string, Dictionary<(string, string), string[]>> a in optionTextures)
-				foreach(KeyValuePair<(string, string), string[]> b in a.Value)
-					PluginLog.Log($"[{a.Key}] {b.Key.Item1}/{b.Key.Item2} ({b.Value.Length})");
-			
+			string curpath = "";
 			void writeTex(Tex tex, string texturePath, string gamePath, string modid) {
 				main.ui.ShowNotice(string.Format("Applying\n{0}/{1}", modid, gamePath));
+				curpath = modid + "/" + gamePath;
 				
 				// Used to allow game style format for the options in main
 				string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
@@ -798,15 +792,17 @@ namespace MaterialUI {
 					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 			} catch(Exception e) {
 				PluginLog.LogError(e, "Failed writing textures");
-				main.ui.ShowNotice("Failed writing textures\nTry a Integrity Check in the Advanced tab");
+				main.ui.ShowNotice($"Failed writing texture\n{curpath}\n{e.Message}\n\nTry a Integrity Check in the Advanced tab", true);
 				
-				return;
+				return false;
 			}
 			
 			File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/meta.json"), JsonConvert.SerializeObject(meta, Formatting.Indented));
 			main.ui.CloseNotice();
 			
 			GC.Collect();
+			
+			return true;
 		}
 		
 		public void ApplyAsync() {

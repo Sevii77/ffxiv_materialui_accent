@@ -44,12 +44,18 @@ namespace MaterialUI {
 			settingsVisible = true;
 		}
 		
-		public void ShowNotice(string text) {
+		public void ShowNotice(string text, bool force = false) {
+			if(force)
+				settingsVisible = true;
+			
 			noticeVisible = true;
 			noticeText = new List<string>() {text};
 		}
 		
-		public void ShowNotice(List<string> text) {
+		public void ShowNotice(List<string> text, bool force = false) {
+			if(force)
+				settingsVisible = true;
+			
 			noticeVisible = true;
 			noticeText = new List<string>(text);
 		}
@@ -76,16 +82,23 @@ namespace MaterialUI {
 				if(ImGui.Button("Close"))
 					CloseNotice();
 			} else {
-				try {
-					main.pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
-				} catch(Exception e) {
-					ImGui.Text("Penumbra is not installed.");
+				if(main.penumbraIssue != null) {
+					ImGui.Text(main.penumbraIssue);
+					if(ImGui.Button("Retry")) {
+						main.CheckPenumbra();
+						main.updater.Update();
+					}
 					ImGui.End();
 					
 					return;
 				}
 				
 				if(!main.updater.mods.ContainsKey("base")) {
+					ImGui.Text("Failed loading remote data");
+					if(ImGui.Button("Retry")) {
+						main.CheckPenumbra();
+						main.updater.Update();
+					}
 					ImGui.End();
 					
 					return;
@@ -122,6 +135,31 @@ namespace MaterialUI {
 						
 						main.pluginInterface.SavePluginConfig(main.config);
 						main.updater.ApplyAsync();
+					}
+					
+					ImGui.SameLine();
+					if(ImGui.Button("Apply Dalamud Style")) {
+						main.CheckPenumbra();
+						if(main.penumbraIssue != null) {
+							ImGui.End();
+							
+							return;
+						}
+						
+						main.config.color = colorAccent;
+						
+						Dictionary<string, int> styleOverrides = new();
+						foreach(Mod mod in main.updater.mods.Values) {
+							string id = mod.id;
+							if(id == "base")
+								continue;
+							
+							if(main.config.modOptions[id].enabled && mod.options.styleOptions != null)
+								foreach(KeyValuePair<string, int> val in mod.options.styleOptions)
+									styleOverrides[val.Key] = val.Value;
+						}
+						
+						DalamudStyle.Apply(main.config, styleOverrides);
 					}
 					
 					ImGui.SameLine();
@@ -192,30 +230,31 @@ namespace MaterialUI {
 							}
 							
 							ImGui.PopStyleVar();
-							ImGui.Separator();
-							ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 							
-							if(ImGui.TreeNode("Options")) {
-								ImGui.Text("Options that will be added to Penumbra");
+							if(options.penumbraOptions.Length > 0) {
 								ImGui.Separator();
-								
-								foreach(OptionPenumbra option in options.penumbraOptions) {
-									ImGui.Text(option.name);
+								ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+								if(ImGui.TreeNode("Options")) {
+									ImGui.Text("Options that will be added to Penumbra");
+									ImGui.Separator();
 									
-									int i = 0;
-									foreach(string suboption in option.options.Keys) {
-										i++;
-										ImGui.Text((i == option.options.Count ? "└ " : "├ ") + suboption);
+									foreach(OptionPenumbra option in options.penumbraOptions) {
+										ImGui.Text(option.name);
+										
+										int i = 0;
+										foreach(string suboption in option.options.Keys) {
+											i++;
+											ImGui.Text((i == option.options.Count ? "└ " : "├ ") + suboption);
+										}
 									}
+									
+									ImGui.TreePop();
 								}
-								
-								ImGui.TreePop();
+								ImGui.PopStyleVar();
 							}
 							
-							ImGui.PopStyleVar();
 							ImGui.Separator();
 							ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
-							
 							if(ImGui.TreeNode("Files")) {
 								Dir uld = dir.GetPathDir(string.Format("elements_{0}/ui/uld", main.config.style));
 								if(uld != null) {
@@ -233,8 +272,8 @@ namespace MaterialUI {
 								
 								ImGui.TreePop();
 							}
-							
 							ImGui.PopStyleVar();
+							
 							ImGui.Separator();
 							
 							foreach(OptionColor option in options.colorOptions) {
@@ -322,6 +361,10 @@ namespace MaterialUI {
 					ImGui.Separator();
 					if(ImGui.Button("Check Integrity"))
 						main.updater.Repair();
+					
+					// ImGui.Separator();
+					// if(ImGui.Button("Dalamud test"))
+					// 	DalamudStyle.Apply(main.config);
 					
 					ImGui.EndChild();
 					ImGui.EndTabItem();

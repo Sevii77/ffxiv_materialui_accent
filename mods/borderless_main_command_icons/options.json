@@ -1,0 +1,22 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Borderless Main Command Icons",
+	
+	"description": "The MUI Main Command Icons, but borderless.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Main Command Icons",
+			"options": {
+				"Borderless": ["ui/uld/maincommand_icon"],
+			}
+		}
+	]
+}
