@@ -187,8 +187,7 @@
 					"UI/HUD/JobHudSimple_StackB",
 					"UI/HUD/Parameter_Gauge",
 					"UI/HUD/Parameter_Gauge2",
-					"UI/HUD/ContentGauge",
-					"ui/uld/partylist_gaugehp"
+					"UI/HUD/ContentGauge"
 				],
 				"Silver": [
 					"UI/HUD/JobHudMNK0/OPTIONS/Silver Frame Gaugebar",
@@ -198,8 +197,7 @@
 					"UI/HUD/JobHudSimple_StackB/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge2/OPTIONS/Silver Frame Gaugebar",
-					"UI/HUD/ContentGauge",
-					"ui/uld/partylist_gaugehp"
+					"UI/HUD/ContentGauge"
 				]
 			}
 		},
