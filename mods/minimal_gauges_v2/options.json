@@ -3,9 +3,9 @@
 	
 	"author_contact": "Meconate#2761",
 	
-	"name": "Minimal Gauges",
+	"name": "Minimal Gauges V2",
 	
-	"description": "Minimal HP/MP, Limit Break, and Simple Job gauges. Also includes a Target Castbar minimal option.",
+	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
 	
 	"color_options": [
 		
@@ -29,6 +29,23 @@
 		},
 		
 		{
+			"name": "Target Info",
+			"options": {
+				"Minimal": ["ui/uld/targetinfo/option/minimal"],
+				"Minimal (with object line)": ["ui/uld/targetinfo/option/minimal/wline"],
+				
+			}
+		}
+		
+		{
+			"name": "Party List Bars",
+			"options": {
+				"Minimal": ["ui/uld/partylist_gaugehp"],
+				
+			}
+		}
+		
+		{
 			"name": "Gauges",
 			"options": {
 				"Minimal": ["ui/uld/jobhudmnk0",
@@ -38,7 +55,6 @@
 							"ui/uld/jobhudsimple_stackb",
 							"ui/uld/parameter_gauge",
 							"ui/uld/parameter_gauge2",
-							"ui/uld/partylist_gaugehp",
 							"ui/uld/contentgauge"],
 				
 			}
