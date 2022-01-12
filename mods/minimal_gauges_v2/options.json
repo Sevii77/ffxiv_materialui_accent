@@ -35,7 +35,7 @@
 				"Minimal (with object line)": ["ui/uld/targetinfo/option/minimal/wline"],
 				
 			}
-		}
+		},
 		
 		{
 			"name": "Party List Bars",
@@ -43,7 +43,7 @@
 				"Minimal": ["ui/uld/partylist_gaugehp"],
 				
 			}
-		}
+		},
 		
 		{
 			"name": "Gauges",
