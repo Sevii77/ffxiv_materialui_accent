@@ -10,7 +10,8 @@ def search_dir(path):
 				sys.stdout.write(path2 + "\n")
 				sys.stdout.flush()
 				
-				subprocess.Popen(["convert", path2, "-define", "dds:compression=none", path2[:-3] + "dds"], shell = True)
+				os.system("convert " + path2 + " -define" + " dds:compression=none " + path2[:-3] + "dds")
+				# subprocess.Popen(["convert", path2, "-define", "dds:compression=none", path2[:-3] + "dds"], shell = True)
 		else:
 			search_dir(path2)
 
