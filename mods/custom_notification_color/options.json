@@ -12,9 +12,9 @@
 			"id": "notification",
 			"name": "Notification",
 			"default": {
-				"r": 123,
-				"g": 132,
-				"b": 138
+				"r": 72,
+				"g": 85,
+				"b": 124
 			}
 		}
 	],
