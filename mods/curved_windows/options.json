@@ -7,6 +7,10 @@
 	
 	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
 	
+	"themes": ["Material UI Black Plus"],
+	
+	"standalone": false,
+	
 	"dalamud": {
 		"WindowRounding": 11,
 		"FrameRounding": 12,
@@ -14,73 +18,26 @@
 		"TabRounding": 4
 	},
 	
-	"color_options": [
-		
-	],
+	"options": [],
 	
 	"penumbra": [
 		{
 			"name": "Selected Window",
 			"options": {
 				"Bar": [
-					"ui/uld/windowa_bgselected_corner",
-					"ui/uld/windowa_bgselected_h",
-					"ui/uld/windowa_bgselected_hv",
-					"ui/uld/windowa_bgselected_v",
-					
-					"ui/uld/windowpvp_bgselected_corner",
-					"ui/uld/windowpvp_bgselected_h",
-					"ui/uld/windowpvp_bgselected_hv",
-					"ui/uld/windowpvp_bgselected_v",
-					
-					"ui/uld/harpoonwindowa_selected_corner",
-					"ui/uld/harpoonwindowa_selected_h",
-					"ui/uld/harpoonwindowa_selected_v",
-					
-					"ui/uld/windowf_bgnormal_corner",
-					"ui/uld/windowf_bgnormal_h",
-					"ui/uld/windowf_bgnormal_hv",
-					"ui/uld/windowf_bgnormal_v"
+					"ui/uld/windowa_bgselected_corner_hr1",
+					"ui/uld/windowf_bgnormal_corner_hr1",
+					"ui/uld/windowpvp_bgselected_corner_hr1"
 				],
 				"Border": [
-					"ui/uld/windowa_bgselected_corner/option/full",
-					"ui/uld/windowa_bgselected_h/option/full_window_border",
-					"ui/uld/windowa_bgselected_hv",
-					"ui/uld/windowa_bgselected_v/option/full_window_border",
-					
-					"ui/uld/windowpvp_bgselected_corner/option/full",
-					"ui/uld/windowpvp_bgselected_h/option/full_window_border",
-					"ui/uld/windowpvp_bgselected_hv",
-					"ui/uld/windowpvp_bgselected_v/option/full_window_border",
-					
-					"ui/uld/harpoonwindowa_selected_corner/option/full_window_border",
-					"ui/uld/harpoonwindowa_selected_h/option/full_window_border",
-					"ui/uld/harpoonwindowa_selected_v/option/full_window_border",
-					
-					"ui/uld/windowf_bgnormal_corner",
-					"ui/uld/windowf_bgnormal_h",
-					"ui/uld/windowf_bgnormal_hv",
-					"ui/uld/windowf_bgnormal_v"
+					"ui/uld/windowa_bgselected_corner_hr1/option/full",
+					"ui/uld/windowf_bgnormal_corner_hr1",
+					"ui/uld/windowpvp_bgselected_corner_hr1/option/full"
 				],
 				"Clean": [
-					"ui/uld/windowa_bgselected_corner/option/borderless",
-					"ui/uld/windowa_bgselected_h/option/no_window_border",
-					"ui/uld/windowa_bgselected_hv",
-					"ui/uld/windowa_bgselected_v",
-					
-					"ui/uld/windowpvp_bgselected_corner/option/borderless",
-					"ui/uld/windowpvp_bgselected_h/option/no_window_border",
-					"ui/uld/windowpvp_bgselected_hv",
-					"ui/uld/windowpvp_bgselected_v",
-					
-					"ui/uld/harpoonwindowa_selected_corner/option/no_window_border",
-					"ui/uld/harpoonwindowa_selected_h/option/no_window_border",
-					"ui/uld/harpoonwindowa_selected_v",
-					
-					"ui/uld/windowf_bgnormal_corner/option/borderless",
-					"ui/uld/windowf_bgnormal_h/option/no_window_border",
-					"ui/uld/windowf_bgnormal_hv",
-					"ui/uld/windowf_bgnormal_v"
+					"ui/uld/windowa_bgselected_corner_hr1/option/borderless",
+					"ui/uld/windowf_bgnormal_corner_hr1/option/borderless",
+					"ui/uld/windowpvp_bgselected_corner_hr1/option/borderless"
 				],
 			}
 		},
@@ -88,18 +45,8 @@
 		{
 			"name": "Non-Selected Window",
 			"options": {
-				"Solid": [
-					"ui/uld/windowa_bgnormal_corner",
-					"ui/uld/windowa_bgnormal_h",
-					"ui/uld/windowa_bgnormal_hv",
-					"ui/uld/windowa_bgnormal_v"
-				],
-				"Transparent": [
-					"ui/uld/windowa_bgnormal_corner/option/trans",
-					"ui/uld/windowa_bgnormal_h/option/non-selected window transparency black style",
-					"ui/uld/windowa_bgnormal_hv/option/non-selected window transparency black style",
-					"ui/uld/windowa_bgnormal_v/option/non-selected window transparency black style"
-				],
+				"Solid": ["ui/uld/windowa_bgnormal_corner_hr1"],
+				"Transparent": ["ui/uld/windowa_bgnormal_corner_hr1/option/trans"],
 			}
 		}
 	]

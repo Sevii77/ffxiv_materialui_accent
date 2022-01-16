@@ -1,0 +1,12 @@
+{
+	"Author": "Sevii",
+	"Name": "Aetherment",
+	"Punchline": "todo",
+	"Description": "todo",
+	"InternalName": "Aetherment",
+	"ApplicableVersion": "any",
+	"DalamudApiLevel": 5,
+	"LoadPriority": 1,
+	"Tags": ["material ui", "material", "ui", "penumbra"],
+	"IconUrl": "https://raw.githubusercontent.com/Sevii77/ffxiv_materialui_accent/v2/images/icon.png"
+}

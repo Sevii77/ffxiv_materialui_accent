@@ -7,15 +7,17 @@
 	
 	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
 	
-	"color_options": [
-		
-	],
+	"themes": [],
+	
+	"standalone": false,
+	
+	"color_options": [],
 	
 	"penumbra": [
 		{
 			"name": "Limit Break",
 			"options": {
-				"Minimal": ["ui/uld/limitbreak"],
+				"Minimal": ["ui/uld/limitbreak_hr1"],
 				
 			}
 		},
@@ -23,7 +25,7 @@
 		{
 			"name": "Target Castbar",
 			"options": {
-				"Minimal": ["ui/uld/partylist_gaugecast"],
+				"Minimal": ["ui/uld/partylist_gaugecast_hr1"],
 				
 			}
 		},
@@ -31,8 +33,8 @@
 		{
 			"name": "Target Info",
 			"options": {
-				"Minimal": ["ui/uld/targetinfo/option/minimal"],
-				"Minimal (with object line)": ["ui/uld/targetinfo/option/minimal/wline"],
+				"Minimal": ["ui/uld/targetinfo_hr1/option/minimal"],
+				"Minimal (with object line)": ["ui/uld/targetinfo_hr1/option/minimal/wline"],
 				
 			}
 		},
@@ -40,7 +42,7 @@
 		{
 			"name": "Party List Bars",
 			"options": {
-				"Minimal": ["ui/uld/partylist_gaugehp"],
+				"Minimal": ["ui/uld/partylist_gaugehp_hr1"],
 				
 			}
 		},
@@ -48,15 +50,11 @@
 		{
 			"name": "Gauges",
 			"options": {
-				"Minimal": ["ui/uld/jobhudmnk0",
-							"ui/uld/jobhudsam1",
-							"ui/uld/jobhudsmn1",
-							"ui/uld/jobhudsimple_stacka",
-							"ui/uld/jobhudsimple_stackb",
-							"ui/uld/parameter_gauge",
-							"ui/uld/parameter_gauge2",
-							"ui/uld/contentgauge"],
-				
+				"Minimal": [
+					"ui/uld/parameter_gauge_hr1",
+					"ui/uld/parameter_gauge2_hr1",
+					"ui/uld/contentgauge_hr1"
+				]
 			}
 		}
 	]

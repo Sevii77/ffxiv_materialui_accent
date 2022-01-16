@@ -1,2 +1,2 @@
-dotnet build ./plugin/MaterialUI.csproj
-mv $HOME/XIVLauncher/devPlugins/MaterialUI/MaterialUI/latest.zip ./release.zip
+dotnet build ./plugin/Aetherment.csproj
+mv $HOME/XIVLauncher/devPlugins/Aetherment/Aetherment/latest.zip ./release.zip
