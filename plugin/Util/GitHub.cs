@@ -30,23 +30,21 @@ namespace Aetherment.Util {
 				dynamic repo = JsonConvert.DeserializeObject(await httpClient.GetStringAsync($"https://api.github.com/repos/{info.author}/{info.repo}/git/trees/{info.branch}?recursive=1"));
 				Dir dir = new Dir("", repo?.sha);
 				
-				foreach(var file in repo?.tree) {
+				foreach(var node in repo?.tree) {
 					Dir curdir = dir;
-					string[] path = file.path.Split("/");
+					string[] path = node.path.ToLower().Split("/");
 					
-					if(file.type == "tree") {
+					if(node.type == "tree") {
 						for(int i = 0; i < path.Length - 1; i++)
 							curdir = curdir.dirs[path[i]];
 						
 						string n = path[path.Length - 1];
-						curdir.AddDir(n, file.sha);
-						// curdir.dirs[n] = new Dir(n, file.sha);
-					} if(file.type == "blob") {
+						curdir.AddDir(n, node.sha);
+					} if(node.type == "blob") {
 						for(int i = 0; i < path.Length - 1; i++)
 							curdir = curdir.dirs[path[i]];
 						
-						curdir.AddFile(path[path.Length - 1], file.sha, $"https://raw.githubusercontent.com/{info.author}/{info.repo}/{info.branch}/{file.path}");
-						// curdir.files[path[path.Length - 1]] = (file.sha, $"https://raw.githubusercontent.com/{info.author}/{info.repo}/{info.branch}/{file.path}";
+						curdir.AddFile(path[path.Length - 1], node.sha, $"https://raw.githubusercontent.com/{info.author}/{info.repo}/{info.branch}/{node.path}");
 					}
 				}
 				
