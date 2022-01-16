@@ -1,0 +1,22 @@
+{
+	"author": "Espresso",
+	
+	"author_contact": "Espresso#7777",
+	
+	"name": "Alternative Teleport Icons",
+	
+	"description": "If you don't like the region-based icons the game currently provides in the teleport menu, or it appears to hinder your modern UI's aesthetics, feel free to give this mod a try! ",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Teleport Icons",
+			"options": {
+				"Alternative": ["ui/uld/teleport"]
+			}
+		}
+	]
+}

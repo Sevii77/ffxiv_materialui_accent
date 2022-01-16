@@ -48,15 +48,17 @@
 		{
 			"name": "Gauges",
 			"options": {
-				"Minimal": ["ui/uld/jobhudmnk0",
-							"ui/uld/jobhudsam1",
-							"ui/uld/jobhudsmn1",
-							"ui/uld/jobhudsimple_stacka",
-							"ui/uld/jobhudsimple_stackb",
-							"ui/uld/parameter_gauge",
-							"ui/uld/parameter_gauge2",
-							"ui/uld/contentgauge"],
-				
+				"Minimal": [
+					"ui/uld/jobhudbrd0",
+					"ui/uld/jobhudmnk0",
+					"ui/uld/jobhudsam1",
+					"ui/uld/jobhudsmn1",
+					"ui/uld/jobhudsimple_stacka",
+					"ui/uld/jobhudsimple_stackb",
+					"ui/uld/parameter_gauge",
+					"ui/uld/parameter_gauge2",
+					"ui/uld/contentgauge"
+				]
 			}
 		}
 	]

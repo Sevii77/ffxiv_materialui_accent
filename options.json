@@ -180,6 +180,7 @@
 			"name": "Gauges",
 			"options": {
 				"Square": [
+					"UI/HUD/JobHudBRD0",
 					"UI/HUD/JobHudMNK0",
 					"UI/HUD/JobHudSAM1",
 					"UI/HUD/JobHudSMN1",
@@ -190,6 +191,7 @@
 					"UI/HUD/ContentGauge"
 				],
 				"Silver": [
+					"UI/HUD/JobHudBRD0/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudMNK0/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSAM1/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSMN1/OPTIONS/Silver Frame Gaugebar",
