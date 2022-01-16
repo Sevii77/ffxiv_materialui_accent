@@ -1,0 +1,30 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Custom Notification Color",
+	
+	"description": "Customise the MUI notification background color. Remember to reapply the MUI theme for the mod to take effect.",
+	
+	"color_options": [
+		{
+			"id": "notification",
+			"name": "Notification",
+			"default": {
+				"r": 123,
+				"g": 132,
+				"b": 138
+			}
+		}
+	],
+	
+	"penumbra": [
+		{
+			"name": "Notification",
+			"options": {
+				"Custom Color": ["ui/uld/notification"]
+			}
+		}
+	]
+}
