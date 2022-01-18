@@ -5,7 +5,7 @@
 	
 	"name": "Bar Enmity",
 	
-	"description": "Meconate's Bar Enmity Icons, now fully color customisable. Including all 3 variants; solid colored, multicolored and filled.",
+	"description": "Meconate's Bar Enmity Icons, now fully color customisable. Including all 3 variants; solid colored, multicolored and filled. Now with borderless options, and updated minimal health and cast bars.",
 	
 	"color_options": [
 		{
@@ -55,7 +55,10 @@
 			"options": {
 				"Bar Fill": ["ui/uld/enemylist/option/fill"],
 				"Bar Solid": ["ui/uld/enemylist/option/solid"],
-				"Bar Multi": ["ui/uld/enemylist/option/multi"]
+				"Bar Multi": ["ui/uld/enemylist/option/multi"],
+				"Bar Fill (Borderless)": ["ui/uld/enemylist/option/fill/borderless"],
+				"Bar Solid (Borderless)": ["ui/uld/enemylist/option/solid/borderless"],
+				"Bar Multi (Borderless)": ["ui/uld/enemylist/option/multi/borderless"]
 			}
 		}
 	]
