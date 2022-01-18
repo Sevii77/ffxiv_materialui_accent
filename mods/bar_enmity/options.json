@@ -55,7 +55,10 @@
 			"options": {
 				"Bar Fill": ["ui/uld/enemylist/option/fill"],
 				"Bar Solid": ["ui/uld/enemylist/option/solid"],
-				"Bar Multi": ["ui/uld/enemylist/option/multi"]
+				"Bar Multi": ["ui/uld/enemylist/option/multi"],
+				"Bar Fill (Borderless)": ["ui/uld/enemylist/option/fill/borderless"],
+				"Bar Solid (Borderless)": ["ui/uld/enemylist/option/solid/borderless"],
+				"Bar Multi (Borderless)": ["ui/uld/enemylist/option/multi/borderless"]
 			}
 		}
 	]
