@@ -240,7 +240,9 @@
 					"ui/icon/062140",
 					"ui/icon/062141",
 					"ui/icon/062142",
-					"ui/icon/062143"
+					"ui/icon/062143",
+					"ui/icon/062144"
+					
 				],
 				"Black Edge Different DPS Color": [
 					"ui/icon/062105/option/diffrange",
@@ -286,7 +288,8 @@
 					"ui/icon/062140",
 					"ui/icon/062141",
 					"ui/icon/062142",
-					"ui/icon/062143"
+					"ui/icon/062143",
+					"ui/icon/062144"
 				]
 			}
 		}
