@@ -5,7 +5,7 @@
 	
 	"name": "Silver Minimap",
 	
-	"description": "A silver framed minimap.",
+	"description": "A silver framed minimap, now available in a rounded option. (Chromatized maps shown in the rounded preview by Gabster)",
 	
 	"color_options": [
 		
@@ -15,8 +15,14 @@
 		{
 			"name": "Minimap",
 			"options": {
-				"Silver": ["ui/uld/navimap",
-				           "ui/uld/navimap_mask"],
+				"Silver": [
+					"ui/uld/navimap",
+				    "ui/uld/navimap_mask"
+				],
+				"Silver Rounded": [
+					"ui/uld/navimap/option/rounded",
+					"ui/uld/navimap_mask/option/rounded"
+				]
 			}
 		}
 	]
