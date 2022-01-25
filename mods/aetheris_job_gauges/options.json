@@ -1,0 +1,45 @@
+{
+	"author": "Vec7rex",
+	
+	"author_contact": "Vec7rex#9495",
+	
+	"name": "Aetheris - Job Gauges",
+	
+	"description": "Replaces the standard HP Bar, MP Bar and Job Gauge with cleaner ones. There are 2 variants available.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Gauges",
+			"options": {
+				"Hydaelyn": [
+					"ui/uld/jobhudbrd0",
+					"ui/uld/jobhudmnk0",
+					"ui/uld/jobhudsam1",
+					"ui/uld/jobhudsmn1",
+					"ui/uld/jobhudnin1",
+					"ui/uld/jobhudsimple_stacka",
+					"ui/uld/jobhudsimple_stackb",
+					"ui/uld/parameter_gauge",
+					"ui/uld/parameter_gauge2",
+					"ui/uld/contentgauge"
+				],
+				"Zodiark": [
+					"ui/uld/jobhudbrd0/option/zodiark/",
+					"ui/uld/jobhudmnk0/option/zodiark/",
+					"ui/uld/jobhudsam1/option/zodiark/",
+					"ui/uld/jobhudsmn1/option/zodiark/",
+					"ui/uld/jobhudnin1/option/zodiark/",
+					"ui/uld/jobhudsimple_stacka/option/zodiark/",
+					"ui/uld/jobhudsimple_stackb/option/zodiark/",
+					"ui/uld/parameter_gauge/option/zodiark/",
+					"ui/uld/parameter_gauge2/option/zodiark/",
+					"ui/uld/contentgauge"
+				]
+			}
+		}
+	]
+}

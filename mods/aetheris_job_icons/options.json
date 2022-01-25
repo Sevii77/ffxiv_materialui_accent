@@ -1,0 +1,68 @@
+{
+	"author": "Vec7rex",
+	
+	"author_contact": "Vec7rex#9495",
+	
+	"name": "Aetheris - Job Icons",
+	
+	"description": "Replaces the standard Job Icons with cleaner ones.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Job Icons - Party List",
+			"options": {
+				"Aetheris": [
+					"ui/icon/062042",
+					"ui/icon/062101",
+					"ui/icon/062102",
+					"ui/icon/062103",
+					"ui/icon/062104",
+					"ui/icon/062105",
+					"ui/icon/062106",
+					"ui/icon/062107",
+					"ui/icon/062108",
+					"ui/icon/062109",
+					"ui/icon/062110",
+					"ui/icon/062111",
+					"ui/icon/062112",
+					"ui/icon/062113",
+					"ui/icon/062114",
+					"ui/icon/062115",
+					"ui/icon/062116",
+					"ui/icon/062117",
+					"ui/icon/062118",
+					"ui/icon/062119",
+					"ui/icon/062120",
+					"ui/icon/062121",
+					"ui/icon/062122",
+					"ui/icon/062123",
+					"ui/icon/062124",
+					"ui/icon/062125",
+					"ui/icon/062126",
+					"ui/icon/062127",
+					"ui/icon/062128",
+					"ui/icon/062129",
+					"ui/icon/062130",
+					"ui/icon/062131",
+					"ui/icon/062132",
+					"ui/icon/062133",
+					"ui/icon/062134",
+					"ui/icon/062135",
+					"ui/icon/062136",
+					"ui/icon/062137",
+					"ui/icon/062138",
+					"ui/icon/062139",
+					"ui/icon/062140",
+					"ui/icon/062141",
+					"ui/icon/062142",
+					"ui/icon/062143",
+					"ui/icon/062144"
+				]
+			}
+		}
+	]
+}
