@@ -28,15 +28,15 @@
 					"ui/uld/contentgauge"
 				],
 				"Zodiark": [
-					"ui/uld/jobhudbrd0/option/zodiark/",
-					"ui/uld/jobhudmnk0/option/zodiark/",
-					"ui/uld/jobhudsam1/option/zodiark/",
-					"ui/uld/jobhudsmn1/option/zodiark/",
-					"ui/uld/jobhudnin1/option/zodiark/",
-					"ui/uld/jobhudsimple_stacka/option/zodiark/",
-					"ui/uld/jobhudsimple_stackb/option/zodiark/",
-					"ui/uld/parameter_gauge/option/zodiark/",
-					"ui/uld/parameter_gauge2/option/zodiark/",
+					"ui/uld/jobhudbrd0/option/zodiark",
+					"ui/uld/jobhudmnk0/option/zodiark",
+					"ui/uld/jobhudsam1/option/zodiark",
+					"ui/uld/jobhudsmn1/option/zodiark",
+					"ui/uld/jobhudnin1/option/zodiark",
+					"ui/uld/jobhudsimple_stacka/option/zodiark",
+					"ui/uld/jobhudsimple_stackb/option/zodiark",
+					"ui/uld/parameter_gauge/option/zodiark",
+					"ui/uld/parameter_gauge2/option/zodiark",
 					"ui/uld/contentgauge"
 				]
 			}
