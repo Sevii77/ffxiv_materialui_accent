@@ -46,6 +46,14 @@
 		},
 		
 		{
+			"name": "Nameplate Bar",
+			"options": {
+				"Minimal": ["ui/uld/nameplate"],
+				
+			}
+		},
+		
+		{
 			"name": "Gauges",
 			"options": {
 				"Minimal": [
