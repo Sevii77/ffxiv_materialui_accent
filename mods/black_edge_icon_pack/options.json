@@ -103,6 +103,46 @@
 		},
 		
 		{
+			"name": "Marketboard Icons",
+			"options": {
+				"Black Edge": [
+					"ui/icon/060101",
+					"ui/icon/060102",
+					"ui/icon/060103",
+					"ui/icon/060104",
+					"ui/icon/060105",
+					"ui/icon/060106",
+					"ui/icon/060107",
+					"ui/icon/060108",
+					"ui/icon/060109",
+					"ui/icon/060112",
+					"ui/icon/060113",
+					"ui/icon/060114",
+					"ui/icon/060115",
+					"ui/icon/060116",
+					"ui/icon/060117",
+					"ui/icon/060118",
+					"ui/icon/060119",
+					"ui/icon/060120",
+					"ui/icon/060121",
+					"ui/icon/060122",
+					"ui/icon/060123",
+					"ui/icon/060170",
+					"ui/icon/060171",
+					"ui/icon/060172",
+					"ui/icon/060176",
+					"ui/icon/060177",
+					"ui/icon/060178",
+					"ui/icon/060180",
+					"ui/icon/060181",
+					"ui/icon/060182",
+					"ui/icon/060183",
+					"ui/icon/060184"
+				]
+			}
+		},
+		
+		{
 			"name": "Job Icons - Contents",
 			"options": {
 				"Black Edge": [
