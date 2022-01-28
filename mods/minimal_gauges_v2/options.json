@@ -38,6 +38,14 @@
 		},
 		
 		{
+			"name": "Experience Bar",
+			"options": {
+				"Minimal": ["ui/uld/exp_gauge"],
+				
+			}
+		},
+		
+		{
 			"name": "Party List Bars",
 			"options": {
 				"Minimal": ["ui/uld/partylist_gaugehp"],
