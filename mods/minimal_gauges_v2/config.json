@@ -1,0 +1,97 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Minimal Gauges V2",
+	
+	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
+	
+	"requirements": [],
+	
+	"color_inherit": ["material_ui_black_plus"],
+	
+	"standalone": true,
+	
+	"options": [
+		{
+			"type": "rgb",
+			"id": "shield",
+			"name": "Party List Shield",
+			"default": {
+				"r": 255,
+				"g": 211,
+				"b": 0
+			}
+		},
+		
+		{
+			"type": "rgb",
+			"id": "targetcast",
+			"name": "Target Castbar",
+			"default": {
+				"r": 209,
+				"g": 134,
+				"b": 11
+			}
+		},
+		
+		{
+			"type": "rgb",
+			"id": "targetcastinter",
+			"name": "Target Castbar Interrupt",
+			"default": {
+				"r": 139,
+				"g": 15,
+				"b": 15
+			}
+		},
+		
+		{
+			"type": "rgb",
+			"id": "limitbreak1",
+			"name": "Limit Break Filling",
+			"default": {
+				"r": 25,
+				"g": 220,
+				"b": 222
+			}
+		},
+		
+		{
+			"type": "rgb",
+			"id": "limitbreak2",
+			"name": "Limit Break Full",
+			"default": {
+				"r": 190,
+				"g": 99,
+				"b": 221
+			}
+		},
+		
+		{
+			"type": "multi",
+			"name": "Minimal",
+			"options": {
+				"Limit Break": ["ui/uld/limitbreak_hr1"],
+				"Target Castbar": ["ui/uld/partylist_gaugecast_hr1"],
+				"Party List Bars": ["ui/uld/partylist_gaugehp_hr1"],
+				"Gauges": [
+					"ui/uld/parameter_gauge_hr1",
+					"ui/uld/parameter_gauge2_hr1",
+					"ui/uld/contentgauge_hr1"
+				]
+			}
+		},
+		
+		{
+			"type": "single",
+			"name": "Target Info",
+			"options": {
+				"Minimal": ["ui/uld/targetinfo_hr1/option/minimal"],
+				"Minimal (with object line)": ["ui/uld/targetinfo_hr1/option/minimal/wline"],
+				
+			}
+		}
+	]
+}
