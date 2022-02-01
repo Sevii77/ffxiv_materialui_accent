@@ -1,0 +1,24 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Static Proc",
+	
+	"description": "Replaces the ability proc with a static alternative, and gives an alternative look to the highlight frame. Fully color customisable through the main plugin options.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Macro Gear Icon",
+			"options": {
+				"Show": ["ui/uld/icona_frame"],
+				"Remove": ["ui/uld/icona_frame/option/hide_macro_icon"]
+			}
+		}
+		
+	]
+}
