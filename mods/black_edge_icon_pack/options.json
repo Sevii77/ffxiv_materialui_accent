@@ -5,7 +5,7 @@
 	
 	"name": "Black Edge Icon Pack",
 	
-	"description": "The Black Edge Icon Pack, now available directly through the Material UI plugin. Includes party list icons, contents and macro job icons.",
+	"description": "The Black Edge Icon Pack, now available directly through the Material UI plugin. Includes party list icons, contents, macro job icons and marketboard icons.",
 	
 	"color_options": [
 		
@@ -98,6 +98,80 @@
 					"ui/icon/062837",
 					"ui/icon/062839",
 					"ui/icon/062840"
+				]
+			}
+		},
+		
+		{
+			"name": "Marketboard Icons",
+			"options": {
+				"Black Edge": [
+					"ui/icon/060101",
+					"ui/icon/060102",
+					"ui/icon/060103",
+					"ui/icon/060104",
+					"ui/icon/060105",
+					"ui/icon/060106",
+					"ui/icon/060107",
+					"ui/icon/060108",
+					"ui/icon/060109",
+					"ui/icon/060112",
+					"ui/icon/060113",
+					"ui/icon/060114",
+					"ui/icon/060115",
+					"ui/icon/060116",
+					"ui/icon/060117",
+					"ui/icon/060118",
+					"ui/icon/060119",
+					"ui/icon/060120",
+					"ui/icon/060121",
+					"ui/icon/060122",
+					"ui/icon/060123",
+					"ui/icon/060170",
+					"ui/icon/060171",
+					"ui/icon/060172",
+					"ui/icon/060176",
+					"ui/icon/060177",
+					"ui/icon/060178",
+					"ui/icon/060180",
+					"ui/icon/060181",
+					"ui/icon/060182",
+					"ui/icon/060183",
+					"ui/icon/060184"
+				],
+				"Black Edge Different Icons": [
+					"ui/icon/060101/option/diffjob",
+					"ui/icon/060102/option/diffjob",
+					"ui/icon/060103/option/diffjob",
+					"ui/icon/060104/option/diffjob",
+					"ui/icon/060105/option/diffjob",
+					"ui/icon/060106/option/diffjob",
+					"ui/icon/060107/option/diffjob",
+					"ui/icon/060108/option/diffjob",
+					"ui/icon/060109/option/diffjob",
+					"ui/icon/060112",
+					"ui/icon/060113",
+					"ui/icon/060114",
+					"ui/icon/060115",
+					"ui/icon/060116",
+					"ui/icon/060117",
+					"ui/icon/060118",
+					"ui/icon/060119",
+					"ui/icon/060120",
+					"ui/icon/060121",
+					"ui/icon/060122",
+					"ui/icon/060123",
+					"ui/icon/060170",
+					"ui/icon/060171",
+					"ui/icon/060172",
+					"ui/icon/060176",
+					"ui/icon/060177",
+					"ui/icon/060178",
+					"ui/icon/060180",
+					"ui/icon/060181",
+					"ui/icon/060182",
+					"ui/icon/060183",
+					"ui/icon/060184"
 				]
 			}
 		},
@@ -240,7 +314,9 @@
 					"ui/icon/062140",
 					"ui/icon/062141",
 					"ui/icon/062142",
-					"ui/icon/062143"
+					"ui/icon/062143",
+					"ui/icon/062144"
+					
 				],
 				"Black Edge Different DPS Color": [
 					"ui/icon/062105/option/diffrange",
@@ -285,7 +361,9 @@
 					"ui/icon/062139",
 					"ui/icon/062140",
 					"ui/icon/062141",
-					"ui/icon/062143"
+					"ui/icon/062142",
+					"ui/icon/062143",
+					"ui/icon/062144"
 				]
 			}
 		}

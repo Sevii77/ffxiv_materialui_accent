@@ -184,6 +184,7 @@
 					"UI/HUD/JobHudMNK0",
 					"UI/HUD/JobHudSAM1",
 					"UI/HUD/JobHudSMN1",
+					"UI/HUD/JobHudNIN1",
 					"UI/HUD/JobHudSimple_StackA",
 					"UI/HUD/JobHudSimple_StackB",
 					"UI/HUD/Parameter_Gauge",
@@ -195,6 +196,7 @@
 					"UI/HUD/JobHudMNK0/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSAM1/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSMN1/OPTIONS/Silver Frame Gaugebar",
+					"UI/HUD/JobHudNIN1",
 					"UI/HUD/JobHudSimple_StackA/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/JobHudSimple_StackB/OPTIONS/Silver Frame Gaugebar",
 					"UI/HUD/Parameter_Gauge/OPTIONS/Silver Frame Gaugebar",
@@ -297,7 +299,8 @@
 					"UI/Icon/Icon/062139",
 					"UI/Icon/Icon/062140",
 					"UI/Icon/Icon/062141",
-					"UI/Icon/Icon/062143"
+					"UI/Icon/Icon/062143",
+					"UI/Icon/Icon/062144"
 				],
 				"Glow Different DPS Color": [
 					"UI/Icon/Icon/062105/OPTIONS/PartyList Glow Job Icon Diff Range DPS Color",
@@ -342,7 +345,8 @@
 					"UI/Icon/Icon/062139",
 					"UI/Icon/Icon/062140",
 					"UI/Icon/Icon/062141",
-					"UI/Icon/Icon/062143"
+					"UI/Icon/Icon/062143",
+					"UI/Icon/Icon/062144"
 				],
 				"Square": [
 					"UI/Icon/Icon/062042/OPTIONS/Edge Background Job Icon",
@@ -387,7 +391,8 @@
 					"UI/Icon/Icon/062139/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062140/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon",
-					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon"
+					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062144"
 				],
 				"Square Different DPS Color": [
 					"UI/Icon/Icon/062105/OPTIONS/Edge Background Job Icon Diff Range DPS Color",
@@ -432,7 +437,8 @@
 					"UI/Icon/Icon/062139/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062140/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon",
-					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon"
+					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062144"
 				]
 			}
 		},

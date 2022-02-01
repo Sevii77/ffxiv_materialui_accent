@@ -38,9 +38,25 @@
 		},
 		
 		{
+			"name": "Experience Bar",
+			"options": {
+				"Minimal": ["ui/uld/exp_gauge"],
+				
+			}
+		},
+		
+		{
 			"name": "Party List Bars",
 			"options": {
 				"Minimal": ["ui/uld/partylist_gaugehp"],
+				
+			}
+		},
+		
+		{
+			"name": "Nameplate Bar",
+			"options": {
+				"Minimal": ["ui/uld/nameplate"],
 				
 			}
 		},
@@ -53,6 +69,7 @@
 					"ui/uld/jobhudmnk0",
 					"ui/uld/jobhudsam1",
 					"ui/uld/jobhudsmn1",
+					"ui/uld/jobhudnin1",
 					"ui/uld/jobhudsimple_stacka",
 					"ui/uld/jobhudsimple_stackb",
 					"ui/uld/parameter_gauge",
