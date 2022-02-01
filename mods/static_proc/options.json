@@ -5,7 +5,7 @@
 	
 	"name": "Static Proc",
 	
-	"description": "Replaces the ability proc with a static alternative, and gives an alternative look to the highlight frame. Fully color customisable through the main plugin options.",
+	"description": "Replaces the ability proc with a glowing static alternative, while also giving an alternative design to the icon highlight frame. Fully color customisable through the main plugin options.",
 	
 	"color_options": [
 		
