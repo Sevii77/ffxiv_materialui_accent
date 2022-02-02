@@ -1,0 +1,35 @@
+{
+	"author": "Cali666 & Meconate",
+	
+	"author_contact": "Cali666#1236",
+	
+	"name": "dogemap & dogecoin",
+	
+	"description": "for max raiding performance wow",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Minimap",
+			"options": {
+				"doge": [
+					"ui/uld/navimap",
+				    "ui/uld/navimap_mask"
+				]
+			}
+		},
+		
+		{
+			"name": "Gil Currency",
+			"options": {
+				"doge": [
+					"ui/icon/065002",
+					"ui/uld/money_number"
+				]
+			}
+		}
+	]
+}
