@@ -7,6 +7,8 @@
 	
 	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
 	
+	"tags": ["customizable", "4k", "ui", "window"],
+	
 	"dependencies": [["material_ui_black_plus"]],
 	
 	"options_inherit": ["material_ui_black_plus"],

@@ -1,13 +1,15 @@
 {
-	"author": "Sevii",
+	"author": "skotlex",
 	
-	"author_contact": "Sevii#0007",
+	"author_contact": "",
 	
-	"name": "Material UI Black Plus",
+	"name": "Material UI Black",
 	
-	"description": "Material Ui Black by Skotlex but with customizable colors and other slight adjustments.",
+	"description": "todo",
 	
-	"links": ["https://discord.gg/T5sWUpgNPD", "https://ko-fi.com/skotlex", "https://github.com/Sevii77/ffxiv_materialui_accent"],
+	"tags": ["4k", "ui", "theme", "gauge", "icon", "window"],
+	
+	"links": ["https://discord.gg/T5sWUpgNPD", "https://ko-fi.com/skotlex", "https://github.com/skotlex/ffxiv-material-ui"],
 	
 	"dalamud": {
 		"default": {
@@ -60,7 +62,7 @@
 			"ScrollbarGrab": [62, 62, 62, 255],
 			"ScrollbarGrabHovered": [70, 70, 70, 255],
 			"ScrollbarGrabActive": [70, 70, 70, 255],
-			"CheckMark": "accent",
+			"CheckMark": [99, 60, 181],
 			"SliderGrab": [101, 101, 101, 255],
 			"SliderGrabActive": [123, 123, 123, 255],
 			"Button": [0, 0, 0, 0],
@@ -70,142 +72,32 @@
 			"HeaderHovered": [0, 0, 0, 90],
 			"HeaderActive": [0, 0, 0, 120],
 			"Separator": [0, 0, 0, 0],
-			"SeparatorHovered": "50%accent",
-			"SeparatorActive": "accent",
+			"SeparatorHovered": [50, 30, 90],
+			"SeparatorActive": [99, 60, 181],
 			"ResizeGrip": [0, 0, 0, 0],
 			"ResizeGripHovered": [0, 0, 0, 0],
-			"ResizeGripActive": "accent",
+			"ResizeGripActive": [99, 60, 181],
 			"Tab": [41, 41, 41, 255],
-			"TabHovered": "50%accent",
-			"TabActive": "accent",
+			"TabHovered": [50, 30, 90],
+			"TabActive": [99, 60, 181],
 			"TabUnfocused": [41, 39, 41, 255],
-			"TabUnfocusedActive": "accent",
-			"DockingPreview": "accent",
+			"TabUnfocusedActive": [99, 60, 181],
+			"DockingPreview": [99, 60, 181],
 			"DockingEmptyBg": [51, 51, 51, 255],
 			
-			"TextSelectedBg": "accent",
-			"DragDropTarget": "accent",
-			"NavHighlight": "accent"
+			"TextSelectedBg": [99, 60, 181],
+			"DragDropTarget": [99, 60, 181],
+			"NavHighlight": [99, 60, 181]
 			// Rest are default (for now)
-		},
-		
-		"Selected Window/Border": {
-			"WindowBorderSize": 2,
-			"PopupBorderSize": 0,
-			"Border": "accent"
 		}
 	},
 	
 	"options": [
 		{
-			"type": "rgb",
-			"id": "accent",
-			"name": "Accent",
-			"default": [99, 60, 181]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "party",
-			"name": "Party and Alliance List Target",
-			"default": [255, 73, 56]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "enemy",
-			"name": "Enemy List Target",
-			"default": [255, 173, 56]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "proc",
-			"name": "Ability Proc",
-			"default": [255, 173, 56]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "shield",
-			"name": "Party List Shield",
-			"default": [255, 211, 0]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "targetcast",
-			"name": "Target Castbar",
-			"default": [209, 34, 11]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "targetcastinter",
-			"name": "Target Castbar Interrupt",
-			"default": [139, 15, 15]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "limitbreak1",
-			"name": "Limit Break Filling",
-			"default": [25, 220, 222]
-		},
-		
-		{
-			"type": "rgb",
-			"id": "limitbreak2",
-			"name": "Limit Break Full",
-			"default": [190, 99, 221]
-		},
-		
-		{
-			"type": "single",
-			"name": "Selected Window",
-			"options": {
-				"Bar": [
-					// nothing needed here as all default files will be added by the other options
-				],
-				"Border": [
-					"ui/uld/windowa_bgselected_corner_hr1/full_window_border",
-					"ui/uld/windowa_bgselected_h_hr1/full_window_border",
-					"ui/uld/windowa_bgselected_v_hr1/full_window_border",
-					
-					"ui/uld/windowf_bgnormal_corner_hr1",
-					"ui/uld/windowf_bgnormal_h_hr1",
-					
-					"ui/uld/windowpvp_bgselected_corner_hr1/full_window_border",
-					"ui/uld/windowpvp_bgselected_h_hr1/full_window_border",
-					"ui/uld/windowpvp_bgselected_v_hr1/full_window_border",
-					
-					"ui/uld/harpoonwindowa_selected_corner_hr1/full_window_border",
-					"ui/uld/harpoonwindowa_selected_h_hr1/full_window_border",
-					"ui/uld/harpoonwindowa_selected_v_hr1/full_window_border",
-				],
-				"Clean": [
-					"ui/uld/windowa_bgselected_corner_hr1/no_window_border",
-					"ui/uld/windowa_bgselected_h_hr1/no_window_border",
-					
-					"ui/uld/windowf_bgnormal_corner_hr1/no_window_border",
-					"ui/uld/windowf_bgnormal_h_hr1/no_window_border",
-					
-					"ui/uld/windowpvp_bgselected_corner_hr1/no_window_border",
-					"ui/uld/windowpvp_bgselected_h_hr1/no_window_border",
-					
-					"ui/uld/harpoonwindowa_selected_corner_hr1/no_window_border",
-					"ui/uld/harpoonwindowa_selected_h_hr1/no_window_border",
-				],
-			}
-		},
-		
-		{
 			"type": "single",
 			"name": "Non-Selected Window",
 			"options": {
-				"Solid": [
-					// same reason as above
-				],
+				"Solid": [],
 				"Transparent": [
 					"ui/uld/windowa_bgnormal_corner_hr1/options/non-selected window transparency black style",
 					"ui/uld/windowa_bgnormal_h_hr1/options/non-selected window transparency black style",
@@ -217,22 +109,9 @@
 		
 		{
 			"type": "single",
-			"name": "Party and Alliance Background",
-			"options": {
-				"Default": ["ui/uld/alliance_hr1",
-				            "ui/uld/partylist_bg_hr1"],
-				"Transparent": ["ui/uld/alliance_hr1/no_party_bg",
-				                "ui/uld/partylist_bg_hr1/no_party_bg"],
-			}
-		},
-		
-		{
-			"type": "single",
 			"name": "Gauges",
 			"options": {
-				"Square": [
-					// same reason once again
-				],
+				"Square": [],
 				"Silver": [
 					"ui/uld/jobhudbrd0_hr1/options/silver frame gaugebar",
 					"ui/uld/jobhudmnk0_hr1/options/silver frame gaugebar",
@@ -243,6 +122,28 @@
 					"ui/uld/parameter_gauge_hr1/options/silver frame gaugebar",
 					"ui/uld/parameter_gauge2_hr1/options/silver frame gaugebar"
 				]
+			}
+		},
+		
+		{
+			"type": "single",
+			"name": "Target Castbar",
+			"options": {
+				"Orange": ["ui/uld/partylist_gaugecast_hr1/options/default target castbar"],
+				"Gray": ["ui/uld/partylist_gaugecast_hr1/options/gray color target castbar"],
+				"Red": ["ui/uld/partylist_gaugecast_hr1/options/red color target castbar"]
+			}
+		},
+		
+		{
+			"type": "single",
+			"name": "Partylist Shield",
+			"options": {
+				"Yellow": ["ui/uld/partylist_gaugehp_hr1/options/partylist shieldcolor - yellow"],
+				"Dark Red": ["ui/uld/partylist_gaugehp_hr1/options/partylist shieldcolor - darkred"],
+				"Emerald Green": ["ui/uld/partylist_gaugehp_hr1/options/partylist shieldcolor - emeraldgreen"],
+				"Purple": ["ui/uld/partylist_gaugehp_hr1/options/partylist shieldcolor - purple"],
+				"Sky Blue": ["ui/uld/partylist_gaugehp_hr1/options/partylist shieldcolor - skyblue"],
 			}
 		},
 		
@@ -275,7 +176,7 @@
 			"name": "Macro Gear Icon",
 			"options": {
 				"Show": ["ui/uld/icona_frame_hr1"],
-				"Remove": ["ui/uld/icona_frame_hr1/option/hide_macro_icon"]
+				"Remove": ["ui/uld/icona_frame_hr1/options/remove macro gear icon black style"]
 			}
 		},
 		
@@ -357,10 +258,8 @@
 					"ui/icon/062000/062135_hr1/options/partylist glow job icon diff range dps color",
 					"ui/icon/062000/062136_hr1/options/partylist glow job icon diff range dps color",
 					"ui/icon/062000/062138_hr1/options/partylist glow job icon diff range dps color"
-					// Only need the difference so we can cut off the rest
 				],
 				"Square": [
-					// we need all icons on the next 2 since both are options
 					"ui/icon/062000/062042_hr1/options/edge background job icon",
 					"ui/icon/062000/062101_hr1/options/edge background job icon",
 					"ui/icon/062000/062102_hr1/options/edge background job icon",
