@@ -101,99 +101,63 @@
 			"type": "rgb",
 			"id": "accent",
 			"name": "Accent",
-			"default": {
-				"r": 99,
-				"g": 60,
-				"b": 181
-			}
+			"default": [99, 60, 181]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "party",
 			"name": "Party and Alliance List Target",
-			"default": {
-				"r": 255,
-				"g": 173,
-				"b": 56
-			}
+			"default": [255, 73, 56]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "enemy",
 			"name": "Enemy List Target",
-			"default": {
-				"r": 255,
-				"g": 173,
-				"b": 56
-			}
+			"default": [255, 173, 56]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "proc",
 			"name": "Ability Proc",
-			"default": {
-				"r": 255,
-				"g": 173,
-				"b": 56
-			}
+			"default": [255, 173, 56]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "shield",
 			"name": "Party List Shield",
-			"default": {
-				"r": 255,
-				"g": 211,
-				"b": 0
-			}
+			"default": [255, 211, 0]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "targetcast",
 			"name": "Target Castbar",
-			"default": {
-				"r": 209,
-				"g": 134,
-				"b": 11
-			}
+			"default": [209, 34, 11]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "targetcastinter",
 			"name": "Target Castbar Interrupt",
-			"default": {
-				"r": 139,
-				"g": 15,
-				"b": 15
-			}
+			"default": [139, 15, 15]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "limitbreak1",
 			"name": "Limit Break Filling",
-			"default": {
-				"r": 25,
-				"g": 220,
-				"b": 222
-			}
+			"default": [25, 220, 222]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "limitbreak2",
 			"name": "Limit Break Full",
-			"default": {
-				"r": 190,
-				"g": 99,
-				"b": 221
-			}
+			"default": [190, 99, 221]
 		},
 		
 		{

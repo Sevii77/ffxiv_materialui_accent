@@ -7,9 +7,7 @@
 	
 	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
 	
-	"requirements": [],
-	
-	"color_inherit": ["material_ui_black_plus"],
+	"options_inherit": ["material_ui_black_plus"],
 	
 	"standalone": true,
 	
@@ -18,55 +16,35 @@
 			"type": "rgb",
 			"id": "shield",
 			"name": "Party List Shield",
-			"default": {
-				"r": 255,
-				"g": 211,
-				"b": 0
-			}
+			"default": [255, 211, 0]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "targetcast",
 			"name": "Target Castbar",
-			"default": {
-				"r": 209,
-				"g": 134,
-				"b": 11
-			}
+			"default": [209, 134, 11]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "targetcastinter",
 			"name": "Target Castbar Interrupt",
-			"default": {
-				"r": 139,
-				"g": 15,
-				"b": 15
-			}
+			"default": [139, 15, 15]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "limitbreak1",
 			"name": "Limit Break Filling",
-			"default": {
-				"r": 25,
-				"g": 220,
-				"b": 222
-			}
+			"default": [25, 220, 222]
 		},
 		
 		{
 			"type": "rgb",
 			"id": "limitbreak2",
 			"name": "Limit Break Full",
-			"default": {
-				"r": 190,
-				"g": 99,
-				"b": 221
-			}
+			"default": [190, 99, 221]
 		},
 		
 		{

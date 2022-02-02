@@ -7,9 +7,9 @@
 	
 	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
 	
-	"requirements": [["material_ui_black_plus"]],
+	"dependencies": [["material_ui_black_plus"]],
 	
-	"color_inherit": ["material_ui_black_plus"],
+	"options_inherit": ["material_ui_black_plus"],
 	
 	"standalone": false,
 	
@@ -23,6 +23,13 @@
 	},
 	
 	"options": [
+		{
+			"type": "rgb",
+			"id": "accent",
+			"name": "Accent",
+			"default": [99, 60, 181]
+		},
+		
 		{
 			"type": "single",
 			"name": "Selected Window",
