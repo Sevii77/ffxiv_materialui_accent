@@ -62,11 +62,21 @@
 		
 		{
 			"id": "recast2",
-			"name": "Recast Circle",
+			"name": "Cooldown Circle",
 			"default": {
 				"r": 214,
 				"g": 109,
 				"b": 0
+			}
+		},
+		
+		{
+			"id": "recast",
+			"name": "Recast",
+			"default": {
+				"r": 255,
+				"g": 255,
+				"b": 255
 			}
 		},
 		
