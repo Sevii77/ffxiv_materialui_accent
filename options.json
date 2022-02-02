@@ -61,6 +61,16 @@
 		},
 		
 		{
+			"id": "recast2",
+			"name": "Recast Circle",
+			"default": {
+				"r": 214,
+				"g": 109,
+				"b": 0
+			}
+		},
+		
+		{
 			"id": "limitbreak1",
 			"name": "Limit Break Filling",
 			"default": {
