@@ -61,22 +61,32 @@
 		},
 		
 		{
-			"id": "recast2",
-			"name": "Cooldown Circle",
-			"default": {
-				"r": 214,
-				"g": 109,
-				"b": 0
-			}
-		},
-		
-		{
 			"id": "recast",
 			"name": "Recast",
 			"default": {
 				"r": 255,
 				"g": 255,
 				"b": 255
+			}
+		},
+		
+		{
+			"id": "recast1",
+			"name": "Stack-Based oGCD Recharge",
+			"default": {
+				"r": 255,
+				"g": 255,
+				"b": 255
+			}
+		},
+		
+		{
+			"id": "recast2",
+			"name": "Extended GCD Recharge",
+			"default": {
+				"r": 214,
+				"g": 109,
+				"b": 0
 			}
 		},
 		
