@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Dalamud.Logging;
 
 namespace Aetherment.Util {
 	internal class GitHub {
@@ -17,6 +18,18 @@ namespace Aetherment.Util {
 			}
 		}
 		
+		private struct Repo {
+			public struct RepoFile {
+				public string path;
+				public string type;
+				public string sha;
+				public uint size = 0;
+			}
+			
+			public string sha;
+			public RepoFile[] tree;
+		}
+		
 		private static Dictionary<RepoInfo, Dir> repoCache = new();
 		private static HttpClient httpClient;
 		
@@ -27,10 +40,10 @@ namespace Aetherment.Util {
 		
 		public static async Task<Dir> GetRepo(RepoInfo info) {
 			if(!repoCache.ContainsKey(info)) {
-				dynamic repo = JsonConvert.DeserializeObject(await httpClient.GetStringAsync($"https://api.github.com/repos/{info.author}/{info.repo}/git/trees/{info.branch}?recursive=1"));
-				Dir dir = new Dir("", repo?.sha);
+				Repo repo = JsonConvert.DeserializeObject<Repo>(await httpClient.GetStringAsync($"https://api.github.com/repos/{info.author}/{info.repo}/git/trees/{info.branch}?recursive=1"));
+				Dir dir = new Dir("", repo.sha);
 				
-				foreach(var node in repo?.tree) {
+				foreach(var node in repo.tree) {
 					Dir curdir = dir;
 					string[] path = node.path.ToLower().Split("/");
 					
@@ -54,6 +67,14 @@ namespace Aetherment.Util {
 			}
 			
 			return repoCache[info];
+		}
+		
+		public static Task<string> GetString(string url) {
+			return httpClient.GetStringAsync(url);
+		}
+		
+		public static Task<byte[]> GetByteArray(string url) {
+			return httpClient.GetByteArrayAsync(url);
 		}
 		
 		public static void ClearCache() {

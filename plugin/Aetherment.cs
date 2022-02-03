@@ -15,6 +15,7 @@ using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Objects;
 
+using Aetherment.Util;
 using Aetherment.GUI;
 
 namespace Aetherment {
@@ -27,10 +28,16 @@ namespace Aetherment {
 		[PluginService][RequiredVersion("1.0")] public static CommandManager         Commands    {get; private set;} = null!;
 		[PluginService][RequiredVersion("1.0")] public static GameGui                GameGui     {get; private set;} = null!;
 		
-		internal static UI UI;
+		internal static UI ui;
+		internal static List<GitHub.RepoInfo> repos;
 		
 		public Aetherment() {
-			UI = new UI();
+			GitHub.ClearCache();
+			// TODO: turn this into config
+			repos = new List<GitHub.RepoInfo>{new GitHub.RepoInfo("Sevii77", "ffxiv_materialui_accent", "v2")};
+			
+			ui = new UI();
+			
 			
 			Commands.AddHandler(command, new CommandInfo(OnCommand) {
 				HelpMessage = "Open Aetherment menu"
@@ -47,7 +54,7 @@ namespace Aetherment {
 		
 		private void OnCommand(string cmd, string args) {
 			if(cmd == command || cmd == commandAlt)
-				{}
+				ui.Show();
 		}
 	}
 }
