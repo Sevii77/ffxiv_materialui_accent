@@ -7,6 +7,6 @@
 	"ApplicableVersion": "any",
 	"DalamudApiLevel": 5,
 	"LoadPriority": 1,
-	"Tags": ["material ui", "material", "ui", "penumbra"],
+	"Tags": ["penumbra", "modding", "mods", "mod", "ui"],
 	"IconUrl": "https://raw.githubusercontent.com/Sevii77/ffxiv_materialui_accent/v2/images/icon.png"
 }

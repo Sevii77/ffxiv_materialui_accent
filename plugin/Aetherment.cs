@@ -48,6 +48,7 @@ namespace Aetherment {
 		}
 		
 		public void Dispose() {
+			ui.Dispose();
 			Commands.RemoveHandler(command);
 			Commands.RemoveHandler(commandAlt);
 		}

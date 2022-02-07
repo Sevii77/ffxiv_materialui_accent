@@ -23,6 +23,8 @@ namespace Aetherment.GUI {
 				drawmods = await Mod.GetMods(Aetherment.repos);
 			});
 			
+			modsOpen = new();
+			
 			Show();
 			
 			Aetherment.Interface.UiBuilder.OpenConfigUi += Show;
@@ -30,6 +32,9 @@ namespace Aetherment.GUI {
 		}
 		
 		public void Dispose() {
+			foreach(Mod mod in drawmods)
+				mod.Dispose();
+			
 			Aetherment.Interface.UiBuilder.OpenConfigUi -= Show;
 			Aetherment.Interface.UiBuilder.Draw -= Draw;
 		}
@@ -42,29 +47,45 @@ namespace Aetherment.GUI {
 			if(!shouldDraw)
 				return;
 			
-			ImGui.SetNextWindowSize(new Vector2(720, 480));
+			ImGui.SetNextWindowSize(new Vector2(720, 480), ImGuiCond.FirstUseEver);
 			ImGui.Begin("Aetherment", ref shouldDraw);
 			// DrawTest();
 			ImGui.BeginTabBar("Aetherment");
 			if(ImGui.BeginTabItem("Settings")) {
+				ImGui.BeginChild("AethermentTab");
 				DrawSettings();
+				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
 			
 			if(ImGui.BeginTabItem("Configuration")) {
+				ImGui.BeginChild("AethermentTab");
 				DrawConfig();
+				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
 			
 			if(ImGui.BeginTabItem("Mod Browser")) {
+				ImGui.BeginChild("AethermentTab");
+				DrawModBrowser();
+				ImGui.EndChild();
+				ImGui.EndTabItem();
+			}
+			
+			if(ImGuiAeth.BeginTabItem("Mods", newestMod != null ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None)) {
+				ImGui.BeginChild("AethermentTab");
 				DrawMods();
+				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
 			
 			if(ImGui.BeginTabItem("Test")) {
+				ImGui.BeginChild("AethermentTab");
 				DrawTest();
+				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
+			ImGui.EndTabBar();
 			
 			ImGui.End();
 		}
@@ -105,21 +126,21 @@ namespace Aetherment.GUI {
 			ImGui.Button("right", new Vector2(100, 40));
 			
 			// Grid test
-			w = 150;
-			float tw = ImGuiAeth.WidthLeft();
-			int c = Math.Max(1, ImGuiAeth.PossibleCount(w, tw));
-			float o = (tw - ((x + w) * c - x)) / 2 + x;
-			for(int i = 0; i < 20; i++) {
-				if(i % c == 0)
-					ImGui.SetCursorPosX(o);
+			// w = 150;
+			// float tw = ImGuiAeth.WidthLeft();
+			// int c = Math.Max(1, ImGuiAeth.PossibleCount(w, tw));
+			// float o = (tw - ((x + w) * c - x)) / 2 + x;
+			// for(int i = 0; i < 20; i++) {
+			// 	if(i % c == 0)
+			// 		ImGui.SetCursorPosX(o);
 				
-				ImGui.BeginChild("" + i, new Vector2(w, 200));
-				ImGui.TextWrapped("It sportsman earnestly ye preserved an on. Moment led family sooner cannot her window pulled any. Or raillery if improved landlord to speaking hastened differed he. Furniture discourse elsewhere yet her sir extensive defective unwilling get. Why resolution one motionless you him thoroughly. Noise is round to in it quick timed doors. Written address greatly get attacks inhabit pursuit our but. Lasted hunted enough an up seeing in lively letter. Had judgment out opinions property the supplied.");
-				ImGui.EndChild();
+			// 	ImGui.BeginChild("" + i, new Vector2(w, 200));
+			// 	ImGui.TextWrapped("It sportsman earnestly ye preserved an on. Moment led family sooner cannot her window pulled any. Or raillery if improved landlord to speaking hastened differed he. Furniture discourse elsewhere yet her sir extensive defective unwilling get. Why resolution one motionless you him thoroughly. Noise is round to in it quick timed doors. Written address greatly get attacks inhabit pursuit our but. Lasted hunted enough an up seeing in lively letter. Had judgment out opinions property the supplied.");
+			// 	ImGui.EndChild();
 				
-				if(i < 19 && i % c != c - 1)
-					ImGui.SameLine();
-			}
+			// 	if(i < 19 && i % c != c - 1)
+			// 		ImGui.SameLine();
+			// }
 		}
 	}
 }

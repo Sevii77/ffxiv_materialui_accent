@@ -1,86 +1,61 @@
 using System;
 using System.Numerics;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ImGuiNET;
 using Dalamud.Logging;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 
 using Aetherment.Util;
 
 namespace Aetherment.GUI {
 	internal partial class UI {
-		private string search = "";
-		private bool adv = true;
-		private Dictionary<string, bool> advtags;
-		private List<Mod> drawmods;
+		private List<Mod> modsOpen;
+		private string newestMod;
 		
 		private void DrawMods() {
-			float h = ImGuiAeth.Height();
-			uint w = (uint)ImGuiAeth.WidthLeft(h * 1.5f);
-			ImGui.SetNextItemWidth(w);
-			if(ImGui.InputTextWithHint("", "Search", ref search, w))
-				SearchMods();
-			ImGui.SameLine();
-			if(ImGuiAeth.ButtonIcon(FontAwesomeIcon.Cog, new Vector2(h * 1.5f, h)))
-				adv = !adv;
-			ImGuiAeth.HoverTooltip("Advanced search options");
+			ImGui.BeginTabBar("AethermentMods");
 			
-			if(adv) {
-				w = 125;
-				float tw = ImGuiAeth.WidthLeft();
-				int c = Math.Max(1, ImGuiAeth.PossibleCount(w, tw));
-				
-				foreach(Dictionary<string, string> categorized in Mod.TagNames) {
-					int i = 0;;
-					
-					foreach(KeyValuePair<string, string> tag in categorized) {
-						string id = tag.Key;
-						string name = tag.Value;
-						
-						ImGui.BeginChild(id, new Vector2(w, h));
-						bool tmp = advtags[id];
-						if(ImGui.Checkbox(name, ref tmp))
-							SearchMods();
-						advtags[id] = tmp;
-						ImGui.EndChild();
-						
-						if(i < categorized.Count - 1 && i % c != c - 1)
-							ImGui.SameLine();
-						i++;
-					}
-					
-					ImGuiAeth.Offset(0, 10);
+			List<Mod> newOpen = new();
+			foreach(Mod mod in modsOpen) {
+				var open = true;
+				if(ImGui.BeginTabItem(mod.Name, ref open, newestMod == mod.ID ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None)) {
+					DrawModPage(mod);
+					ImGui.EndTabItem();
 				}
-			}
-			
-			foreach(Mod mod in drawmods) {
-				DrawModSimple(mod);
-			}
-		}
-		
-		private void SearchMods() {
-			Task.Run(async() => {
-				List<string> tags = new();
-				foreach(KeyValuePair<string, bool> tag in advtags)
-					if(tag.Value)
-						tags.Add(tag.Key);
 				
-				drawmods = await Mod.GetMods(Aetherment.repos, search, tags);
-			});
-		}
-		
-		private void DrawMod(Mod mod) {
+				if(open)
+					newOpen.Add(mod);
+			}
+			modsOpen = newOpen;
+			newestMod = null;
 			
+			ImGui.EndTabBar();
 		}
 		
-		private void DrawModSimple(Mod mod) {
-			ImGui.Text(mod.Name);
+		private void OpenMod(Mod mod) {
+			mod.LoadPreviews();
+			newestMod = mod.ID;
+			if(!modsOpen.Contains(mod))
+				modsOpen.Add(mod);
 		}
 		
 		private void DrawModPage(Mod mod) {
+			ImGui.BeginChild("AethermentModPage", new Vector2(0, 300 * ImGuiHelpers.GlobalScale + ImGuiAeth.SpacingY * 2), false, ImGuiWindowFlags.HorizontalScrollbar);
+			// previews
+			for(int i = 0; i < mod.Previews.Count; i++) {
+				var preview = mod.Previews[i];
+				
+				if(i > 0)
+					ImGui.SameLine();
+				ImGuiAeth.Image(preview, ImGui.GetCursorScreenPos(), new Vector2(preview.Width, preview.Height) * (300f / preview.Height));
+				// ImGui.Image(preview.ImGuiHandle, new Vector2(preview.Width, preview.Height) * (300f / preview.Height));
+			}
 			
+			// todo: the rest
+			
+			ImGui.EndChild();
 		}
 	}
 }

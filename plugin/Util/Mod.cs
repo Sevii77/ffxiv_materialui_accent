@@ -62,11 +62,14 @@ namespace Aetherment.Util {
 			[JsonProperty("name")] public string Name {get; private set;}
 		}
 		
+		public string ID {get; private set;} = "ID";
+		public uint ID2 {get; private set;}
 		[JsonProperty("author")] public string Author {get; private set;} = "Unknown";
 		[JsonProperty("author_contact")] public string AuthorContact {get; private set;} = "";
 		[JsonProperty("name")] public string Name {get; private set;} = "No Name";
 		[JsonProperty("description")] public string Description {get; private set;} = "";
 		[JsonProperty("tags")] public string[] Tags {get; private set;} = new string[0];
+		public string[] TagsFancy {get; private set;} = new string[0];
 		[JsonProperty("links")] public string[] Links {get; private set;} = new string[0];
 		[JsonProperty("dependencies")] public string[][] Dependencies {get; private set;} = new string[0][];
 		[JsonProperty("options_inherit")] public string[] OptionsInherit {get; private set;} = new string[0];
@@ -76,21 +79,27 @@ namespace Aetherment.Util {
 		public List<TextureWrap> Previews {get; private set;} = new();
 		public Dir Files {get; private set;}
 		
+		public void LoadPreview() {
+			if(Files.dirs["previews"].files.Count == 0 || Previews.Count > 0)
+				return;
+			
+			Task.Run(async() => {
+				foreach(Dir.File file in Files.dirs["previews"].files.Values) {
+					Previews.Add(Aetherment.Interface.UiBuilder.LoadImage(await GitHub.GetByteArray(file.path)));
+					break;
+				}
+			});
+		}
+		
 		public void LoadPreviews() {
-			if(Files.dirs["previews"].dirs.Count == Previews.Count)
+			if(Files.dirs["previews"].files.Count == Previews.Count)
 				return;
 			
 			DisposePreviews();
 			
 			Task.Run(async() => {
 				foreach(Dir.File file in Files.dirs["previews"].files.Values)
-					Previews.Add(null);
-				
-				int i = 0;
-				foreach(Dir.File file in Files.dirs["previews"].files.Values) {
-					Previews[i] = Aetherment.Interface.UiBuilder.LoadImage(await GitHub.GetByteArray(file.path));
-					i++;
-				}
+					Previews.Add(Aetherment.Interface.UiBuilder.LoadImage(await GitHub.GetByteArray(file.path)));
 			});
 		}
 		
@@ -122,6 +131,7 @@ namespace Aetherment.Util {
 				{"icon", "Icons"},
 				{"map", "Maps"},
 				{"window", "Windows"},
+				{"cursor", "Target Cursor"},
 			},
 			
 			new() {
@@ -130,6 +140,7 @@ namespace Aetherment.Util {
 		};
 		
 		private static Dictionary<string, Mod> modCache = new();
+		private static uint idCounter = 489657309;
 		
 		public static async Task<Mod> GetMod(GitHub.RepoInfo repo, string id) {
 			await CacheMod(repo, id);
@@ -142,7 +153,7 @@ namespace Aetherment.Util {
 		
 		public static async Task<List<Mod>> GetMods(List<GitHub.RepoInfo> repos, string search = null, List<string> tags = null) {
 			await CacheMods(repos);
-			PluginLog.Log(modCache.Count + "!");
+			
 			if((search == null || search == "") && tags == null)
 				return modCache.Values.ToList();
 			
@@ -181,9 +192,24 @@ namespace Aetherment.Util {
 				return;
 			
 			Mod mod = JsonConvert.DeserializeObject<Mod>(Regex.Replace(await GitHub.GetString(dir.files["config.json"].path), "\\s//[^\n]*", ""));
-			mod.Files = dir.GetPathDir("files");
+			mod.ID = id;
+			mod.ID2 = idCounter;
+			mod.Files = dir;
+			mod.LoadPreview();
+			
+			mod.TagsFancy = new string[mod.Tags.Length];
+			// foreach(string tag in mod.Tags)
+			for(int i = 0; i < mod.Tags.Length; i++) {
+				string tag = mod.Tags[i];
+				foreach(Dictionary<string, string> names in TagNames)
+					if(names.ContainsKey(tag)) {
+						mod.TagsFancy[i] = names[tag];
+						break;
+					}
+			}
 			
 			modCache[id] = mod;
+			idCounter++;
 		}
 		
 		public static async Task CacheMods(List<GitHub.RepoInfo> repos) {

@@ -15,11 +15,11 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<OutputPath>$(Home)/XIVLauncher/devPlugins/Aetherment/</OutputPath>
+		<OutputPath>$(AppData)/XIVLauncher/devPlugins/Aetherment/</OutputPath>
 	</PropertyGroup>
 	
 	<PropertyGroup>
-		<DalamudLibPath>$(Home)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
+		<DalamudLibPath>$(AppData)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
 	</PropertyGroup>
 	
 	<ItemGroup>
