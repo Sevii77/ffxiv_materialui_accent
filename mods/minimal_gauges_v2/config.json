@@ -7,7 +7,7 @@
 	
 	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
 	
-	"tags": ["customizable", "4k", "ui", "gauge"],
+	"tags": ["4k", "ui", "gauge"],
 	
 	"options_inherit": ["material_ui_black_plus"],
 	

@@ -47,8 +47,8 @@ for node in mui["tree"]:
 	
 	gamepath = node["path"].lower()
 	gamepath = re.sub("4k resolution/black/saved/ui/", "ui/", gamepath)
-	gamepath = re.sub(r"/hud/([a-z0-9_]+)/", r"/uld/\1_hr1/", gamepath)
-	gamepath = re.sub(r"/icon/icon/(\d\d\d)(\d\d\d)/", r"/icon/\g<1>000/\1\2_hr1/", gamepath)
+	gamepath = re.sub(r"/hud/([a-z0-9_]+)/", r"/uld/\1_hr1.tex/", gamepath)
+	gamepath = re.sub(r"/icon/icon/(\d\d\d)(\d\d\d)/", r"/icon/\g<1>000/\1\2_hr1.tex/", gamepath)
 	gamepath = re.sub(r"/[a-z0-9_]+_hr1\.dds", "/underlay.dds", gamepath)
 	
 	sys.stdout.write(gamepath + "\n")
