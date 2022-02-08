@@ -1,0 +1,31 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Dracula Dungeon",
+	
+	"description": "A overhaul of the Palace of the Dead and Heaven on High UI theme, using the Dracula color scheme with a minimalist look. Includes numbered key indicator for greater accessibility, and various updated elements including a reworked map interface.)",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Deep Dungeon",
+			"options": {
+				"Dracula": [
+					"ui/uld/deepdungeon_bg",
+				    "ui/uld/deepdungeoninformation",
+					"ui/uld/deepdungeonnavimap",
+					"ui/uld/deepdungeonnavimap_ankh",
+					"ui/uld/deepdungeonnavimap_key",
+					"ui/uld/deepdungeonnavimap_rooms",
+					"ui/uld/deepdungeonnavimap_room2",
+					"ui/uld/deepdungeonresult"
+				]
+			}
+		}
+	]
+}
