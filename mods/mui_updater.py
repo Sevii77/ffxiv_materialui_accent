@@ -31,8 +31,8 @@ search_dir("./material_ui_black_plus/pngs", "./material_ui_black_plus/files")
 # download mui files
 def write_file(path, data):
 	pathdir = re.search(r".+/", path).group(0)
-	if not os.path.exists(pathdir):
-		os.makedirs(pathdir)
+	if not os.path.exists(pathdir) or len(next(os.walk(pathdir))[2]) == 0:
+		os.makedirs(pathdir, exist_ok = True)
 		
 		with open(path, "wb") as f:
 			f.write(data)
