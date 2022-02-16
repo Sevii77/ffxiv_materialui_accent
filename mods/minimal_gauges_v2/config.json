@@ -53,13 +53,13 @@
 			"type": "multi",
 			"name": "Minimal",
 			"options": {
-				"Limit Break": ["ui/uld/limitbreak_hr1"],
-				"Target Castbar": ["ui/uld/partylist_gaugecast_hr1"],
-				"Party List Bars": ["ui/uld/partylist_gaugehp_hr1"],
+				"Limit Break": ["ui/uld/limitbreak_hr1.tex"],
+				"Target Castbar": ["ui/uld/partylist_gaugecast_hr1.tex"],
+				"Party List Bars": ["ui/uld/partylist_gaugehp_hr1.tex"],
 				"Gauges": [
-					"ui/uld/parameter_gauge_hr1",
-					"ui/uld/parameter_gauge2_hr1",
-					"ui/uld/contentgauge_hr1"
+					"ui/uld/parameter_gauge_hr1.tex",
+					"ui/uld/parameter_gauge2_hr1.tex",
+					"ui/uld/contentgauge_hr1.tex"
 				]
 			}
 		},
@@ -68,8 +68,8 @@
 			"type": "single",
 			"name": "Target Info",
 			"options": {
-				"Minimal": ["ui/uld/targetinfo_hr1/option/minimal"],
-				"Minimal (with object line)": ["ui/uld/targetinfo_hr1/option/minimal/wline"],
+				"Minimal": ["ui/uld/targetinfo_hr1.tex/option/minimal"],
+				"Minimal (with object line)": ["ui/uld/targetinfo_hr1.tex/option/minimal/wline"],
 				
 			}
 		}

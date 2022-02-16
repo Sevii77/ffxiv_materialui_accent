@@ -37,19 +37,19 @@
 			"name": "Selected Window",
 			"options": {
 				"Bar": [
-					"ui/uld/windowa_bgselected_corner_hr1",
-					"ui/uld/windowf_bgnormal_corner_hr1",
-					"ui/uld/windowpvp_bgselected_corner_hr1"
+					"ui/uld/windowa_bgselected_corner_hr1.tex",
+					"ui/uld/windowf_bgnormal_corner_hr1.tex",
+					"ui/uld/windowpvp_bgselected_corner_hr1.tex"
 				],
 				"Border": [
-					"ui/uld/windowa_bgselected_corner_hr1/option/full",
-					"ui/uld/windowf_bgnormal_corner_hr1",
-					"ui/uld/windowpvp_bgselected_corner_hr1/option/full"
+					"ui/uld/windowa_bgselected_corner_hr1.tex/option/full",
+					"ui/uld/windowf_bgnormal_corner_hr1.tex",
+					"ui/uld/windowpvp_bgselected_corner_hr1.tex/option/full"
 				],
 				"Clean": [
-					"ui/uld/windowa_bgselected_corner_hr1/option/borderless",
-					"ui/uld/windowf_bgnormal_corner_hr1/option/borderless",
-					"ui/uld/windowpvp_bgselected_corner_hr1/option/borderless"
+					"ui/uld/windowa_bgselected_corner_hr1.tex/option/borderless",
+					"ui/uld/windowf_bgnormal_corner_hr1.tex/option/borderless",
+					"ui/uld/windowpvp_bgselected_corner_hr1.tex/option/borderless"
 				],
 			}
 		},
@@ -58,8 +58,8 @@
 			"type": "single",
 			"name": "Non-Selected Window",
 			"options": {
-				"Solid": ["ui/uld/windowa_bgnormal_corner_hr1"],
-				"Transparent": ["ui/uld/windowa_bgnormal_corner_hr1/option/trans"],
+				"Solid": ["ui/uld/windowa_bgnormal_corner_hr1.tex"],
+				"Transparent": ["ui/uld/windowa_bgnormal_corner_hr1.tex/option/trans"],
 			}
 		}
 	]
