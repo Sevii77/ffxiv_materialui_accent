@@ -103,9 +103,11 @@ namespace Aetherment.GUI {
 				// DrawInstalled(mod);
 				ImGui.Text(mod.Name);
 				
-				ImGui.SameLine();
-				ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
-				DrawInstalled(mod);
+				if(Aetherment.Config.InstalledMods.Contains(mod.ID)) {
+					ImGui.SameLine();
+					ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
+					DrawInstalled();
+				}
 				
 				ImGuiAeth.Offset(10, -ImGuiAeth.SpacingY);
 				var suppress = DrawAuthor(mod);
@@ -142,9 +144,11 @@ namespace Aetherment.GUI {
 				ImGuiAeth.Offset(10 - ImGuiAeth.SpacingX - ImGuiAeth.PaddingX, 0, false);
 				var suppress = DrawAuthor(mod);
 				
-				ImGui.SameLine();
-				ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
-				DrawInstalled(mod);
+				if(Aetherment.Config.InstalledMods.Contains(mod.ID)) {
+					ImGui.SameLine();
+					ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
+					DrawInstalled();
+				}
 				
 				ImGuiAeth.Offset(-ImGuiAeth.PaddingX, -ImGuiAeth.SpacingY);
 				ImGui.TextDisabled(string.Join("   ", mod.TagsFancy));
@@ -160,11 +164,7 @@ namespace Aetherment.GUI {
 				OpenMod(mod);
 		}
 		
-		private void DrawInstalled(Mod mod) {
-			// todo check if installed
-			if(!true)
-				return;
-			
+		private void DrawInstalled() {
 			ImGui.PushFont(UiBuilder.IconFont);
 			ImGui.SetWindowFontScale(0.8f);
 			ImGuiAeth.Offset(5, 3);

@@ -18,6 +18,7 @@ namespace Aetherment.GUI {
 			ImGui.Text("TODO: make fancy");
 			lock(installedMods)
 				foreach(var mod in installedMods) {
+					ImGui.PushID(mod.ID);
 					ImGui.Text(mod.Name);
 					if(ImGui.Button("Remove"))
 						Installer.DeleteMod(mod);
@@ -25,6 +26,18 @@ namespace Aetherment.GUI {
 					bool apply = false;
 					foreach(var option in mod.Options)
 						apply = DrawOption(option) || apply;
+					
+					if(ImGui.Button("Reset")) {
+						apply = true;
+						
+						foreach(var option in mod.Options)
+							switch(option) {
+								case Mod.Option.Color clr:
+									clr.Value = clr.Default;
+									break;
+							}
+					}
+					
 					if(apply) {
 						if(applyTimes.Count == 0)
 							Task.Run(async() => {
@@ -46,6 +59,7 @@ namespace Aetherment.GUI {
 					}
 					
 					ImGuiAeth.Offset(0, 20);
+					ImGui.PopID();
 				}
 		}
 		

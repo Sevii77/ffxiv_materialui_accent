@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ using Newtonsoft.Json.Serialization;
 
 using ImGuiScene;
 using Dalamud.Logging;
-using System.IO;
 
 namespace Aetherment.Util {
 	public partial class Mod : IDisposable {
@@ -169,7 +169,7 @@ namespace Aetherment.Util {
 		public List<string> Tags {get; private set;} = new();
 		public List<string> TagsFancy {get; private set;} = new();
 		[JsonProperty("links")] public string[] Links {get; private set;} = new string[0];
-		[JsonProperty("dependencies")] public string[][] Dependencies {get; private set;} = new string[0][];
+		[JsonProperty("dependencies")] public string[] Dependencies {get; private set;} = new string[0];
 		[JsonProperty("options_inherit")] public string[] OptionsInherit {get; private set;} = new string[0];
 		[JsonProperty("standalone")] public bool Standalone {get; private set;} = true;
 		[JsonProperty("dalamud")] public Dictionary<string, DalamudStyle> Dalamud {get; private set;} = new();
@@ -385,8 +385,8 @@ namespace Aetherment.Util {
 			if(dir == null)
 				return;
 			
-			// var config = Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", "");
-			var config = Regex.Replace(Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", ""), "\"type\"", "\"$type\"");
+			var config = Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", "");
+			// var config = Regex.Replace(Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", ""), "\"type\"", "\"$type\"");
 			var mod = JsonConvert.DeserializeObject<Mod>(config, new JsonSerializerSettings{
 				TypeNameHandling = TypeNameHandling.Objects,
 				SerializationBinder = new OptionBinder() {KnownTypes = new List<Type>() {
