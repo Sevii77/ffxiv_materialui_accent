@@ -1,37 +1,36 @@
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
 using Dalamud.Logging;
 
 namespace Aetherment.Util {
-	internal class GitHub {
-		internal struct RepoInfo {
-			public string author;
-			public string repo;
-			public string branch;
+	public class GitHub {
+		public struct RepoInfo {
+			public string Author;
+			public string Repo;
+			public string Branch;
 			
 			public RepoInfo(string author, string repo, string branch) {
-				this.author = author;
-				this.repo = repo;
-				this.branch = branch;
+				Author = author;
+				Repo = repo;
+				Branch = branch;
 			}
 		}
 		
 		private struct Repo {
 			public struct RepoFile {
-				public string path;
-				public string type;
-				public string sha;
-				public uint size = 0;
+				public string Path;
+				public string Type;
+				public string Sha;
+				public int Size = 0;
 			}
 			
-			public string sha;
-			public RepoFile[] tree;
+			public string Sha;
+			public RepoFile[] Tree;
 		}
 		
 		private static Dictionary<RepoInfo, Dir> repoCache = new();
-		private static HttpClient httpClient;
 		
 		public static async Task<Dir> GetRepo(string info) {
 			string[] seg = info.Split("/");
@@ -39,25 +38,28 @@ namespace Aetherment.Util {
 		}
 		
 		public static async Task<Dir> GetRepo(RepoInfo info) {
+			if(info.Author == "")
+				return null;
+			
 			if(!repoCache.ContainsKey(info)) {
-				Repo repo = JsonConvert.DeserializeObject<Repo>(await httpClient.GetStringAsync($"https://api.github.com/repos/{info.author}/{info.repo}/git/trees/{info.branch}?recursive=1"));
-				Dir dir = new Dir("", repo.sha);
+				Repo repo = JsonConvert.DeserializeObject<Repo>(await Installer.GetString($"https://api.github.com/repos/{info.Author}/{info.Repo}/git/trees/{info.Branch}?recursive=1"));
+				Dir dir = new Dir("", repo.Sha);
 				
-				foreach(var node in repo.tree) {
+				foreach(var node in repo.Tree) {
 					Dir curdir = dir;
-					string[] path = node.path.ToLower().Split("/");
+					string[] path = node.Path.ToLower().Split("/");
 					
-					if(node.type == "tree") {
+					if(node.Type == "tree") {
 						for(int i = 0; i < path.Length - 1; i++)
-							curdir = curdir.dirs[path[i]];
+							curdir = curdir.Dirs[path[i]];
 						
 						string n = path[path.Length - 1];
-						curdir.AddDir(n, node.sha);
-					} if(node.type == "blob") {
+						curdir.AddDir(n, node.Sha);
+					} if(node.Type == "blob") {
 						for(int i = 0; i < path.Length - 1; i++)
-							curdir = curdir.dirs[path[i]];
+							curdir = curdir.Dirs[path[i]];
 						
-						curdir.AddFile(path[path.Length - 1], node.sha, $"https://raw.githubusercontent.com/{info.author}/{info.repo}/{info.branch}/{node.path}");
+						curdir.AddFile(path[path.Length - 1], node.Sha, $"https://raw.githubusercontent.com/{info.Author}/{info.Repo}/{info.Branch}/{node.Path}", node.Size);
 					}
 				}
 				
@@ -69,24 +71,7 @@ namespace Aetherment.Util {
 			return repoCache[info];
 		}
 		
-		public static Task<string> GetString(string url) {
-			return httpClient.GetStringAsync(url);
-		}
-		
-		public static Task<byte[]> GetByteArray(string url) {
-			return httpClient.GetByteArrayAsync(url);
-		}
-		
 		public static void ClearCache() {
-			if(httpClient == null) {
-				var handler = new HttpClientHandler();
-				handler.Proxy = null;
-				handler.UseProxy = false;
-				
-				httpClient = new HttpClient(handler);
-				httpClient.DefaultRequestHeaders.Add("User-Agent", "FFXIV-Aetherment");
-			}
-			
 			lock(repoCache) {
 				repoCache.Clear();
 			}

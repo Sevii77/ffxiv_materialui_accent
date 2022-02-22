@@ -16,13 +16,13 @@
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<OutputPath>$(AppData)/XIVLauncher/devPlugins/Aetherment/</OutputPath>
-	</PropertyGroup>
-	
-	<PropertyGroup>
 		<DalamudLibPath>$(AppData)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
 	</PropertyGroup>
 	
 	<ItemGroup>
+		<Content Include="assets/*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<PackageReference Include="DalamudPackager" Version="2.1.5"/>
 		<Reference Include="Dalamud">
 			<HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
@@ -34,6 +34,10 @@
 		</Reference>
 		<Reference Include="ImGuiScene">
 			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="FFXIVClientStructs">
+			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">

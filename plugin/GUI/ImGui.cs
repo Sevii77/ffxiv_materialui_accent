@@ -2,13 +2,15 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using ImGuiNET;
 using ImGuiScene;
-using Dalamud.Interface;
 using Dalamud.Logging;
+using Dalamud.Interface;
 
 namespace Aetherment.GUI {
 	public class ImGuiAeth {
@@ -36,8 +38,16 @@ namespace Aetherment.GUI {
 			return ((ImGui.GetColumnWidth() - after.Sum() - SpacingX * after.Length) - SpacingX * (splitCount - 1)) / splitCount;
 		}
 		
+		public static float HeightLeft() {
+			return ImGui.GetContentRegionAvail().Y;
+		}
+		
 		public static float Height() {
 			return PaddingY * 2 + ImGui.GetFontSize();
+		}
+		
+		public static float XOffset(float width, int items, float itemWidth) {
+			return width / 2 - items / 2f * itemWidth - (items - 1) / 2f * SpacingX;
 		}
 		
 		public static void Offset(float x, float y, bool globalScale = true) {
@@ -55,11 +65,12 @@ namespace Aetherment.GUI {
 				ImGui.SetTooltip(label);
 		}
 		
-		public static bool ButtonIcon(FontAwesomeIcon icon, Vector2 size) {
+		public static bool ButtonIcon(FontAwesomeIcon icon) {
 			ImGui.PushFont(UiBuilder.IconFont);
 			
+			var size = new Vector2(ImGuiAeth.Height());
 			var pos = ImGui.GetCursorPos();
-			bool hover = false;
+			var hover = false;
 			ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, PaddingY));
 			ImGui.Dummy(size);
 			if(ImGui.IsItemHovered()) {
@@ -68,7 +79,7 @@ namespace Aetherment.GUI {
 			}
 			
 			ImGui.SetCursorPos(pos);
-			bool a = ImGui.Button(icon.ToIconString(), size);
+			var a = ImGui.Button(icon.ToIconString(), size);
 			ImGui.PopStyleVar();
 			
 			if(hover)
@@ -76,6 +87,43 @@ namespace Aetherment.GUI {
 			ImGui.PopFont();
 			
 			return a;
+		}
+		
+		public static bool ButtonImage(TextureWrap tex, Vector2 size, float rounding) {
+			var pos =  ImGui.GetCursorScreenPos();
+			ImGui.GetWindowDrawList().AddImageRounded(tex.ImGuiHandle, pos, pos + size, Vector2.Zero, Vector2.One, 0xFFFFFFFF, rounding);
+			
+			ImGui.Dummy(size);
+			return ImGui.IsItemClicked();
+		}
+		
+		public static void ButtonImageLink(TextureWrap tex, Vector2 size, float rounding, string hover, string url) {
+			if(ButtonImage(tex, size, rounding)) {
+				Task.Run(async() => {
+					try {
+						var p = new Process();
+						p.StartInfo.FileName = url;
+						p.StartInfo.UseShellExecute = true;
+						p.Start();
+						p.WaitForExit();
+						p.Dispose();
+					} catch(Exception) {}
+				});
+			}
+			HoverTooltip(hover);
+		}
+		
+		public static void ButtonSocial(Vector2 size, string url) {
+			var rounding = Math.Min(ImGui.GetStyle().FrameRounding, 5);
+			
+			if(Regex.IsMatch(url, @"https://(?:www\.)?patreon\.com/[a-zA-Z]+"))
+				ButtonImageLink(Aetherment.Textures["patreon64.png"], size, rounding, "Support on Patreon", url);
+			else if(Regex.IsMatch(url, @"https://(?:www\.)?ko-fi\.com/[a-zA-Z]+"))
+				ButtonImageLink(Aetherment.Textures["kofi64.png"], size, rounding, "Support on Kofi", url);
+			else if(Regex.IsMatch(url, @"https://(?:www\.)?github\.com/[a-zA-Z]+/[a-zA-Z-]+"))
+				ButtonImageLink(Aetherment.Textures["github64.png"], size, rounding, "View on GitHub", url);
+			else if(Regex.IsMatch(url, @"https://(?:www\.)?discord\.gg/[a-zA-Z]+"))
+				ButtonImageLink(Aetherment.Textures["discord64.png"], size, rounding, "Join Discord server", url);
 		}
 		
 		public static void Image(TextureWrap tex, Vector2 bounds, bool center = true) {
@@ -137,6 +185,35 @@ namespace Aetherment.GUI {
 			ImGui.Text(final + section);
 		}
 		
+		public static void TextCentered(string text, float width) {
+			string section = "";
+			List<string> sections = new();
+			string[] segments = text.Split(' ');
+			float addLength = ImGui.CalcTextSize("...").X;
+			
+			foreach(string segment in segments) {
+				var s = ImGui.CalcTextSize(section + (section == "" ? "" : " ") + segment);
+				
+				if(s.X + (section == "" ? addLength : 0) > width) {
+					sections.Add(section);
+					section = segment;
+				} else {
+					section += (section == "" ? "" : " ") + segment;
+				}
+			}
+			
+			if(section != "")
+				sections.Add(section);
+			
+			bool first = true;
+			foreach(string line in sections) {
+				float w = ImGui.CalcTextSize(line).X;
+				Offset((width - w) / 2, first ? 0 : -SpacingY, false);
+				ImGui.Text(line);
+				first = false;
+			}
+		}
+		
 		// why tf do i need this, why doesnt a varient exist without the open bool ref
 		public static unsafe bool BeginTabItem(string label, ImGuiTabItemFlags flags) {
 			var len = Encoding.UTF8.GetByteCount(label);
@@ -161,7 +238,6 @@ namespace Aetherment.GUI {
 				gridItemPos += new Vector2(-(gridItemSize.X + ImGuiAeth.PaddingX) * Math.Max(0, gridCount - 1), gridItemSize.Y + ImGuiAeth.PaddingX);
 			else
 				gridItemPos.X += gridItemSize.X + ImGuiAeth.PaddingX;
-			
 		}
 	}
 }

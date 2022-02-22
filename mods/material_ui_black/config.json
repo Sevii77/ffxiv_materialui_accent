@@ -7,8 +7,6 @@
 	
 	"description": "todo",
 	
-	"tags": ["4k", "ui", "theme", "gauge", "icon", "window"],
-	
 	"links": ["https://discord.gg/T5sWUpgNPD", "https://ko-fi.com/skotlex", "https://github.com/skotlex/ffxiv-material-ui"],
 	
 	"dalamud": {
@@ -66,7 +64,7 @@
 			"SliderGrab": [101, 101, 101, 255],
 			"SliderGrabActive": [123, 123, 123, 255],
 			"Button": [0, 0, 0, 0],
-			"ButtonHovered": [41, 41, 41, 255],
+			"ButtonHovered": [45, 45, 45, 255],
 			"ButtonActive": [57, 57, 57, 255],
 			"Header": [0, 0, 0, 60],
 			"HeaderHovered": [0, 0, 0, 90],
@@ -84,6 +82,10 @@
 			"TabUnfocusedActive": [99, 60, 181],
 			"DockingPreview": [99, 60, 181],
 			"DockingEmptyBg": [51, 51, 51, 255],
+			"PlotLines": [99, 60, 181],
+			"PlotLinesHovered": [50, 30, 90],
+			"PlotHistogram": [99, 60, 181],
+			"PlotHistogramHovered": [50, 30, 90],
 			
 			"TextSelectedBg": [99, 60, 181],
 			"DragDropTarget": [99, 60, 181],
@@ -94,7 +96,7 @@
 	
 	"options": [
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Non-Selected Window",
 			"options": {
 				"Solid": [],
@@ -108,7 +110,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Gauges",
 			"options": {
 				"Square": [],
@@ -126,7 +128,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Target Castbar",
 			"options": {
 				"Orange": ["ui/uld/partylist_gaugecast_hr1.tex/options/default target castbar"],
@@ -136,7 +138,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Partylist Shield",
 			"options": {
 				"Yellow": ["ui/uld/partylist_gaugehp_hr1.tex/options/partylist shieldcolor - yellow"],
@@ -148,7 +150,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Minimap",
 			"options": {
 				"Circle - Colored Cardinal": ["ui/uld/navimap_hr1.tex/options/circle/circle minimap cardinal color",
@@ -172,7 +174,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Macro Gear Icon",
 			"options": {
 				"Show": ["ui/uld/icona_frame_hr1.tex"],
@@ -181,7 +183,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Chatlog Resize Symbol",
 			"options": {
 				"Remove": ["ui/uld/chatlog_hr1.tex"],
@@ -190,7 +192,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Main Command Icons",
 			"options": {
 				"Solid Background": ["ui/uld/maincommand_icon_hr1.tex"],
@@ -199,7 +201,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Party List",
 			"options": {
 				"Glow": [
@@ -353,7 +355,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Contents",
 			"options": {
 				"Default": [
@@ -486,7 +488,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Macro",
 			"options": {
 				"Default": [

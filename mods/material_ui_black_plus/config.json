@@ -7,8 +7,6 @@
 	
 	"description": "Material UI Black by Skotlex but with customizable colors and other slight adjustments.",
 	
-	"tags": ["4k", "ui", "theme", "gauge", "icon", "window"],
-	
 	"links": ["https://discord.gg/T5sWUpgNPD", "https://ko-fi.com/skotlex", "https://github.com/Sevii77/ffxiv_materialui_accent"],
 	
 	"dalamud": {
@@ -66,7 +64,7 @@
 			"SliderGrab": [101, 101, 101, 255],
 			"SliderGrabActive": [123, 123, 123, 255],
 			"Button": [0, 0, 0, 0],
-			"ButtonHovered": [41, 41, 41, 255],
+			"ButtonHovered": [45, 45, 45, 255],
 			"ButtonActive": [57, 57, 57, 255],
 			"Header": [0, 0, 0, 60],
 			"HeaderHovered": [0, 0, 0, 90],
@@ -84,6 +82,10 @@
 			"TabUnfocusedActive": "accent",
 			"DockingPreview": "accent",
 			"DockingEmptyBg": [51, 51, 51, 255],
+			"PlotLines": "accent",
+			"PlotLinesHovered": "50%accent",
+			"PlotHistogram": "accent",
+			"PlotHistogramHovered": "50%accent",
 			
 			"TextSelectedBg": "accent",
 			"DragDropTarget": "accent",
@@ -100,70 +102,70 @@
 	
 	"options": [
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "accent",
 			"name": "Accent",
 			"default": [99, 60, 181]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "party",
 			"name": "Party and Alliance List Target",
-			"default": [255, 73, 56]
+			"default": [255, 173, 56]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "enemy",
 			"name": "Enemy List Target",
 			"default": [255, 173, 56]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "proc",
 			"name": "Ability Proc",
 			"default": [255, 173, 56]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "shield",
 			"name": "Party List Shield",
 			"default": [255, 211, 0]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "targetcast",
 			"name": "Target Castbar",
-			"default": [209, 34, 11]
+			"default": [209, 134, 11]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "targetcastinter",
 			"name": "Target Castbar Interrupt",
 			"default": [139, 15, 15]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "limitbreak1",
 			"name": "Limit Break Filling",
 			"default": [25, 220, 222]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "limitbreak2",
 			"name": "Limit Break Full",
 			"default": [190, 99, 221]
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Selected Window",
 			"options": {
 				"Bar": [
@@ -202,7 +204,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Non-Selected Window",
 			"options": {
 				"Solid": [
@@ -218,7 +220,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Party and Alliance Background",
 			"options": {
 				"Default": ["ui/uld/alliance_hr1.tex",
@@ -229,7 +231,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Gauges",
 			"options": {
 				"Square": [
@@ -249,7 +251,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Minimap",
 			"options": {
 				"Circle - Colored Cardinal": ["ui/uld/navimap_hr1.tex/options/circle/circle minimap cardinal color",
@@ -273,16 +275,16 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Macro Gear Icon",
 			"options": {
 				"Show": ["ui/uld/icona_frame_hr1.tex"],
-				"Remove": ["ui/uld/icona_frame_hr1.tex/option/hide_macro_icon"]
+				"Remove": ["ui/uld/icona_frame_hr1.tex/hide_macro_icon"]
 			}
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Chatlog Resize Symbol",
 			"options": {
 				"Remove": ["ui/uld/chatlog_hr1.tex"],
@@ -291,7 +293,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Main Command Icons",
 			"options": {
 				"Solid Background": ["ui/uld/maincommand_icon_hr1.tex"],
@@ -300,7 +302,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Party List",
 			"options": {
 				"Glow": [
@@ -456,7 +458,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Contents",
 			"options": {
 				"Default": [
@@ -589,7 +591,7 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Job Icons - Macro",
 			"options": {
 				"Default": [

@@ -1,38 +1,40 @@
 using System.Collections.Generic;
 
 namespace Aetherment.Util {
-	internal class Dir {
-		internal struct File {
-			public string name;
-			public string sha;
-			public string path;
+	public class Dir {
+		public struct File {
+			public string Name;
+			public string Sha;
+			public string Path;
+			public int Size;
 			
-			public File(string name, string sha, string path) {
-				this.name = name;
-				this.sha = sha;
-				this.path = path;
+			public File(string name, string sha, string path, int size) {
+				Name = name;
+				Sha = sha;
+				Path = path;
+				Size = size;
 			}
 		}
 		
-		public string name;
-		public string sha;
-		public Dictionary<string, File> files;
-		public Dictionary<string, Dir> dirs;
+		public string Name;
+		public string Sha;
+		public Dictionary<string, File> Files;
+		public Dictionary<string, Dir> Dirs;
 		
 		public Dir(string name, string sha) {
-			this.name = name;
-			this.sha = sha;
-			files = new Dictionary<string, File>();
-			dirs = new Dictionary<string, Dir>();
+			Name = name;
+			Sha = sha;
+			Files = new Dictionary<string, File>();
+			Dirs = new Dictionary<string, Dir>();
 		}
 		
 		public Dir GetPathDir(string path) {
 			Dir dir = this;
 			foreach(string subpath in path.Split("/")) {
-				if(!dir.dirs.ContainsKey(subpath))
+				if(!dir.Dirs.ContainsKey(subpath))
 					return null;
 				
-				dir = dir.dirs[subpath];
+				dir = dir.Dirs[subpath];
 			}
 			
 			return dir;
@@ -40,13 +42,13 @@ namespace Aetherment.Util {
 		
 		public Dir AddDir(string name, string sha) {
 			Dir dir = new Dir(name, sha);
-			dirs[name] = dir;
+			Dirs[name] = dir;
 			
 			return dir;
 		}
 		
-		public void AddFile(string name, string sha, string path) {
-			files[name] = new File(name, sha, path);
+		public void AddFile(string name, string sha, string path, int size) {
+			Files[name] = new File(name, sha, path, size);
 		}
 	}
 }

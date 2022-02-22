@@ -7,33 +7,27 @@
 	
 	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
 	
-	"tags": ["4k", "ui", "window"],
-	
-	"dependencies": [["material_ui_black_plus"]],
-	
-	"options_inherit": ["material_ui_black_plus"],
-	
-	"standalone": false,
+	"dependencies": ["material_ui_black_plus"],
 	
 	"dalamud": {
 		"default": {
 			"WindowRounding": 11,
-			"FrameRounding": 12,
-			"PopupRounding": 12,
+			"FrameRounding": 8,
+			"PopupRounding": 11,
 			"TabRounding": 4
 		}
 	},
 	
 	"options": [
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "accent",
 			"name": "Accent",
 			"default": [99, 60, 181]
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Selected Window",
 			"options": {
 				"Bar": [
@@ -55,7 +49,7 @@
 		},
 
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Non-Selected Window",
 			"options": {
 				"Solid": ["ui/uld/windowa_bgnormal_corner_hr1.tex"],

@@ -7,50 +7,44 @@
 	
 	"description": "Meconate's Minimal Gauges with Minimal Target Info. Includes HP/MP, simple job, limit break, focus target, and both player and target castbars. Options included in the Material UI Configuration tab.",
 	
-	"tags": ["4k", "ui", "gauge"],
-	
-	"options_inherit": ["material_ui_black_plus"],
-	
-	"standalone": true,
-	
 	"options": [
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "shield",
 			"name": "Party List Shield",
 			"default": [255, 211, 0]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "targetcast",
 			"name": "Target Castbar",
 			"default": [209, 134, 11]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "targetcastinter",
 			"name": "Target Castbar Interrupt",
 			"default": [139, 15, 15]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "limitbreak1",
 			"name": "Limit Break Filling",
 			"default": [25, 220, 222]
 		},
 		
 		{
-			"type": "rgb",
+			"$type": "rgb",
 			"id": "limitbreak2",
 			"name": "Limit Break Full",
 			"default": [190, 99, 221]
 		},
 		
 		{
-			"type": "multi",
+			"$type": "multi",
 			"name": "Minimal",
 			"options": {
 				"Limit Break": ["ui/uld/limitbreak_hr1.tex"],
@@ -65,9 +59,10 @@
 		},
 		
 		{
-			"type": "single",
+			"$type": "single",
 			"name": "Target Info",
 			"options": {
+				"Default": [],
 				"Minimal": ["ui/uld/targetinfo_hr1.tex/option/minimal"],
 				"Minimal (with object line)": ["ui/uld/targetinfo_hr1.tex/option/minimal/wline"],
 				

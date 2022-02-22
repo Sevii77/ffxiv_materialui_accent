@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using ImGuiNET;
 using Dalamud.Logging;
 using Dalamud.Interface;
-using Dalamud.Interface.Components;
 
 using Aetherment.Util;
 
@@ -21,11 +20,10 @@ namespace Aetherment.GUI {
 		private void DrawModBrowser() {
 			var h = ImGuiAeth.Height();
 			var w = (uint)ImGuiAeth.WidthLeft(new float[]{h * 1f, h * 1f});
-			var iconSize = new Vector2(h);
 			
 			// functionality of clear button here because else it wont work
 			ImGuiAeth.Offset(w - h, 0, false);
-			ImGui.Dummy(iconSize);
+			ImGui.Dummy(new Vector2(h));
 			if(ImGui.IsMouseClicked(ImGuiMouseButton.Left)) {
 				search = "";
 				SearchMods();
@@ -39,16 +37,16 @@ namespace Aetherment.GUI {
 				
 			ImGui.SameLine();
 			ImGuiAeth.Offset(-h - ImGuiAeth.SpacingX, 0, false);
-			ImGuiAeth.ButtonIcon(FontAwesomeIcon.Times, iconSize);
+			ImGuiAeth.ButtonIcon(FontAwesomeIcon.Times);
 			ImGuiAeth.HoverTooltip("Clear");
 				
 			ImGui.SameLine();
-			if(ImGuiAeth.ButtonIcon(FontAwesomeIcon.Cog, iconSize))
+			if(ImGuiAeth.ButtonIcon(FontAwesomeIcon.Cog))
 				adv = !adv;
 			ImGuiAeth.HoverTooltip("Advanced search options");
 			
 			ImGui.SameLine();
-			if (ImGuiAeth.ButtonIcon(gridDisplay ? FontAwesomeIcon.ThLarge : FontAwesomeIcon.ThList, iconSize))
+			if (ImGuiAeth.ButtonIcon(gridDisplay ? FontAwesomeIcon.ThLarge : FontAwesomeIcon.ThList))
 				gridDisplay = !gridDisplay;
 			
 			if(adv) {
@@ -88,7 +86,8 @@ namespace Aetherment.GUI {
 					if(tag.Value)
 						tags.Add(tag.Key);
 				
-				drawmods = await Mod.GetMods(Aetherment.repos, search, tags);
+				drawmods = await Mod.GetMods(search, tags);
+				// drawmods = await Mod.GetMods(Aetherment.Config.Repos, search, tags);
 			});
 		}
 		
@@ -97,7 +96,7 @@ namespace Aetherment.GUI {
 			// pop the clip rect from the child frame since ONLY the x is affected by FramePadding (why only X? why is it even affected in general? wtf)
 			ImGui.PopClipRect();
 			
-			var pos = ImGui.GetCursorScreenPos() + new Vector2(0, 100 * ImGuiHelpers.GlobalScale) - ImGuiAeth.Padding;
+			var pos = ImGui.GetCursorScreenPos() + new Vector2(0, 100 * ImGuiHelpers.GlobalScale) - ImGuiAeth.Padding + new Vector2(1, 0);
 			
 			// info
 			ImGui.BeginGroup();
@@ -115,7 +114,7 @@ namespace Aetherment.GUI {
 				ImGuiAeth.TextBounded(mod.Description, new Vector2(ImGuiAeth.WidthLeft(), 100 * ImGuiHelpers.GlobalScale - ImGuiAeth.Height() * 2 - ImGuiAeth.Spacing.Y));
 			ImGui.EndGroup();
 			
-			ImGuiAeth.Image(mod.Previews.Count > 0 ? mod.Previews[0] : null, pos, new Vector2(200, 100));
+			ImGuiAeth.Image(mod.Previews.Count > 0 ? mod.Previews[0] : null, pos, new Vector2(198, 99));
 			
 			// push a new clip rect since it will expect one from child frame and pop it
 			ImGui.PushClipRect(Vector2.Zero, Vector2.Zero, true);
@@ -129,7 +128,7 @@ namespace Aetherment.GUI {
 			ImGui.BeginChildFrame(mod.ID2, new Vector2(ImGuiAeth.WidthLeft(), 100 * ImGuiHelpers.GlobalScale), ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 			ImGui.PopClipRect();
 			
-			ImGuiAeth.Image(mod.Previews.Count > 0 ? mod.Previews[0] : null, ImGui.GetCursorScreenPos() - ImGuiAeth.Padding, new Vector2(200, 100));
+			ImGuiAeth.Image(mod.Previews.Count > 0 ? mod.Previews[0] : null, ImGui.GetCursorScreenPos() - ImGuiAeth.Padding + Vector2.One, new Vector2(196, 98));
 			
 			// info
 			ImGui.SameLine();
@@ -140,7 +139,7 @@ namespace Aetherment.GUI {
 				ImGui.Text(mod.Name);
 				
 				ImGui.SameLine();
-				ImGuiAeth.Offset(10 - ImGuiAeth.SpacingX - ImGuiAeth.PaddingX, 0);
+				ImGuiAeth.Offset(10 - ImGuiAeth.SpacingX - ImGuiAeth.PaddingX, 0, false);
 				var suppress = DrawAuthor(mod);
 				
 				ImGui.SameLine();
@@ -170,6 +169,7 @@ namespace Aetherment.GUI {
 			ImGui.SetWindowFontScale(0.8f);
 			ImGuiAeth.Offset(5, 3);
 			ImGui.Text(FontAwesomeIcon.Check.ToIconString());
+			ImGuiAeth.Offset(0, -3);
 			ImGui.SetWindowFontScale(1f);
 			ImGui.PopFont();
 			ImGuiAeth.HoverTooltip("Installed");
@@ -180,8 +180,8 @@ namespace Aetherment.GUI {
 			
 			ImGui.TextDisabled("by ");
 			ImGui.SameLine();
-			ImGuiAeth.Offset(-ImGuiAeth.SpacingX, 0);
-			ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[35]);
+			ImGuiAeth.Offset(-ImGuiAeth.SpacingX, 0, false);
+			ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[18]);
 			ImGui.Text(mod.Author);
 			ImGui.PopStyleColor();
 			if(ImGui.IsItemClicked()) {
