@@ -72,7 +72,7 @@ namespace Aetherment {
 							shas[file.Sha] = file;
 					}
 					walkDir(mod.Files.Dirs["files"]);
-					// shas[mod.Files["config.json"].Sha] = mod.Files["config.json"];
+					shas[mod.Files.Files["config.json"].Sha] = mod.Files.Files["config.json"];
 					
 					// Get rid of outdated files
 					foreach(var file in new DirectoryInfo(filesPath).EnumerateFiles()) {
@@ -149,6 +149,9 @@ namespace Aetherment {
 					
 					while(activeCount > 0)
 						await Task.Delay(100);
+					
+					if(!mod.LoadConfig())
+						mod.SaveConfig();
 					
 					Apply(mod);
 					// TODO: tell penumbra to add/reload mod
@@ -328,7 +331,7 @@ namespace Aetherment {
 			
 			File.WriteAllText(penumPath + "meta.json", JsonConvert.SerializeObject(penumMeta, Formatting.Indented));
 			
-			mod.SaveConfig();
+			// mod.SaveConfig();
 			Aetherment.AddInstalledMod(mod.ID);
 			
 			InstallStatus.Busy = false;

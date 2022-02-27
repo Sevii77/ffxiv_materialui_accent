@@ -152,12 +152,11 @@ namespace Aetherment.Util {
 			}
 		}
 		
-		// public ConfigMod Config {get; private set;} = new();
 		public GitHub.RepoInfo Repo {get; private set;}
 		public bool Enabled {get; private set;} = false;
 		public bool AutoUpdate {get; private set;} = true;
 		public List<string> DisabledPaths {get; private set;} = new();
-		public string Raw {get; private set;}
+		public string ConfigSha {get; private set;}
 		
 		public string ID {get; private set;} = "ID";
 		public uint ID2 {get; private set;}
@@ -178,19 +177,21 @@ namespace Aetherment.Util {
 		public Dir Files {get; private set;}
 		public int Size {get; private set;}
 		
-		public void LoadConfig() {
+		public bool LoadConfig() {
 			var path = $"{Aetherment.Interface.ConfigDirectory.FullName}/configs/{ID}.json";
 			if(!File.Exists(path))
-				return;
+				return false;
 			
 			var config = JObject.Parse(File.ReadAllText(path));
 			Repo = config["Repo"].ToObject<GitHub.RepoInfo>();
 			AutoUpdate = (bool)config["AutoUpdate"];
 			DisabledPaths = config["DisabledPaths"].ToObject<List<string>>();
-			Raw = (string)config["RawConfig"];
+			ConfigSha = (string)config["ConfigSha"];
 			
 			foreach(var option in config["OptionValues"].ToObject<Dictionary<string, JObject>>())
 				((Option.Customizable)Options.First(x => x is Option.Customizable && ((Option.Customizable)x).ID == option.Key)).ReadJson(option.Value);
+			
+			return true;
 		}
 		
 		public void SaveConfig() {
@@ -224,8 +225,8 @@ namespace Aetherment.Util {
 							((Option.Customizable)option).WriteJson(writer);
 					writer.WriteEndObject();
 				
-				writer.WritePropertyName("RawConfig");
-					writer.WriteValue(Raw);
+				writer.WritePropertyName("ConfigSha");
+					writer.WriteValue(ConfigSha);
 			writer.WriteEndObject();
 			
 			var path = $"{Aetherment.Interface.ConfigDirectory.FullName}/configs/{ID}.json";
@@ -302,7 +303,7 @@ namespace Aetherment.Util {
 				return null;
 			
 			// This is dumb
-			var mod = JsonConvert.DeserializeObject<Mod>((string)JObject.Parse(File.ReadAllText(path))["RawConfig"], new JsonSerializerSettings{
+			var mod = JsonConvert.DeserializeObject<Mod>(File.ReadAllText($"{Penumbra.GetModPath()}/{id}/files/{(string)JObject.Parse(File.ReadAllText(path))["ConfigSha"]}"), new JsonSerializerSettings{
 				TypeNameHandling = TypeNameHandling.Objects,
 				SerializationBinder = new OptionBinder() {KnownTypes = new List<Type>() {
 					typeof(Option.RGBA),
@@ -386,7 +387,6 @@ namespace Aetherment.Util {
 				return;
 			
 			var config = Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", "");
-			// var config = Regex.Replace(Regex.Replace(await Installer.GetString(dir.Files["config.json"].Path), "\\s//[^\n]*", ""), "\"type\"", "\"$type\"");
 			var mod = JsonConvert.DeserializeObject<Mod>(config, new JsonSerializerSettings{
 				TypeNameHandling = TypeNameHandling.Objects,
 				SerializationBinder = new OptionBinder() {KnownTypes = new List<Type>() {
@@ -404,9 +404,8 @@ namespace Aetherment.Util {
 			mod.Files = dir;
 			mod.Size = 0;
 			mod.Repo = repo;
-			mod.Raw = config;
+			mod.ConfigSha = dir.Files["config.json"].Sha;
 			
-			mod.Tags.Clear(); // TODO: remove tags from config file, probably
 			TagGrabber.AddTags(mod);
 			
 			if(repo.Author == "")

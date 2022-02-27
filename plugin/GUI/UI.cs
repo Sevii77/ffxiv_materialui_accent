@@ -67,27 +67,27 @@ namespace Aetherment.GUI {
 			var footer = (Installer.InstallStatus.Busy ? (ImGuiAeth.Height() + ImGuiAeth.SpacingY) : 0);
 			var bodySize = new Vector2(-1, -footer);
 			
-			// ImGui.SetNextWindowSize(new Vector2(720, 480), ImGuiCond.FirstUseEver);
-			ImGui.SetNextWindowSize(new Vector2(1050, 600));
+			// ImGui.SetNextWindowSize(new Vector2(1070, 600));
+			ImGui.SetNextWindowSize(new Vector2(1070, 600), ImGuiCond.FirstUseEver);
 			ImGui.Begin("Aetherment", ref shouldDraw);
 			// DrawTest();
 			ImGui.BeginTabBar("Aetherment");
 			if(ImGui.BeginTabItem("Settings")) {
-				ImGui.BeginChild("AethermentTabSettings", bodySize);
+				ImGui.BeginChild("Settings", bodySize);
 				DrawSettings();
 				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
 			
 			if(ImGui.BeginTabItem("Configuration")) {
-				ImGui.BeginChild("AethermentTabConfig", bodySize);
+				ImGui.BeginChild("Configuration", bodySize);
 				DrawConfig();
 				ImGui.EndChild();
 				ImGui.EndTabItem();
 			}
 			
 			if(ImGui.BeginTabItem("Mod Browser")) {
-				ImGui.BeginChild("AethermentTabBrowser", bodySize);
+				ImGui.BeginChild("Browser", bodySize);
 				DrawModBrowser();
 				ImGui.EndChild();
 				ImGui.EndTabItem();
@@ -95,7 +95,7 @@ namespace Aetherment.GUI {
 			
 			if(modsOpen.Count > 0) {
 				if(ImGuiAeth.BeginTabItem("Mods", newestMod != null ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None)) {
-					ImGui.BeginChild("AethermentTabMods", bodySize);
+					ImGui.BeginChild("Mods", bodySize);
 					DrawMods();
 					ImGui.EndChild();
 					ImGui.EndTabItem();
