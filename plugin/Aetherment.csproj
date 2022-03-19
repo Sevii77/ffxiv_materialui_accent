@@ -1,29 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType>Library</OutputType>
-		<Authors>Sevii</Authors>
+		<AssemblyName>Aetherment</AssemblyName>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
 	
 	<PropertyGroup>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<Platforms>x64</Platforms>
+		<OutputType>Library</OutputType>
 		<Configuration>Release</Configuration>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<OutputPath>$(AppData)/XIVLauncher/devPlugins/Aetherment/</OutputPath>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
+		<!-- <OutputPath>$(AppData)/XIVLauncher/devPlugins/Aetherment/</OutputPath> -->
+		<PluginPath>$(AppData)/XIVLauncher/devPlugins/Aetherment/</PluginPath>
 		<DalamudLibPath>$(AppData)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
 	</PropertyGroup>
 	
+	<Target Name="ILRepacker" AfterTargets="Build">
+		<ItemGroup>
+			<InputAssemblies Include="$(OutputPath)$(AssemblyName).dll"/>
+			<InputAssemblies Include="$(OutputPath)Lumina.dll"/>
+		</ItemGroup>
+		<Exec Command="$(PkgILRepack)\tools\ILRepack.exe /lib:$(AppData)\XIVLauncher\addon\Hooks\dev /out:$(PluginPath)\$(TargetFileName) @(InputAssemblies, ' ')"/>
+		<ItemGroup>
+			<Assets Include="assets/**"/>
+			<Files Include="Aetherment.json;bin/Release/Microsoft.Data.Sqlite.dll;bin/Release/SQLitePCLRaw.*.dll"/>
+		</ItemGroup>
+		<Copy SourceFiles="@(Assets)" DestinationFolder="$(PluginPath)/assets/%(RecursiveDir)" SkipUnchangedFiles="true"/>
+		<Copy SourceFiles="@(Files)" DestinationFolder="$(PluginPath)" SkipUnchangedFiles="true"/>
+		<Copy SourceFiles="bin/Release/runtimes/win-x64/native/e_sqlite3.dll" DestinationFolder="$(PluginPath)/runtimes/win-x64/native" SkipUnchangedFiles="true"/>
+		<Exec Command="rm ../release.zip"/>
+		<Exec Command="zip a ../release.zip $(PluginPath)*"/>
+	</Target>
+	
 	<ItemGroup>
-		<Content Include="assets/*">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<PackageReference Include="DalamudPackager" Version="2.1.5"/>
+		<Compile Remove="lib\**"/>
+		<Compile Remove="Publish\**"/>
+		<EmbeddedResource Remove="lib\**"/>
+		<EmbeddedResource Remove="Publish\**"/>
+		<None Remove="lib\**"/>
+		<None Remove="Publish\**"/>
+		
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.2"/>
+		<PackageReference Include="ILRepack" Version="2.0.18" GeneratePathProperty="true"/>
 		<Reference Include="Dalamud">
 			<HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
 			<Private>false</Private>
@@ -36,13 +62,22 @@
 			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
-		<Reference Include="FFXIVClientStructs">
-			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
 		<Reference Include="Newtonsoft.Json">
 			<HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
 			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpDX">
+			<HintPath>$(DalamudLibPath)SharpDX.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpDX.Direct3D11">
+			<HintPath>$(DalamudLibPath)SharpDX.Direct3D11.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		
+		<Reference Include="Lumina">
+			<HintPath>../../Lumina/src/Lumina/bin/Release/net5.0/Lumina.dll</HintPath>
+			<Private>True</Private>
 		</Reference>
 	</ItemGroup>
 </Project>

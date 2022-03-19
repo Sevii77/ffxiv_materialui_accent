@@ -1,13 +1,12 @@
 using System;
-using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ImGuiNET;
 using Dalamud.Logging;
 
 using Aetherment.Util;
-using System.Threading.Tasks;
 
 namespace Aetherment.GUI {
 	internal partial class UI {
@@ -54,7 +53,7 @@ namespace Aetherment.GUI {
 					rgba.Value = clr;
 					break;
 				case Mod.Option.RGB rgb:
-					if(Aetherment.Config.ForceColor4) {
+					if(Aetherment.Config.ForceColor4 || rgb.Value.W != 1) {
 						clr = rgb.Value;
 						b = ImGui.ColorEdit4(rgb.Name, ref clr, ImGuiColorEditFlags.PickerHueWheel | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar);
 						rgb.Value = clr;

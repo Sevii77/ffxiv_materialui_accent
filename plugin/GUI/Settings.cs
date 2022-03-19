@@ -15,6 +15,7 @@ namespace Aetherment.GUI {
 				save = ImGui.Checkbox("Force RGBA Color Select", ref Aetherment.Config.ForceColor4) || save;
 				save = ImGui.Checkbox("Local Mods", ref Aetherment.Config.LocalMods) || save;
 				save = ImGui.InputTextWithHint("", "Local Mods Path", ref Aetherment.Config.LocalModsPath, 200) || save;
+				save = ImGui.Checkbox("Developer Mode", ref Aetherment.Config.DevMode) || save;
 			}
 			
 			if(save) {

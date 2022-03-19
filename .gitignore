@@ -1,2 +1,4 @@
-.vs
-obj
+plugin/.vs
+plugin/obj
+plugin/bin
+plugin/Util/PathsDB.cs

@@ -1,10 +1,8 @@
-using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ImGuiNET;
-using Dalamud.Logging;
 using Dalamud.Interface;
 
 using Aetherment.Util;
@@ -76,7 +74,7 @@ namespace Aetherment.GUI {
 			} else
 				foreach(Mod mod in drawmods)
 					DrawModPreviewList(mod);
-			ImGui.EndChildFrame();
+			ImGui.EndChild();
 		}
 		
 		private void SearchMods() {

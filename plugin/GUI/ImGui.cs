@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 
 using ImGuiNET;
 using ImGuiScene;
-using Dalamud.Logging;
 using Dalamud.Interface;
 
 namespace Aetherment.GUI {
@@ -17,6 +16,9 @@ namespace Aetherment.GUI {
 		public static Vector2 Spacing => ImGui.GetStyle().ItemSpacing;
 		public static float SpacingX => ImGui.GetStyle().ItemSpacing.X;
 		public static float SpacingY => ImGui.GetStyle().ItemSpacing.Y;
+		public static Vector2 Ipacing => ImGui.GetStyle().ItemInnerSpacing;
+		public static float ISpacingX => ImGui.GetStyle().ItemInnerSpacing.X;
+		public static float ISpacingY => ImGui.GetStyle().ItemInnerSpacing.Y;
 		public static Vector2 Padding => ImGui.GetStyle().FramePadding;
 		public static float PaddingX => ImGui.GetStyle().FramePadding.X;
 		public static float PaddingY => ImGui.GetStyle().FramePadding.Y;
@@ -48,6 +50,10 @@ namespace Aetherment.GUI {
 		
 		public static float XOffset(float width, int items, float itemWidth) {
 			return width / 2 - items / 2f * itemWidth - (items - 1) / 2f * SpacingX;
+		}
+		
+		public static void Offset(Vector2 xy, bool globalScale = true) {
+			ImGui.SetCursorPos(ImGui.GetCursorPos() + xy * (globalScale ? ImGuiHelpers.GlobalScale : 1));
 		}
 		
 		public static void Offset(float x, float y, bool globalScale = true) {
@@ -132,7 +138,7 @@ namespace Aetherment.GUI {
 			float y = tex.Height * scale;
 			
 			if(center)
-				ImGuiAeth.Offset((bounds.X - x) / 2, (bounds.Y - y) / 2, false);
+				Offset((bounds.X - x) / 2, (bounds.Y - y) / 2, false);
 			
 			ImGui.Image(tex.ImGuiHandle, new Vector2(x, y));
 		}

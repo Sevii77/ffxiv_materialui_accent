@@ -1,29 +1,23 @@
+global using Dalamud.Logging;
+
 using System;
 using System.IO;
-using System.Numerics;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
-using ImGuiNET;
 using ImGuiScene;
-using Dalamud;
 using Dalamud.IoC;
-using Dalamud.Game;
 using Dalamud.Plugin;
-using Dalamud.Logging;
 using Dalamud.Interface;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Objects;
+
+using Lumina;
 
 using Aetherment.GUI;
 using Aetherment.Util;
-using System.Threading.Tasks;
-using System.Diagnostics;
-
-// TODO save mod config files locally and use that for the config tab
 
 namespace Aetherment {
 	[Serializable]
@@ -40,6 +34,12 @@ namespace Aetherment {
 		public bool LocalMods = false;
 		public string LocalModsPath = "";
 		public List<GitHub.RepoInfo> Repos = new();
+		
+		public bool DevMode = false;
+		
+		public string ExplorerMod = "";
+		public string ExplorerExportPath = ".";
+		public Dictionary<string, string> ExplorerExportExt = new();
 	}
 	
 	public class Aetherment : IDalamudPlugin {
@@ -49,8 +49,9 @@ namespace Aetherment {
 		
 		[PluginService][RequiredVersion("1.0")] public static DalamudPluginInterface Interface {get; private set;} = null!;
 		[PluginService][RequiredVersion("1.0")] public static CommandManager         Commands  {get; private set;} = null!;
-		[PluginService][RequiredVersion("1.0")] public static GameGui                GameGui   {get; private set;} = null!;
 		[PluginService][RequiredVersion("1.0")] public static TitleScreenMenu        TitleMenu {get; private set;} = null!;
+		
+		internal static GameData GameData;
 		
 		internal static Config Config;
 		internal static UI Ui;
@@ -59,10 +60,12 @@ namespace Aetherment {
 		
 		public Aetherment() {
 			Installer.Initialize();
-			foreach(var file in new DirectoryInfo(Interface.AssemblyLocation.DirectoryName + "/assets").EnumerateFiles())
+			foreach(var file in new DirectoryInfo(Interface.AssemblyLocation.DirectoryName + "/assets/icons").EnumerateFiles())
 				Textures[file.Name] = Interface.UiBuilder.LoadImage(file.FullName);
 			
-			var path = $"{Aetherment.Interface.ConfigDirectory.FullName}/config.json";
+			GameData = new GameData(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "/sqpack", new LuminaOptions());
+			
+			var path = $"{Interface.ConfigDirectory.FullName}/config.json";
 			Config = File.Exists(path) ? JsonConvert.DeserializeObject<Config>(File.ReadAllText(path)) : new Config();
 			Config.Repos.Insert(0, new GitHub.RepoInfo("Sevii77", "ffxiv_materialui_accent", "v2"));
 			Ui = new UI();
@@ -73,6 +76,10 @@ namespace Aetherment {
 			Commands.AddHandler(commandAlt, new CommandInfo(OnCommand) {
 				HelpMessage = "Alternative for /aetherment"
 			});
+			
+			// Task.Run(async() => {
+			// 	PathsDB.Fetch();
+			// });
 		}
 		
 		public void Dispose() {

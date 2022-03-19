@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Collections.Generic;
 
 using ImGuiNET;
-using Dalamud.Logging;
 using Dalamud.Interface;
 
 using Aetherment.Util;
@@ -42,12 +41,6 @@ namespace Aetherment.GUI {
 				
 				ImGuiAeth.Offset(0, 10);
 				ImGui.TextWrapped(Mod.Description);
-				
-				// if(ImGui.Button("save config"))
-				// 	Mod.SaveConfig();
-				
-				// if(ImGui.Button("load config"))
-				// 	Mod.LoadConfig();
 				
 				// Links
 				var h = ImGuiAeth.Height();
@@ -124,80 +117,4 @@ namespace Aetherment.GUI {
 				modsOpen.Add(new(mod));
 		}
 	}
-	
-		// private void DrawModPage(Mod mod) {
-		// 	ImGui.BeginChild("AethermentModPage", new Vector2(0, 300 * ImGuiHelpers.GlobalScale + ImGuiAeth.SpacingY * 2), false, ImGuiWindowFlags.HorizontalScrollbar);
-		// 	// previews
-		// 	for(int i = 0; i < mod.Previews.Count; i++) {
-		// 		var preview = mod.Previews[i];
-				
-		// 		if(i > 0)
-		// 			ImGui.SameLine();
-		// 		ImGuiAeth.Image(preview, ImGui.GetCursorScreenPos(), new Vector2(preview.Width, preview.Height) * (300f / preview.Height));
-		// 		// ImGui.Image(preview.ImGuiHandle, new Vector2(preview.Width, preview.Height) * (300f / preview.Height));
-		// 	}
-			
-		// 	ImGui.EndChild();
-			
-		// 	// todo: the rest
-		// 	ImGui.BeginTabBar("AethermentModPageSections");
-		// 	if(ImGui.BeginTabItem("Description")) {
-		// 		ImGui.TextWrapped(mod.Description);
-		// 		ImGui.EndTabItem();
-		// 	}
-			
-		// 	// if(ImGui.BeginTabItem("Files")) {
-		// 	// 	DrawFiles(mod);
-		// 	// 	ImGui.EndTabItem();
-		// 	// }
-			
-		// 	if(ImGui.BeginTabItem("Options")) {
-		// 		foreach(Mod.Option option in mod.Options)
-		// 			DrawOption(mod, option);
-		// 		ImGui.EndTabItem();
-		// 	}
-		// 	ImGui.EndTabBar();
-		// }
-		
-		// private void DrawFiles(Mod mod, Dir dir = null, string path = "", int depth = 0, bool disabled = false) {
-		// 	static void DrawFile(Mod mod, string name) {
-		// 		// ImGuiAeth.Offset(10, 0);
-		// 		ImGui.Text(name);
-		// 	}
-			
-		// 	if(dir == null)
-		// 		dir = mod.Files.dirs["files"];
-			
-		// 	// DrawFile(mod, dir.name, depth);
-			
-		// 	depth++;
-			
-		// 	foreach(Dir sub in dir.dirs.Values) {
-		// 		if(!sub.name.Contains(".")) {
-		// 			string subpath = path + "/" + sub.name;
-		// 			var d = mod.DisabledPaths.Contains(subpath);
-		// 			var e = !d;
-		// 			ImGui.PushID(sub.name);
-		// 			ImGui.Checkbox("", ref e);
-		// 			ImGui.PopID();
-		// 			if(d == e) {
-		// 				if(d)
-		// 					mod.DisabledPaths.Remove(subpath);
-		// 				else
-		// 					mod.DisabledPaths.Add(subpath);
-		// 			}
-					
-		// 			ImGui.SameLine();
-		// 			ImGuiAeth.Offset(-ImGuiAeth.SpacingX, 0, false);
-		// 			if(ImGui.TreeNode(sub.name)) {
-		// 				DrawFiles(mod, sub, subpath, depth, disabled);
-		// 				ImGui.TreePop();
-		// 			}
-		// 		} else
-		// 			DrawFile(mod, sub.name);
-		// 	}
-			
-		// 	foreach(string file in dir.files.Keys)
-		// 		DrawFile(mod, file);
-		// }
 }

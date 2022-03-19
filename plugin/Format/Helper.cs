@@ -1,7 +1,7 @@
 namespace Aetherment.Format {
 	public unsafe struct Buffer {
 		public byte* Data;
-		public int Size;
+		public int Size = 0;
 		
 		public Buffer(byte* data, int size) {
 			Data = data;

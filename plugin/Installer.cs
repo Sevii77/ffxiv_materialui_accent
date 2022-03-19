@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -7,8 +8,6 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
-using Dalamud.Logging;
-
 using Aetherment.Util;
 using Aetherment.Format;
 
@@ -16,30 +15,6 @@ using Aetherment.Format;
 
 namespace Aetherment {
 	internal class Installer {
-		// public static string Status {get; private set;}
-		private struct PMeta {
-			public int FileVersion = 0;
-			public string Name = "No Name";
-			public string Author = "Unknown";
-			public string Description = "";
-			public string Version = "";
-			public string Website = "";
-			public Dictionary<int, int> FileSwaps = new(); // idk what the values are but we dont care
-			public Dictionary<string, PGroup> Groups = new();
-			
-			public struct PGroup {
-				public string GroupName = "noname";
-				public string SelectionType = "single";
-				public List<POption> Options = new();
-				
-				public struct POption {
-					public string OptionName = "noname";
-					public string OptionDesc = "";
-					public Dictionary<string, string[]> OptionFiles = new();
-				}
-			}
-		}
-		
 		public class Status {
 			public bool Busy = false;
 			public int Progress = 0;
@@ -58,7 +33,7 @@ namespace Aetherment {
 					InstallStatus.Busy = true;
 					
 					var mod = downloadQueue[0];
-					var filesPath = $"{Penumbra.GetModPath()}/{mod.ID}/files/";
+					var filesPath = $"{PenumbraApi.GetDirectory().FullName}/{mod.ID}/files/";
 					
 					Directory.CreateDirectory(filesPath);
 					
@@ -124,9 +99,11 @@ namespace Aetherment {
 									}
 								}
 								
-								ConvertToGameFile(file.Path.Split(".").Last(), filesPath + file.Sha, new(data, file.Size));
+								Raw.WriteFrom(file.Path.Split(".").Last(), filesPath + file.Sha, new(data, file.Size));
 							}
-						} catch {}
+						} catch(Exception e) {
+							PluginLog.Error(e, $"Error while downloading a file ({file.Path})");
+						}
 						
 						Marshal.FreeHGlobal(dataPtr);
 						download.Dispose();
@@ -160,6 +137,7 @@ namespace Aetherment {
 					InstallStatus.Busy = false;
 					
 					Aetherment.Interface.UiBuilder.AddNotification(mod.Name + " has been successfully installed and applied", "Mod Installed", Dalamud.Interface.Internal.Notifications.NotificationType.Success, 5000);
+					PenumbraApi.RefreshMod(mod);
 					
 					lock(downloadQueue)
 						downloadQueue.RemoveAt(0);
@@ -168,8 +146,7 @@ namespace Aetherment {
 		}
 		
 		public static void Apply(Mod mod, bool onlyCustomize = false) {
-			// TODO: this
-			var penumPath = $"{Penumbra.GetModPath()}/{mod.ID}/";
+			var penumPath = $"{PenumbraApi.GetDirectory().FullName}/{mod.ID}/";
 			var filesPath = $"{penumPath}files/";
 			
 			InstallStatus.Busy = true;
@@ -183,15 +160,15 @@ namespace Aetherment {
 						break;
 					
 					var p = new Dictionary<string, string>();
-					for(var i = 1; i < segs.Length; i++) {
+					for(var i = 2; i < segs.Length; i++) {
 						var f = segs[i].Split(':');
 						p[f[0]] = filesPath + f[1];
 					}
 					
 					InstallStatus.Progress++;
 					InstallStatus.CurrentJob = $"Applying {mod.Name}";
-					InstallStatus.CurrentJobDetails = $"({segs[0]})";
-					ResolveCustomizability(p, mod.Options, filesPath + segs[0]);
+					InstallStatus.CurrentJobDetails = $"({segs[1]})";
+					Raw.ResolveCustomizability(segs[0], p, mod.Options, filesPath + segs[1]);
 				}
 				
 				InstallStatus.Busy = false;
@@ -223,10 +200,11 @@ namespace Aetherment {
 						
 						InstallStatus.CurrentJob = $"Applying {mod.Name}";
 						InstallStatus.CurrentJobDetails = $"({path})";
-						if(ResolveCustomizability(p, mod.Options, $"{filesPath}_{dir.Sha}")) {
+						var ext = Regex.Match(path, @"^[^.]+\.([a-zA-Z]+)").Groups[1].Value;
+						if(Raw.ResolveCustomizability(ext, p, mod.Options, $"{filesPath}_{dir.Sha}")) {
 							paths[path] = "_" + dir.Sha;
 							
-							cus.Write($"_{dir.Sha}|");
+							cus.Write($"{ext}|_{dir.Sha}|");
 							var i = 0;
 							foreach(var file in dir.Files.Values) {
 								cus.Write($"{file.Name}:{file.Sha}{(i < p.Count - 1 ? "|" : "\n")}");
@@ -337,24 +315,6 @@ namespace Aetherment {
 			InstallStatus.Busy = false;
 		}
 		
-		// Probably turn the formats into an interface so i can just loop through or smth idk
-		private static bool ResolveCustomizability(Dictionary<string, string> files, List<Mod.Option> options, string outpath) {
-			var ext = files.Keys.First().Split('.').Last();
-			if(ext == "dds" || ext == "png")
-				return Tex.ResolveCustomizability(files, options, outpath);
-			
-			return false;
-		}
-		
-		private static void ConvertToGameFile(string ext, string path, Buffer data) {
-			if(ext == "dds")
-				Tex.ConvertFromDDS(path, data);
-			else if(ext == "png")
-				Tex.ConvertFromPNG(path, data);
-			else
-				Raw.Write(path, data);
-		}
-		
 		public static void Initialize() {
 			InstallStatus = new();
 			
@@ -401,7 +361,7 @@ namespace Aetherment {
 		public static void DeleteMod(Mod mod) {
 			Task.Run(async() => {
 				try {
-					Directory.Delete(Path.GetFullPath($"{Penumbra.GetModPath()}/{mod.ID}"), true);
+					Directory.Delete(Path.GetFullPath($"{PenumbraApi.GetDirectory().FullName}/{mod.ID}"), true);
 				} catch {}
 				
 				Aetherment.DeleteInstalledMod(mod.ID);

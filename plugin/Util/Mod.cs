@@ -8,14 +8,12 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 using ImGuiScene;
-using Dalamud.Logging;
 
 namespace Aetherment.Util {
-	public partial class Mod : IDisposable {
+	public class Mod : IDisposable {
 		public class DalamudStyle {
 			
 		}
@@ -303,7 +301,7 @@ namespace Aetherment.Util {
 				return null;
 			
 			// This is dumb
-			var mod = JsonConvert.DeserializeObject<Mod>(File.ReadAllText($"{Penumbra.GetModPath()}/{id}/files/{(string)JObject.Parse(File.ReadAllText(path))["ConfigSha"]}"), new JsonSerializerSettings{
+			var mod = JsonConvert.DeserializeObject<Mod>(File.ReadAllText($"{PenumbraApi.GetDirectory().FullName}/{id}/files/{(string)JObject.Parse(File.ReadAllText(path))["ConfigSha"]}"), new JsonSerializerSettings{
 				TypeNameHandling = TypeNameHandling.Objects,
 				SerializationBinder = new OptionBinder() {KnownTypes = new List<Type>() {
 					typeof(Option.RGBA),

@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ImGuiNET;
-using ImGuiScene;
-using Dalamud.Logging;
 using Dalamud.Interface;
 
 using Aetherment.Util;
@@ -14,6 +12,7 @@ namespace Aetherment.GUI {
 	internal partial class UI : IDisposable {
 		private bool shouldDraw = false;
 		private TitleScreenMenu.TitleScreenMenuEntry titleMenu;
+		private Explorer.Explorer explorer;
 		
 		public UI() {
 			advtags = new();
@@ -31,6 +30,7 @@ namespace Aetherment.GUI {
 			});
 			
 			modsOpen = new();
+			explorer = new();
 			
 			Show();
 			
@@ -43,6 +43,8 @@ namespace Aetherment.GUI {
 		public void Dispose() {
 			foreach(Mod mod in drawmods)
 				mod.Dispose();
+			
+			explorer.Dispose();
 			
 			Aetherment.Interface.UiBuilder.OpenConfigUi -= Show;
 			Aetherment.Interface.UiBuilder.Draw -= Draw;
@@ -65,7 +67,7 @@ namespace Aetherment.GUI {
 			// Installer.InstallStatus.CurrentJob = "Testing ABC (yay)";
 			
 			var footer = (Installer.InstallStatus.Busy ? (ImGuiAeth.Height() + ImGuiAeth.SpacingY) : 0);
-			var bodySize = new Vector2(-1, -footer);
+			var bodySize = new Vector2(0, -footer);
 			
 			// ImGui.SetNextWindowSize(new Vector2(1070, 600));
 			ImGui.SetNextWindowSize(new Vector2(1070, 600), ImGuiCond.FirstUseEver);
@@ -93,14 +95,21 @@ namespace Aetherment.GUI {
 				ImGui.EndTabItem();
 			}
 			
-			if(modsOpen.Count > 0) {
+			if(modsOpen.Count > 0)
 				if(ImGuiAeth.BeginTabItem("Mods", newestMod != null ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None)) {
 					ImGui.BeginChild("Mods", bodySize);
 					DrawMods();
 					ImGui.EndChild();
 					ImGui.EndTabItem();
 				}
-			}
+			
+			if(Aetherment.Config.DevMode)
+				if(ImGui.BeginTabItem("File Explorer")) {
+					ImGui.BeginChild("Explorer", bodySize);
+					explorer.Draw();
+					ImGui.EndChild();
+					ImGui.EndTabItem();
+				}
 			ImGui.EndTabBar();
 			
 			// Installer progress bar
