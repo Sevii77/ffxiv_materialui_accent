@@ -73,5 +73,20 @@ namespace Aetherment.Util {
 		
 		public static Dictionary<string, Dictionary<string, Dictionary<string, string>>> GetModFiles(Mod mod)
 			=> GetModFiles(mod.ID);
+		
+		private static ICallGateSubscriber<string, object> drawModConfig = null;
+		public static void SubscribeDrawModConfig(Action<string> action) {
+			if(drawModConfig == null)
+				drawModConfig = Aetherment.Interface.GetIpcSubscriber<string, object>("Penumbra.DrawModConfig");
+			
+			drawModConfig.Subscribe(action);
+		}
+		
+		public static void UnsubscribeDrawModConfig(Action<string> action) {
+			if(drawModConfig == null)
+				drawModConfig = Aetherment.Interface.GetIpcSubscriber<string, object>("Penumbra.DrawModConfig");
+			
+			drawModConfig.Unsubscribe(action);
+		}
 	}
 }

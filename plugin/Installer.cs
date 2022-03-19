@@ -310,7 +310,7 @@ namespace Aetherment {
 			File.WriteAllText(penumPath + "meta.json", JsonConvert.SerializeObject(penumMeta, Formatting.Indented));
 			
 			// mod.SaveConfig();
-			Aetherment.AddInstalledMod(mod.ID);
+			Aetherment.AddInstalledMod(mod);
 			
 			InstallStatus.Busy = false;
 		}

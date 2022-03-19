@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Aetherment.GUI {
 		private bool gridDisplay = false;
 		private Dictionary<string, bool> advtags;
 		private List<Mod> drawmods;
+		private string[] modlist;
 		
 		private void DrawModBrowser() {
 			var h = ImGuiAeth.Height();
@@ -64,6 +66,8 @@ namespace Aetherment.GUI {
 				}
 			}
 			
+			modlist = PenumbraApi.GetMods();
+			
 			ImGui.BeginChild("AethermentModBrowser");
 			if(gridDisplay) {
 				ImGuiAeth.BeginGrid(ImGuiAeth.WidthLeft(), new Vector2(200 * ImGuiHelpers.GlobalScale));
@@ -101,7 +105,7 @@ namespace Aetherment.GUI {
 				// DrawInstalled(mod);
 				ImGui.Text(mod.Name);
 				
-				if(Aetherment.Config.InstalledMods.Contains(mod.ID)) {
+				if(Array.IndexOf(modlist, mod.ID) != -1) {
 					ImGui.SameLine();
 					ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
 					DrawInstalled();
@@ -142,7 +146,7 @@ namespace Aetherment.GUI {
 				ImGuiAeth.Offset(10 - ImGuiAeth.SpacingX - ImGuiAeth.PaddingX, 0, false);
 				var suppress = DrawAuthor(mod);
 				
-				if(Aetherment.Config.InstalledMods.Contains(mod.ID)) {
+				if(Array.IndexOf(modlist, mod.ID) != -1) {
 					ImGui.SameLine();
 					ImGuiAeth.Offset(ImGuiAeth.WidthLeft() - ImGuiAeth.Height(), 0, false);
 					DrawInstalled();

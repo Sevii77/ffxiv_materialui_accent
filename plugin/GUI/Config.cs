@@ -10,36 +10,60 @@ using Aetherment.Util;
 
 namespace Aetherment.GUI {
 	internal partial class UI {
-		private List<Mod> installedMods = new();
 		private Dictionary<Mod, DateTime> applyTimes = new();
 		
 		private void DrawConfig() {
-			ImGui.Text("TODO: make fancy");
-			lock(installedMods)
-				foreach(var mod in installedMods) {
-					ImGui.PushID(mod.ID);
-					ImGui.Text(mod.Name);
-					if(ImGui.Button("Remove"))
-						Installer.DeleteMod(mod);
+			ImGui.Text("inside penumbra for now, might bring it back to here aswell");
+			// ImGui.Text("TODO: make fancy");
+			// lock(installedMods)
+			// 	foreach(var mod in installedMods) {
+			// 		ImGui.PushID(mod.ID);
+			// 		ImGui.Text(mod.Name);
+			// 		if(ImGui.Button("Remove"))
+			// 			Installer.DeleteMod(mod);
 					
-					foreach(var option in mod.Options)
-						if(DrawOption(option))
-							ApplyMod(mod);
+			// 		foreach(var option in mod.Options)
+			// 			if(DrawOption(option))
+			// 				ApplyMod(mod);
 					
-					if(ImGui.Button("Reset")) {
-						foreach(var option in mod.Options)
-							switch(option) {
-								case Mod.Option.Color clr:
-									clr.Value = clr.Default;
-									break;
-							}
+			// 		if(ImGui.Button("Reset")) {
+			// 			foreach(var option in mod.Options)
+			// 				switch(option) {
+			// 					case Mod.Option.Color clr:
+			// 						clr.Value = clr.Default;
+			// 						break;
+			// 				}
 						
-						ApplyMod(mod);
-					}
+			// 			ApplyMod(mod);
+			// 		}
 					
-					ImGuiAeth.Offset(0, 20);
-					ImGui.PopID();
-				}
+			// 		ImGuiAeth.Offset(0, 20);
+			// 		ImGui.PopID();
+			// 	}
+		}
+		
+		public void DrawOptions(string modid) {
+			var mod = Aetherment.InstalledMods.Find(x => x.ID == modid);
+			if(mod == null)
+				return;
+			
+			ImGuiAeth.Offset(0, 10);
+			ImGui.Text("Aetherment Options");
+			
+			foreach(var option in mod.Options)
+				if(DrawOption(option))
+					ApplyMod(mod);
+			
+			if(ImGui.Button("Reset")) {
+				foreach(var option in mod.Options)
+					switch(option) {
+						case Mod.Option.Color clr:
+							clr.Value = clr.Default;
+							break;
+					}
+				
+				ApplyMod(mod);
+			}
 		}
 		
 		private bool DrawOption(Mod.Option option) {
@@ -78,7 +102,7 @@ namespace Aetherment.GUI {
 			var t = option.GetType();
 			var m = t.GetProperty("Value");
 			// PluginLog.Log($"{(Vector4)m.GetValue(Convert.ChangeType(option, t))}");
-			foreach(var mod in installedMods)
+			foreach(var mod in Aetherment.InstalledMods)
 				foreach(var o in mod.Options)
 					if(o.GetType() == t && o.Name == option.Name) {
 						m.SetValue(Convert.ChangeType(o, t), m.GetValue(Convert.ChangeType(option, t)));
@@ -104,20 +128,6 @@ namespace Aetherment.GUI {
 					}
 				});
 			applyTimes[mod] = DateTime.UtcNow;
-		}
-		
-		public void AddLocalMod(string id) {
-			if(installedMods.Exists(x => x.ID == id))
-				return;
-			
-			var mod = Mod.GetModLocal(id);
-			if(mod != null)
-				lock(installedMods)
-					installedMods.Add(mod);
-		}
-		
-		public void DeleteLocalMod(string id) {
-			installedMods.RemoveAll(x => x.ID == id);
 		}
 	}
 }

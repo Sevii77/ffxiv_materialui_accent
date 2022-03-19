@@ -24,7 +24,7 @@ namespace Aetherment {
 	public class Config {
 		public int Version = 0;
 		
-		public List<string> InstalledMods = new();
+		// public List<string> InstalledMods = new();
 		
 		public bool AutoUpdate = true;
 		public bool LinkOptions = true;
@@ -57,11 +57,15 @@ namespace Aetherment {
 		internal static UI Ui;
 		
 		internal static Dictionary<string, TextureWrap> Textures = new();
+		internal static List<Mod> InstalledMods = new();
 		
 		public Aetherment() {
 			Installer.Initialize();
 			foreach(var file in new DirectoryInfo(Interface.AssemblyLocation.DirectoryName + "/assets/icons").EnumerateFiles())
 				Textures[file.Name] = Interface.UiBuilder.LoadImage(file.FullName);
+			
+			foreach(var mod in PenumbraApi.GetMods())
+				AddLocalMod(mod);
 			
 			GameData = new GameData(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "/sqpack", new LuminaOptions());
 			
@@ -92,18 +96,34 @@ namespace Aetherment {
 				texture.Dispose();
 		}
 		
-		public static void AddInstalledMod(string id) {
-			if(!Config.InstalledMods.Contains(id))
-				Config.InstalledMods.Add(id);
+		public static void AddInstalledMod(Mod mod) {
+			// if(!Config.InstalledMods.Contains(id))
+			// 	Config.InstalledMods.Add(id);
 			
-			Aetherment.Ui.AddLocalMod(id);
-			SaveConfig();
+			// Aetherment.Ui.AddLocalMod(id);
+			// SaveConfig();
+			
+			if(InstalledMods.Exists(x => x.ID == mod.ID))
+				return;
+			
+			lock(InstalledMods)
+				InstalledMods.Add(mod);
+		}
+		
+		public static void AddLocalMod(string id) {
+			if(InstalledMods.Exists(x => x.ID == id))
+				return;
+			
+			var mod = Mod.GetModLocal(id);
+			if(mod != null)
+				lock(InstalledMods)
+					InstalledMods.Add(mod);
 		}
 		
 		public static void DeleteInstalledMod(string id) {
-			Config.InstalledMods.Remove(id);
-			Aetherment.Ui.DeleteLocalMod(id);
-			SaveConfig();
+			// Config.InstalledMods.Remove(id);
+			InstalledMods.RemoveAll(x => x.ID == id);
+			// Aetherment.Ui.DeleteLocalMod(id);
 		}
 		
 		public static void SaveConfig() {

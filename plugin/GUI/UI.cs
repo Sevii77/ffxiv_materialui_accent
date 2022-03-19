@@ -24,9 +24,6 @@ namespace Aetherment.GUI {
 			Task.Run(async() => {
 				drawmods = await Mod.GetMods();
 				// drawmods = await Mod.GetMods(Aetherment.Config.Repos);
-				
-				foreach(var mod in Aetherment.Config.InstalledMods)
-					AddLocalMod(mod);
 			});
 			
 			modsOpen = new();
@@ -36,6 +33,8 @@ namespace Aetherment.GUI {
 			
 			Aetherment.Interface.UiBuilder.OpenConfigUi += Show;
 			Aetherment.Interface.UiBuilder.Draw += Draw;
+			
+			PenumbraApi.SubscribeDrawModConfig(DrawOptions);
 			
 			titleMenu = Aetherment.TitleMenu.AddEntry("Aetherment", Aetherment.Textures["icon64.png"], Show);
 		}
@@ -48,6 +47,8 @@ namespace Aetherment.GUI {
 			
 			Aetherment.Interface.UiBuilder.OpenConfigUi -= Show;
 			Aetherment.Interface.UiBuilder.Draw -= Draw;
+			
+			PenumbraApi.UnsubscribeDrawModConfig(DrawOptions);
 			
 			if(titleMenu != null)
 				Aetherment.TitleMenu.RemoveEntry(titleMenu);
