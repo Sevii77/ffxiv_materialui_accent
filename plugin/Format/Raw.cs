@@ -54,8 +54,7 @@ namespace Aetherment.Format {
 		public static bool ResolveCustomizability(string ext, Dictionary<string, string> files, List<Mod.Option> options, string outpath) {
 			switch(ext.ToLower()) {
 				case "tex":
-					Tex.ResolveCustomizability(files, options, outpath);
-					return true;
+					return Tex.ResolveCustomizability(files, options, outpath);
 				default:
 					return false;
 			}
