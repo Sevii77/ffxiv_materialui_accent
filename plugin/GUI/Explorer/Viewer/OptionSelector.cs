@@ -59,11 +59,15 @@ namespace Aetherment.GUI.Explorer {
 				viewer.Dispose();
 			
 			var ext = file.GamePath.Split(".").Last();
-			foreach(var creator in Explorer.ViewerCreators)
-				if(Regex.IsMatch(ext, creator.Item2)) {
-					viewer = creator.Item4(hash, file.Options.First(x => x.Group == group && x.Option == option).RealPath);
-					break;
-				}
+			if(ext != file.GamePath) {
+				foreach(var creator in Explorer.ViewerCreators)
+					if(Regex.IsMatch(ext, creator.Item2)) {
+						viewer = creator.Item4(hash, file.Options.First(x => x.Group == group && x.Option == option).RealPath);
+						break;
+					}
+			} else
+				viewer = new Selector(hash, file.Options[0].RealPath);
+				
 			
 			importValids = viewer.importValids;
 			exportValids = viewer.exportValids;

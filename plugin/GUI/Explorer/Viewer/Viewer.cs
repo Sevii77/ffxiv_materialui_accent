@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 
 using ImGuiNET;
@@ -49,6 +50,7 @@ namespace Aetherment.GUI.Explorer {
 		
 		public void Draw() {
 			if(error != null) {
+				ImGui.Dummy(Vector2.Zero);
 				ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudRed);
 				ImGui.Text(error);
 				ImGui.PopStyleColor();

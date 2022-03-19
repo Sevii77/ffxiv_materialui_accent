@@ -17,7 +17,7 @@ namespace Aetherment.GUI.Explorer {
 				
 				foreach(var type in Explorer.ViewerCreators) {
 					for(int i = 0; i < type.Item3.Length; i++)
-						if(type.Item1[i] != file.Data[i])
+						if(type.Item3[i] != file.Data[i])
 							goto skip;
 					
 					UpdateViewer(type);

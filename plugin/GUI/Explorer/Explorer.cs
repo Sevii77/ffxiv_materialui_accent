@@ -40,8 +40,8 @@ namespace Aetherment.GUI.Explorer {
 		}
 		
 		public static readonly (string, string, byte[], Func<ulong, string, Viewer>)[] ViewerCreators = new (string, string, byte[], Func<ulong, string, Viewer>)[] {
-			("Texture", "a?tex", new byte[4]{0, 0, 128, 0}, (hash, path) => new Tex(hash, path)),
-			("Binary",  ".+",    new byte[0]{            }, (hash, path) => new Raw(hash, path))
+			("Texture", "a?tex", new byte[4]{0, 0, 128, 0}, (hash, path) => new  Tex(hash, path)),
+			("Raw",     ".+",    new byte[0]{            }, (hash, path) => new  Raw(hash, path))
 		};
 		
 		private ModTree modTree;
@@ -247,10 +247,13 @@ namespace Aetherment.GUI.Explorer {
 			
 			var ext = path.Trim().Split(".").Last();
 			foreach(var creator in ViewerCreators)
-				if(Regex.IsMatch(ext, creator.Item2)) {
-					viewer = creator.Item4(hash, path);
-					break;
-				}
+				if(creator != ViewerCreators.Last())
+					if(Regex.IsMatch(ext, creator.Item2)) {
+						viewer = creator.Item4(hash, path);
+						break;
+					}
+				else
+					viewer = new Selector(hash, path);
 			
 			validPath = true;
 			curPath = path;
