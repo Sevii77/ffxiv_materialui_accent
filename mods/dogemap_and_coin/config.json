@@ -1,0 +1,27 @@
+{
+	"author": "Cali666 & Meconate",
+	
+	"author_contact": "Cali666#1236",
+	
+	"name": "dogemap & dogecoin",
+	
+	"description": "for max raiding performance wow",
+	
+	
+	"options": [
+		{
+			"$type": "multi",
+			"name": "Options",
+			"options": {
+				"Minimap": [
+					"ui/uld/navimap_hr1.tex",
+				    "ui/uld/navimap_mask_hr1.tex"
+				],
+				"Coin": [
+					"ui/icon/065002_hr1.tex",
+					"ui/uld/money_number_hr1.tex"
+				]
+			}
+		}
+	]
+}
