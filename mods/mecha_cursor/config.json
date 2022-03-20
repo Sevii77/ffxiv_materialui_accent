@@ -12,8 +12,8 @@
 			"$type": "single",
 			"name": "Target Cursor",
 			"options": {
-				"Mecha": ["ui/uld/targetcursor"],
-				"Mecha Alt": ["ui/uld/targetcursor/option/alt"]
+				"Mecha": ["ui/uld/targetcursor_hr1.tex"],
+				"Mecha Alt": ["ui/uld/targetcursor_hr1.tex/option/alt"]
 			}
 		}
 	]
