@@ -1,0 +1,26 @@
+{
+	"author": "Meconate",
+	
+	"author_contact": "Meconate#2761",
+	
+	"name": "Silver Minimap",
+	
+	"description": "A silver framed minimap, now available in a rounded option. (Chromatized maps shown in the rounded preview by Gabster)",
+
+	"options": [
+		{
+			"$type": "single",
+			"name": "Minimap",
+			"options": {
+				"Silver": [
+					"ui/uld/navimap_hr1.tex",
+				    "ui/uld/navimap_mask_hr1.tex"
+				],
+				"Silver Rounded": [
+					"ui/uld/navimap_hr1.tex/option/rounded",
+					"ui/uld/navimap_mask_hr1.tex/option/rounded"
+				]
+			}
+		}
+	]
+}
