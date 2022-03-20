@@ -6,16 +6,4 @@
 	"name": "Alternative Teleport Icons",
 	
 	"description": "If you don't like the region-based icons the game currently provides in the teleport menu, or it appears to hinder your modern UI's aesthetics, feel free to give this mod a try! ",
-
-	"options": [
-		{
-			"$type": "single",
-			"name": "Teleport Icons",
-			"options": {
-				"Alternative": [
-					"ui/uld/teleport_hr1.tex"
-				]
-			}
-		}
-	]
 }

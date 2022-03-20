@@ -6,16 +6,4 @@
 	"name": "Alternative Materia Icons",
 	
 	"description": "Want more info about your slotted materia on the screen? This mod adds numbers based on the materia you're using e.g. VIII for 8 to help indicate which materia is slotted from your melding menu or inventory preview at a glance, or just for those who find roman numerals tricky to work out!",
-	
-	"options": [
-		{
-			"$type": "single",
-			"name": "Materia Icons",
-			"options": {
-				"Alternative": [
-					"ui/uld/itemdetail_hr1.tex"
-				]
-			}
-		}
-	]
 }
