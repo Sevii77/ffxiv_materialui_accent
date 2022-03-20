@@ -11,20 +11,13 @@
 	"options": [
 		{
 			"$type": "multi",
-			"name": "Minimap",
+			"name": "Options",
 			"options": {
-				"doge": [
+				"Minimap": [
 					"ui/uld/navimap_hr1.tex",
 				    "ui/uld/navimap_mask_hr1.tex"
-				]
-			}
-		},
-		
-		{
-			"$type": "multi",
-			"name": "Gil Currency",
-			"options": {
-				"doge": [
+				],
+				"Coin": [
 					"ui/icon/065002_hr1.tex",
 					"ui/uld/money_number_hr1.tex"
 				]
