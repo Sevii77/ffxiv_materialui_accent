@@ -61,9 +61,9 @@ namespace MaterialUI {
 				
 				return;
 			}
-			
-			string penumbraConfigPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
-			if(!File.Exists(penumbraConfigPath)) {
+
+			string penumbraConfigPath = Path.Combine(this.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
+			if (!File.Exists(penumbraConfigPath)) {
 				penumbraIssue = "Can't find Penumbra Config.";
 				
 				return;

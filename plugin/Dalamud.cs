@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.IO;
 using System;
+using Dalamud.Configuration;
 
 namespace MaterialUI {
 	public class DalamudStyle {
-		public static void Apply(Config config, Dictionary<string, int> styleOverrides) {
+		public static void Apply(MaterialUI main, Dictionary<string, int> styleOverrides) {
+			Config config = main.config;
 			Vector4 accent = new Vector4(config.color.X, config.color.Y, config.color.Z, 1);
 			Vector4 accentHalf = accent * new Vector4(0.5f, 0.5f, 0.5f, 1);
 			
@@ -126,12 +128,13 @@ namespace MaterialUI {
 			};
 			
 			// special edits for penumbra window setting
-			try {
-				string configPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra.json");
+			try
+			{
+				string configPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
 				dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(configPath));
 				string collection = (string)penumbraData?.CurrentCollection;
 				
-				string collectionPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/XIVLauncher/PluginConfigs/Penumbra/collections/" + collection + ".json");
+				string collectionPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra/collections/" + collection + ".json");
 				dynamic collectionData = JsonConvert.DeserializeObject(File.ReadAllText(collectionPath));
 				if(collectionData.Settings["Material UI"].Settings["Selected Window"] == 1) {
 					style.WindowBorderSize = 2;
