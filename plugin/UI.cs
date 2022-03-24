@@ -159,7 +159,7 @@ namespace MaterialUI {
 									styleOverrides[val.Key] = val.Value;
 						}
 						
-						DalamudStyle.Apply(main.config, styleOverrides);
+						DalamudStyle.Apply(main, styleOverrides);
 					}
 					
 					ImGui.SameLine();
