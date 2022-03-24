@@ -454,7 +454,7 @@ namespace MaterialUI {
 					return;
 				
 				List<string> optionsNew = new List<string>();
-				string penumbraConfigPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
+				string penumbraConfigPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
 				if (File.Exists(penumbraConfigPath)) {
 					dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
 					string penumbraPath = (string)penumbraData?.ModDirectory;
@@ -557,7 +557,7 @@ namespace MaterialUI {
 			if(main.penumbraIssue != null)
 				return false;
 			
-			string penumbraConfigPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
+			string penumbraConfigPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
 			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
 			string penumbraPath = (string)penumbraData?.ModDirectory;
 			

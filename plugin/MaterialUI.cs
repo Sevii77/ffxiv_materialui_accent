@@ -61,8 +61,8 @@ namespace MaterialUI {
 				
 				return;
 			}
-
-			string penumbraConfigPath = Path.Combine(this.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
+			
+			string penumbraConfigPath = $"{pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
 			if (!File.Exists(penumbraConfigPath)) {
 				penumbraIssue = "Can't find Penumbra Config.";
 				

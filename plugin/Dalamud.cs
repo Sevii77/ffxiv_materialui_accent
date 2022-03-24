@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.IO;
 using System;
-using Dalamud.Configuration;
 
 namespace MaterialUI {
 	public class DalamudStyle {
@@ -128,13 +127,12 @@ namespace MaterialUI {
 			};
 			
 			// special edits for penumbra window setting
-			try
-			{
-				string configPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra.json");
+			try {
+				string configPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
 				dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(configPath));
 				string collection = (string)penumbraData?.CurrentCollection;
 				
-				string collectionPath = Path.Combine(main.pluginInterface.ConfigDirectory.FullName, "../Penumbra/collections/" + collection + ".json");
+				string collectionPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra/collections/{collection}.json";
 				dynamic collectionData = JsonConvert.DeserializeObject(File.ReadAllText(collectionPath));
 				if(collectionData.Settings["Material UI"].Settings["Selected Window"] == 1) {
 					style.WindowBorderSize = 2;
