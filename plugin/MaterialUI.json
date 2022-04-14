@@ -5,7 +5,7 @@
 	"Description": "Auto updating Material UI with customizable accent color and more. Icon by Meconate",
 	"InternalName": "MaterialUI",
 	"ApplicableVersion": "any",
-	"DalamudApiLevel": 5,
+	"DalamudApiLevel": 6,
 	"LoadPriority": 1,
 	"Tags": ["ui", "penumbra", "material", "skotlex", "sevii", "accent", "color"],
 	"IconUrl": "https://raw.githubusercontent.com/Sevii77/ffxiv_materialui_accent/master/images/icon.png"
