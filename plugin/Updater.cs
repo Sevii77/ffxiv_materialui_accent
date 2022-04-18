@@ -572,7 +572,7 @@ namespace MaterialUI {
 					foreach(OptionPenumbra option in mod.options.penumbraOptions)
 						foreach(KeyValuePair<string, string[]> subOptions in option.options)
 							foreach(string path in subOptions.Value) {
-								string gamePath = path.Split("/OPTIONS/")[0].Split("/option/")[0].ToLower().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
+								string gamePath = path.Split("/OPTIONS/")[0].Split("/option/")[0].ToLowerInvariant().Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
 								if(gamePath.Contains("/icon/"))
 									gamePath = gamePath.Replace("/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
 								optionPaths.Add(gamePath);
@@ -651,7 +651,7 @@ namespace MaterialUI {
 				curpath = modid + "/" + gamePath;
 				
 				// Used to allow game style format for the options in main
-				string texturePath2 = texturePath.ToLower().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
+				string texturePath2 = texturePath.ToLowerInvariant().Replace("/options/", "/option/").Replace("/hud/", "/uld/").Replace("/icon/icon/", "/icon/");
 				
 				if(optionPaths.Contains(gamePath)) {
 					List<string> priority = new();
@@ -771,7 +771,7 @@ namespace MaterialUI {
 						
 						Tex tex = new Tex(File.ReadAllBytes(Path.GetFullPath(cachepath + file.Value.Item1)));
 						
-						string gamePath = fullPath.Split("/OPTIONS/")[0].ToLower().Replace("/hud/", "/uld/");
+						string gamePath = fullPath.Split("/OPTIONS/")[0].ToLowerInvariant().Replace("/hud/", "/uld/");
 						if(gamePath.Contains("/icon/icon/"))
 							gamePath = gamePath.Replace("/icon/icon/", Regex.Match(gamePath, @"(/icon/\d\d\d)").Value + "000/");
 						writeTex(tex, fullPath, gamePath, "main");

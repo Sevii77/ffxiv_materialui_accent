@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<Authors>Sevii</Authors>
-		<Version>1.4.4</Version>
+		<Version>1.4.5</Version>
 	</PropertyGroup>
 	
 	<PropertyGroup>
@@ -15,11 +15,11 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<OutputPath>$(Home)/XIVLauncher/devPlugins/MaterialUI/</OutputPath>
+		<OutputPath>$(AppData)/XIVLauncher/devPlugins/MaterialUI/</OutputPath>
 	</PropertyGroup>
 	
 	<PropertyGroup>
-		<DalamudLibPath>$(Home)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
+		<DalamudLibPath>$(AppData)/XIVLauncher/addon/Hooks/dev/</DalamudLibPath>
 	</PropertyGroup>
 	
 	<ItemGroup>
