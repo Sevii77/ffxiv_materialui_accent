@@ -454,32 +454,33 @@ namespace MaterialUI {
 					return;
 				
 				List<string> optionsNew = new List<string>();
-				string penumbraConfigPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
-				if (File.Exists(penumbraConfigPath)) {
-					dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
-					string penumbraPath = (string)penumbraData?.ModDirectory;
-					if(penumbraPath != "") {
-						string metaPath = Path.GetFullPath(penumbraPath + "/Material UI/meta.json");
-						if(File.Exists(metaPath)) {
-							List<(string, string)> optionsCurrent = new List<(string, string)>();
+				// Disabled since new penumbra changes how the meta file works
+				// string penumbraConfigPath = $"{main.pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
+				// if (File.Exists(penumbraConfigPath)) {
+				// 	dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
+				// 	string penumbraPath = (string)penumbraData?.ModDirectory;
+				// 	if(penumbraPath != "") {
+				// 		string metaPath = Path.GetFullPath(penumbraPath + "/Material UI/meta.json");
+				// 		if(File.Exists(metaPath)) {
+				// 			List<(string, string)> optionsCurrent = new List<(string, string)>();
 							
-							Meta meta = JsonConvert.DeserializeObject<Meta>(File.ReadAllText(metaPath));
-							foreach(MetaGroup group in meta.Groups.Values)
-								foreach(MetaGroupOption option in group.Options)
-									optionsCurrent.Add((group.GroupName, option.OptionName));
+				// 			Meta meta = JsonConvert.DeserializeObject<Meta>(File.ReadAllText(metaPath));
+				// 			foreach(MetaGroup group in meta.Groups.Values)
+				// 				foreach(MetaGroupOption option in group.Options)
+				// 					optionsCurrent.Add((group.GroupName, option.OptionName));
 							
-							foreach(OptionPenumbra group in mods["base"].options.penumbraOptions) {
-								List<string> optionStr = new List<string>();
-								foreach(string option in group.options.Keys)
-									if(!optionsCurrent.Contains((group.name, option)))
-										optionStr.Add("\t" + option);
+				// 			foreach(OptionPenumbra group in mods["base"].options.penumbraOptions) {
+				// 				List<string> optionStr = new List<string>();
+				// 				foreach(string option in group.options.Keys)
+				// 					if(!optionsCurrent.Contains((group.name, option)))
+				// 						optionStr.Add("\t" + option);
 								
-								if(optionStr.Count > 0)
-									optionsNew.Add(group.name + "\n" + string.Join("\n", optionStr));
-							}
-						}
-					}
-				}
+				// 				if(optionStr.Count > 0)
+				// 					optionsNew.Add(group.name + "\n" + string.Join("\n", optionStr));
+				// 			}
+				// 		}
+				// 	}
+				// }
 				
 				if(changes.Count == 0 && optionsNew.Count == 0)
 					return;
