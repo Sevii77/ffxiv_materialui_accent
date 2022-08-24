@@ -1,2 +1,2 @@
 dotnet build ./plugin/MaterialUI.csproj
-mv $APPDATA/XIVLauncher/devPlugins/MaterialUI/MaterialUI/latest.zip ./release.zip
+mv ./plugin/bin//Release/MaterialUI/latest.zip ./release.zip

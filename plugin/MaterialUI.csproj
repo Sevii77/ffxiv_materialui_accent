@@ -7,7 +7,7 @@
 	</PropertyGroup>
 	
 	<PropertyGroup>
-		<TargetFramework>net5.0-windows</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<Platforms>x64</Platforms>
 		<Configuration>Release</Configuration>
 		<Nullable>enable</Nullable>
@@ -15,7 +15,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<OutputPath>$(AppData)/XIVLauncher/devPlugins/MaterialUI/</OutputPath>
+		<!-- <OutputPath>$(AppData)/XIVLauncher/devPlugins/MaterialUI/</OutputPath> -->
 	</PropertyGroup>
 	
 	<PropertyGroup>

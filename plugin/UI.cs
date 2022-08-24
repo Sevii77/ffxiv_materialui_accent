@@ -74,7 +74,7 @@ namespace MaterialUI {
 			ImGui.Begin("Material UI Settings", ref settingsVisible);
 			
 			if(noticeVisible) {
-				ImGui.BeginChild("MaterialUINotice", new Vector2(ImGui.GetWindowContentRegionWidth(), ImGui.GetWindowHeight() - 60));
+				ImGui.BeginChild("MaterialUINotice", new Vector2(ImGui.GetWindowContentRegionMax().X, ImGui.GetWindowHeight() - 60));
 				foreach(string text in noticeText)
 					ImGui.Text(text);
 				ImGui.EndChild();
@@ -222,7 +222,7 @@ namespace MaterialUI {
 							
 							if(preview != null) {
 								if(ImGui.TreeNode("Preview")) {
-									float scale = (ImGui.GetWindowContentRegionWidth() - 45) / preview.Width;
+									float scale = (ImGui.GetWindowContentRegionMax().X - 45) / preview.Width;
 									
 									ImGui.Image(preview.ImGuiHandle, new Vector2(preview.Width * scale, preview.Height * scale));
 									ImGui.TreePop();
@@ -316,7 +316,7 @@ namespace MaterialUI {
 						ImGui.PopID();
 						ImGui.PushID("localPathInput");
 						ImGui.SameLine();
-						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth());
+						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionMax().X);
 						if(ImGui.InputText("", ref main.config.localPath, 200))
 							main.pluginInterface.SavePluginConfig(main.config);
 						ImGui.PopID();
@@ -350,7 +350,7 @@ namespace MaterialUI {
 							main.pluginInterface.SavePluginConfig(main.config);
 						}
 						ImGui.SameLine();
-						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth());
+						ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionMax().X);
 						ImGui.InputText("", ref repoInput, 200);
 					}
 					

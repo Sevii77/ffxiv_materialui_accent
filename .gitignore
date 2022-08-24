@@ -1,2 +1,3 @@
 .vs
-obj
+plugin/obj
+plugin/bin
