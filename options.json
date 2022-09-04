@@ -174,7 +174,7 @@
 					"ui/uld/windowf_bgnormal_h/option/no_window_border",
 					"UI/HUD/WindowF_BgNormal_HV",
 					"UI/HUD/WindowF_BgNormal_V"
-				],
+				]
 			}
 		},
 		
@@ -192,7 +192,7 @@
 					"UI/HUD/WindowA_BgNormal_H/OPTIONS/Non-Selected Window Transparency BLACK Style",
 					"UI/HUD/WindowA_BgNormal_HV/OPTIONS/Non-Selected Window Transparency BLACK Style",
 					"UI/HUD/WindowA_BgNormal_V/OPTIONS/Non-Selected Window Transparency BLACK Style"
-				],
+				]
 			}
 		},
 		
@@ -202,7 +202,7 @@
 				"Default": ["ui/uld/alliance",
 				            "UI/HUD/PartyList_Bg"],
 				"Transparent": ["ui/uld/alliance/option/no_party_bg",
-				                "ui/uld/partylist_bg/option/no_party_bg"],
+				                "ui/uld/partylist_bg/option/no_party_bg"]
 			}
 		},
 		
@@ -468,6 +468,52 @@
 					"UI/Icon/Icon/062140/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062141/OPTIONS/Edge Background Job Icon",
 					"UI/Icon/Icon/062143/OPTIONS/Edge Background Job Icon",
+					"UI/Icon/Icon/062144"
+				],
+				"Metallic": [
+					"UI/Icon/Icon/062042/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062101/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062102/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062103/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062104/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062105/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062106/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062107/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062108/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062109/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062110/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062111/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062112/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062113/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062114/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062115/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062116/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062117/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062118/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062119/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062120/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062121/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062122/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062123/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062124/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062125/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062126/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062127/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062128/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062129/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062130/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062131/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062132/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062133/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062134/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062135/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062136/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062137/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062138/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062139/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062140/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062141/OPTIONS/Metallic Color Job Icon",
+					"UI/Icon/Icon/062143/OPTIONS/Metallic Color Job Icon",
 					"UI/Icon/Icon/062144"
 				]
 			}
