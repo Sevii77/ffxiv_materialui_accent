@@ -284,6 +284,14 @@
 		},
 		
 		{
+			"name": "Dialogue Style",
+			"options": {
+				"Material": ["UI/HUD/Talk_Other"],
+				"Vanilla": []
+			}
+		},
+		
+		{
 			"name": "Job Icons - Party List",
 			"options": {
 				"Glow": [
