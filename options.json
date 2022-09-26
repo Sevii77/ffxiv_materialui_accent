@@ -286,7 +286,13 @@
 		{
 			"name": "Dialogue Style",
 			"options": {
-				"Material": ["UI/HUD/Talk_Other"],
+				"Material": [
+					"UI/HUD/Talk_Basic",
+					"UI/HUD/Talk_Other",
+					"UI/HUD/BattleTalk",
+					"UI/HUD/MiniTalk",
+					"UI/HUD/MiniTalkMinion"
+				],
 				"Vanilla": []
 			}
 		},
