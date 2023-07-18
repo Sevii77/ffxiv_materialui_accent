@@ -1,3 +1,5 @@
 .vs
 plugin/obj
 plugin/bin
+diff_finder/target
+diff_finder/Cargo.lock
