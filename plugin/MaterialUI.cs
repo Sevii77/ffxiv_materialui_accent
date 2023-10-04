@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using System.IO;
+using Dalamud.Plugin.Services;
 
 namespace MaterialUI {
 	public class MaterialUI : IDalamudPlugin {
@@ -13,12 +14,12 @@ namespace MaterialUI {
 		public string penumbraIssue {get; private set;} = null;
 		
 		public DalamudPluginInterface pluginInterface {get; private set;}
-		public CommandManager commandManager {get; private set;}
+		public ICommandManager commandManager {get; private set;}
 		public UI ui {get; private set;}
 		public Config config {get; private set;}
 		public Updater updater {get; private set;}
 		
-		public MaterialUI(DalamudPluginInterface pluginInterface, CommandManager commandManager) {
+		public MaterialUI(DalamudPluginInterface pluginInterface, ICommandManager commandManager) {
 			this.pluginInterface = pluginInterface;
 			this.commandManager = commandManager;
 			

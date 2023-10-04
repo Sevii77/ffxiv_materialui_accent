@@ -9,7 +9,7 @@ using System.IO;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using ImGuiScene;
+using Dalamud.Interface.Internal;
 
 namespace MaterialUI {
 	public struct RepoFile {
@@ -137,9 +137,9 @@ namespace MaterialUI {
 		public string repo;
 		public Options options;
 		public Dir dir;
-		public TextureWrap preview;
+		public IDalamudTextureWrap preview;
 		
-		public Mod(string id, string repo, Options options, Dir dir, TextureWrap preview) {
+		public Mod(string id, string repo, Options options, Dir dir, IDalamudTextureWrap preview) {
 			this.id = id;
 			this.repo = repo;
 			this.options = options;
