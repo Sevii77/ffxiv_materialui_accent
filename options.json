@@ -795,6 +795,22 @@
 					"UI/Icon/Icon/062840/OPTIONS/Macro Glow Job Icon"
 				]
 			}
+		},
+		
+		{
+			"name": "Teleport Icons"
+			"options": {
+				"Default": [
+					"ui/uld/teleport"
+					],
+				"Icons": [
+					"ui/uld/teleport/option/icon"
+					],
+				"Text": [
+					"ui/uld/teleport/option/text"
+					]
+			}
 		}
+
 	]
 }
