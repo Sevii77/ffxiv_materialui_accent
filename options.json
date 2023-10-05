@@ -798,7 +798,7 @@
 		},
 		
 		{
-			"name": "Teleport Icons"
+			"name": "Teleport Icons",
 			"options": {
 				"Default": [
 					"ui/uld/teleport"
