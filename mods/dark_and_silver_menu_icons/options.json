@@ -1,11 +1,11 @@
 {
-	"author": "Meconate",
+	"author": "Mek",
 	
-	"author_contact": "Meconate#2761",
+	"author_contact": "@mekoichi",
 	
 	"name": "Dark & Silver Menu Icons",
 	
-	"description": "Back by popular demand; Dark & Silver Menu Icons are now available through Penumbra. Includes 87 themed icons. Includes Complete and MUI Compatible options.",
+	"description": "Back by popular demand; Dark & Silver Menu Icons are now available through Penumbra. Includes 91 themed icons. Includes Complete and MUI Compatible options.",
 	
 	"color_options": [
 		
@@ -105,7 +105,8 @@
 					"ui/icon/000087",
 					"ui/icon/000088",
 					"ui/icon/000089",
-					"ui/icon/000090"
+					"ui/icon/000090",
+					"ui/icon/000091"
 				],
 				"Dark & Silver Complete": [
 					"ui/icon/000001",
@@ -197,7 +198,8 @@
 					"ui/icon/000087",
 					"ui/icon/000088",
 					"ui/icon/000089",
-					"ui/icon/000090"
+					"ui/icon/000090",
+					"ui/icon/000091"
 				]
 			}
 		},

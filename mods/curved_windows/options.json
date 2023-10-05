@@ -1,11 +1,11 @@
 {
-	"author": "Meconate",
+	"author": "Mek",
 	
-	"author_contact": "Meconate#2761",
+	"author_contact": "@mekoichi",
 	
 	"name": "Material UI Curved Windows",
 	
-	"description": "It's finally here; the highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows. More coming soon.",
+	"description": "The highly requested curved windows. Available for default, borderless, full border, transparent, PVP and tooltips windows.",
 	
 	"dalamud": {
 		"WindowRounding": 11,
