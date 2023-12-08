@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using Dalamud.Plugin.Services;
+using Dalamud.Logging;
 
 namespace MaterialUI {
 	public class MaterialUI : IDalamudPlugin {
@@ -55,9 +56,9 @@ namespace MaterialUI {
 		
 		public void CheckPenumbra() {
 			try {
-				pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersions").InvokeFunc();
-				
+				pluginInterface.GetIpcSubscriber<(int, int)>("Penumbra.ApiVersions").InvokeFunc();
 			} catch(Exception e) {
+				PluginLog.Error("Penumbra.ApiVersions failed", e);
 				penumbraIssue = "Penumbra not found.";
 				
 				return;
