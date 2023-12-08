@@ -17,7 +17,7 @@ namespace MaterialUI {
 		public bool firstTime = true;
 		public bool openOnStart = true;
 		public string style = "black";
-		public bool accentOnly {get; set;} = false;
+		// public bool accentOnly {get; set;} = false;
 		public Vector3 color {get; set;} = new Vector3(99 / 255f, 60 / 255f, 181 / 255f);
 		public Dictionary<string, Vector3> colorOptions {get; set;} = new Dictionary<string, Vector3>();
 		

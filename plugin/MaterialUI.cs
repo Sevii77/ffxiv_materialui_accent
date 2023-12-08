@@ -55,7 +55,7 @@ namespace MaterialUI {
 		
 		public void CheckPenumbra() {
 			try {
-				pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersion").InvokeFunc();
+				pluginInterface.GetIpcSubscriber<int>("Penumbra.ApiVersions").InvokeFunc();
 				
 			} catch(Exception e) {
 				penumbraIssue = "Penumbra not found.";
@@ -63,15 +63,14 @@ namespace MaterialUI {
 				return;
 			}
 			
-			string penumbraConfigPath = $"{pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
-			if (!File.Exists(penumbraConfigPath)) {
-				penumbraIssue = "Can't find Penumbra Config.";
-				
-				return;
-			}
+			// string penumbraConfigPath = $"{pluginInterface.ConfigFile.DirectoryName}/Penumbra.json";
+			// if (!File.Exists(penumbraConfigPath)) {
+			// 	penumbraIssue = "Can't find Penumbra Config.";
+			// 	
+			// 	return;
+			// }
 			
-			dynamic penumbraData = JsonConvert.DeserializeObject(File.ReadAllText(penumbraConfigPath));
-			string penumbraPath = (string)penumbraData?.ModDirectory;
+			string penumbraPath = pluginInterface.GetIpcSubscriber<string>("Penumbra.GetModDirectory").InvokeFunc();
 			if(penumbraPath == "") {
 				penumbraIssue = "Penumbra Mod Directory has not been set.";
 				

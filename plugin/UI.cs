@@ -16,7 +16,7 @@ namespace MaterialUI {
 		private MaterialUI main;
 		
 		private bool openOnStart;
-		private bool accentOnly;
+		// private bool accentOnly;
 		private Vector3 colorAccent;
 		private string repoInput = "";
 		public Vector3[] colorOptions;
@@ -27,7 +27,7 @@ namespace MaterialUI {
 			noticeText = new List<string>();
 			
 			openOnStart = main.config.openOnStart;
-			accentOnly = main.config.accentOnly;
+			// accentOnly = main.config.accentOnly;
 			colorAccent = main.config.color;
 			colorOptions = new Vector3[0];
 			
@@ -114,9 +114,9 @@ namespace MaterialUI {
 					
 					ImGui.Separator();
 					
-					ImGui.Checkbox("Colors Only", ref accentOnly);
-					if(ImGui.IsItemHovered())
-						ImGui.SetTooltip("Only installs the recolored textures instead of everything. For those that have a frankenstein setup, using both TexTools and Penumbra");
+					// ImGui.Checkbox("Colors Only", ref accentOnly);
+					// if(ImGui.IsItemHovered())
+					// 	ImGui.SetTooltip("Only installs the recolored textures instead of everything. For those that have a frankenstein setup, using both TexTools and Penumbra");
 						
 					ImGui.Separator();
 					
@@ -128,7 +128,7 @@ namespace MaterialUI {
 					if(ImGui.Button("Apply")) {
 						main.config.firstTime = false;
 						main.config.color = colorAccent;
-						main.config.accentOnly = accentOnly;
+						// main.config.accentOnly = accentOnly;
 						for(int i = 0; i < colorOptions.Length; i++) {
 							main.config.colorOptions[main.updater.mods["base"].options.colorOptions[i].id] = colorOptions[i];
 						}
