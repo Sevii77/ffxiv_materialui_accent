@@ -1,0 +1,73 @@
+{
+	"author": "Natyusha",
+	
+	"author_contact": "natyusha#7261",
+	
+	"name": "Soul Crystal Macro Icons",
+	
+	"description": "Swaps the gearset macro icons for switching jobs to their respective soul crystals.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Job Icons - Macro",
+			"options": {
+				"Soul Crystals": [
+					"ui/icon/062808",
+					"ui/icon/062809",
+					"ui/icon/062810",
+					"ui/icon/062811",
+					"ui/icon/062812",
+					"ui/icon/062813",
+					"ui/icon/062814",
+					"ui/icon/062815",
+					"ui/icon/062819",
+					"ui/icon/062820",
+					"ui/icon/062821",
+					"ui/icon/062822",
+					"ui/icon/062823",
+					"ui/icon/062824",
+					"ui/icon/062825",
+					"ui/icon/062827",
+					"ui/icon/062828",
+					"ui/icon/062830",
+					"ui/icon/062831",
+					"ui/icon/062832",
+					"ui/icon/062833",
+					"ui/icon/062834",
+					"ui/icon/062835",
+					"ui/icon/062836",
+					"ui/icon/062837",
+					"ui/icon/062838",
+					"ui/icon/062839",
+					"ui/icon/062840"
+				],
+				"Soul Crystals (No Crafters)": [
+					"ui/icon/062819",
+					"ui/icon/062820",
+					"ui/icon/062821",
+					"ui/icon/062822",
+					"ui/icon/062823",
+					"ui/icon/062824",
+					"ui/icon/062825",
+					"ui/icon/062827",
+					"ui/icon/062828",
+					"ui/icon/062830",
+					"ui/icon/062831",
+					"ui/icon/062832",
+					"ui/icon/062833",
+					"ui/icon/062834",
+					"ui/icon/062835",
+					"ui/icon/062836",
+					"ui/icon/062837",
+					"ui/icon/062838",
+					"ui/icon/062839",
+					"ui/icon/062840"
+				]
+			}
+		}
+	]
+}

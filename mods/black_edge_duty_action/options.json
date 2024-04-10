@@ -1,0 +1,24 @@
+{
+	"author": "Natyusha",
+	
+	"author_contact": "natyusha#7261",
+	
+	"name": "Black Edge Duty Action",
+	
+	"description": "Makes the duty action buttons match the look of the default Material UI hotbars.",
+	
+	"color_options": [
+		
+	],
+	
+	"penumbra": [
+		{
+			"name": "Duty Action",
+			"options": {
+				"Black Edge": [
+					"ui/uld/actioncontents"
+				]
+			}
+		}
+	]
+}
