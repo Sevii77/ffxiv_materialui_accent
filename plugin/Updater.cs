@@ -826,8 +826,8 @@ namespace MaterialUI {
 				File.WriteAllText(Path.GetFullPath(penumbraPath + "/Material UI/" + name), JsonConvert.SerializeObject(group, Formatting.Indented));
 			}
 			
-			main.pluginInterface.GetIpcSubscriber<string, byte>("Penumbra.AddMod").InvokeFunc("Material UI");
-			main.pluginInterface.GetIpcSubscriber<string, string, byte>("Penumbra.ReloadMod").InvokeFunc("Material UI", "");
+			main.pluginInterface.GetIpcSubscriber<string, byte>("Penumbra.AddMod.V5").InvokeFunc("Material UI");
+			main.pluginInterface.GetIpcSubscriber<string, string, byte>("Penumbra.ReloadMod.V5").InvokeFunc("Material UI", "");
 			
 			main.ui.CloseNotice();
 			
