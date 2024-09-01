@@ -10,6 +10,9 @@ using System.Numerics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Dalamud.Interface.Internal;
+using Dalamud.IoC;
+using Dalamud.Plugin.Services;
+using Dalamud.Logging.Internal;
 
 namespace MaterialUI {
 	public struct RepoFile {
@@ -131,7 +134,7 @@ namespace MaterialUI {
 			Author = "Sevii, skotlex";
 			Description = "";
 			Version = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-			Website = "https://github.com/Sevii77/ffxiv_materialui_accent";
+			Website = "https://github.com/Tensounder54/ffxiv_materialui_accent";
 			// FileSwaps = new Dictionary<string, string>();
 			// Groups = new Dictionary<string, MetaGroup>();
 		}
@@ -142,9 +145,9 @@ namespace MaterialUI {
 		public string repo;
 		public Options options;
 		public Dir dir;
-		public IDalamudTextureWrap preview;
+		public Dalamud.Interface.Textures.TextureWraps.IDalamudTextureWrap preview;
 		
-		public Mod(string id, string repo, Options options, Dir dir, IDalamudTextureWrap preview) {
+		public Mod(string id, string repo, Options options, Dir dir, Dalamud.Interface.Textures.TextureWraps.IDalamudTextureWrap preview) {
 			this.id = id;
 			this.repo = repo;
 			this.options = options;
@@ -155,7 +158,7 @@ namespace MaterialUI {
 	
 	public class Updater {
 		public const string repoMaster = "Tunnelbliick/ffxiv-material-ui";
-		public const string repoAccent = "sevii77/ffxiv_materialui_accent";
+		public const string repoAccent = "Tensounder54/ffxiv_materialui_accent";
 		
 		private HttpClient httpClient;
 		private MaterialUI main;
@@ -163,7 +166,9 @@ namespace MaterialUI {
 		// public Options options {get; private set;}
 		public Dir dirMaster {get; private set;}
 		public Dir dirAccent {get; private set;}
-		public Dictionary<string, Dir> dirMods {get; private set;}
+        public ModuleLog moduleLog { get; private set; }
+		public ITextureProvider textureProvider {get; private set;}
+        public Dictionary<string, Dir> dirMods {get; private set;}
 		public Dictionary<string, Mod> mods {get; private set;}
 		
 		public Updater(MaterialUI main) {
@@ -275,7 +280,7 @@ namespace MaterialUI {
 					
 					main.ui.ShowNotice(string.Format("Downloading ({0}/{1})\n{2}", done, total, name));
 				} catch(Exception e) {
-					PluginLog.LogError(e, "Download failed");
+                    moduleLog.Error(e, "Download failed");
 					// It failed, just add it back to the queue
 					queue.Add((url, name, sha));
 					failcount++;
@@ -291,7 +296,7 @@ namespace MaterialUI {
 				while(queue.Count > 0) {
 					int c = Math.Min(queue.Count, 100 - busycount);
 					for(int i = 0; i < c; i++) {
-						download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
+						await download(queue[0].Item1, queue[0].Item2, queue[0].Item3);
 						queue.RemoveAt(0);
 					}
 					
@@ -384,7 +389,7 @@ namespace MaterialUI {
 					data = JsonConvert.DeserializeObject<Repo>(resp);
 					dirMods[thirdparty] = PopulateDir(data, thirdparty).GetPathDir("mods");
 				} catch(Exception e) {
-					PluginLog.LogError(e, "Failed loading third party mod repository " + thirdparty);
+                    moduleLog.Error("Failed loading third party mod repository " + thirdparty);
 				}
 			}
 			
@@ -411,27 +416,38 @@ namespace MaterialUI {
 			// Create mod structure
 			foreach(KeyValuePair<string, Dir> modRepo in dirMods)
 				foreach(KeyValuePair<string, Dir> mod in modRepo.Value.dirs) {
-					PluginLog.Log(mod.Key);
+                    moduleLog.Information(mod.Key);
 					try {
 						resp = Regex.Replace(await GetStringAsync(mod.Value.files["options.json"].Item2), "//[^\n]*", "");
 						Options options = JsonConvert.DeserializeObject<Options>(resp);
 						if(!mods.ContainsKey(mod.Key))
-							mods[mod.Key] = new Mod(
-								mod.Key,
-								modRepo.Key,
-								options,
-								mod.Value,
-								mod.Value.files.ContainsKey("preview.png") ? main.pluginInterface.UiBuilder.LoadImage(await GetBytesAsync(mod.Value.files["preview.png"].Item2)) : null
-							);
-						
-						if(!main.config.modOptions.ContainsKey(mod.Key))
+                            if (mod.Value.files.ContainsKey("preview.png")) {
+                                mods[mod.Key] = new Mod(
+									mod.Key,
+									modRepo.Key,
+									options,
+									mod.Value,
+                                    (Dalamud.Interface.Textures.TextureWraps.IDalamudTextureWrap)textureProvider.CreateFromImageAsync(await GetBytesAsync(mod.Value.files["preview.png"].Item2))
+                                );
+                            } else {
+                                mods[mod.Key] = new Mod(
+									mod.Key,
+									modRepo.Key,
+									options,
+									mod.Value,
+									null
+								);
+                            }
+
+                        if (!main.config.modOptions.ContainsKey(mod.Key))
 							main.config.modOptions[mod.Key] = new ModConfig();
 						
 						foreach(OptionColor option in options.colorOptions)
 							if(!main.config.modOptions[mod.Key].colors.ContainsKey(option.id))
 								main.config.modOptions[mod.Key].colors[option.id] = new Vector3(option.@default.r / 255f, option.@default.g / 255f, option.@default.b / 255f);
+
 					} catch(Exception e) {
-						PluginLog.LogError(e, "Failed prepairing mod repository " + mod.Key);
+                        moduleLog.Error("Failed prepairing mod repository " + mod.Key);
 					}
 				}
 		}
@@ -804,7 +820,7 @@ namespace MaterialUI {
 				// if(!main.config.accentOnly)
 					walkDirMain(dirMaster.dirs["4K resolution"].dirs[char.ToUpper(main.config.style[0]) + main.config.style.Substring(1)].dirs["Saved"], null);
 			} catch(Exception e) {
-				PluginLog.LogError(e, "Failed writing textures");
+                moduleLog.Error("Failed writing textures");
 				main.ui.ShowNotice($"Failed writing texture\n{curpath}\n{e.Message}\n\nTry a Integrity Check in the Advanced tab", true);
 				
 				return false;

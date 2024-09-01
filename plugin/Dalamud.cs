@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.IO;
 using System;
+using Dalamud.Logging.Internal;
 
 namespace MaterialUI {
 	public class DalamudStyle {
-		public static void Apply(MaterialUI main, Dictionary<string, int> styleOverrides) {
+        public static ModuleLog moduleLog { get; private set; }
+
+        public static void Apply(MaterialUI main, Dictionary<string, int> styleOverrides) {
 			Config config = main.config;
 			Vector4 accent = new Vector4(config.color.X, config.color.Y, config.color.Z, 1);
 			Vector4 accentHalf = accent * new Vector4(0.5f, 0.5f, 0.5f, 1);
@@ -140,7 +143,7 @@ namespace MaterialUI {
 					style.Colors["Border"] = accent;
 				}
 			} catch(Exception e) {
-				PluginLog.LogError(e, "Failed checking penumbra collection");
+                moduleLog.Error("Failed checking penumbra collection");
 			}
 			
 			// apply mod style edits
@@ -152,7 +155,7 @@ namespace MaterialUI {
 			style.Apply();
 			
 			// reflection garbage to save it
-			var ass = typeof(Dalamud.ClientLanguage).Assembly;
+			var ass = typeof(Dalamud.Game.ClientLanguage).Assembly;
 			var t = ass.GetType("Dalamud.Configuration.Internal.DalamudConfiguration");
 			var dalamudConfig = ass.GetType("Dalamud.Service`1").MakeGenericType(t)
 				.GetMethod("Get").Invoke(null, BindingFlags.Default, null, new object[] {}, null);

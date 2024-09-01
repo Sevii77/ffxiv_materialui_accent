@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Dalamud.Plugin.Services;
 using Dalamud.Logging;
+using Dalamud.IoC;
+using Dalamud.Logging.Internal;
 
 namespace MaterialUI {
 	public class MaterialUI : IDalamudPlugin {
@@ -14,13 +16,14 @@ namespace MaterialUI {
 		
 		public string penumbraIssue {get; private set;} = null;
 		
-		public DalamudPluginInterface pluginInterface {get; private set;}
+		public IDalamudPluginInterface pluginInterface {get; private set;}
 		public ICommandManager commandManager {get; private set;}
-		public UI ui {get; private set;}
+        public ModuleLog moduleLog { get; private set; }
+        public UI ui {get; private set;}
 		public Config config {get; private set;}
 		public Updater updater {get; private set;}
 		
-		public MaterialUI(DalamudPluginInterface pluginInterface, ICommandManager commandManager) {
+		public MaterialUI(IDalamudPluginInterface pluginInterface, ICommandManager commandManager) {
 			this.pluginInterface = pluginInterface;
 			this.commandManager = commandManager;
 			
@@ -58,7 +61,7 @@ namespace MaterialUI {
 			try {
 				pluginInterface.GetIpcSubscriber<(int, int)>("Penumbra.ApiVersions").InvokeFunc();
 			} catch(Exception e) {
-				PluginLog.Error("Penumbra.ApiVersions failed", e);
+				moduleLog.Error("Penumbra.ApiVersions failed", e);
 				penumbraIssue = "Penumbra not found.";
 				
 				return;
