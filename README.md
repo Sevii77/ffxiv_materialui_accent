@@ -1,3 +1,7 @@
+# This plugin is deprecated and has been replaced with [Aetherment](https://github.com/Sevii77/aetherment).
+
+---
+
 Check out Material UI by skotlex [here](https://github.com/skotlex/ffxiv-material-ui)
 
 ![preview](images/preview.png)
